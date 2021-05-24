@@ -142,6 +142,18 @@ class Tally:
         else:
             return self.host.replace("api2", "")
 
+    def build_excel(self, filename=None, params={}):
+        """
+        Build Excel tables with aggregated results.
+
+        Parameters
+        ----------
+        filename : string
+            Name of file that has the survey data. to be used 
+
+        """
+
+
     def weight(self):
         """Get a list of all the datasources this account has.
 
