@@ -59,6 +59,8 @@ class Tally:
         action : type
             Name of the action to take on the resouce,
             e.g. datasource/1/meta_data
+        binary : boolean
+            Are we sending data in a binary format or not? Spss files are binary, CSVs are not.
 
         Returns
         -------
@@ -73,7 +75,7 @@ class Tally:
         result = json.loads(result.content)
         return result
 
-    def post_request(self, resource, action="", data={}):
+    def post_request(self, resource, action="", data={}, files=None):
         """Send a POST request to the API with a wrapper.
 
         This is used by other objects
@@ -84,7 +86,7 @@ class Tally:
         resource : string
             Name of the resource we are calling.
             These are the root paths of the API.
-        action : type
+        action : string
             Name of the action to take on the resouce,
             e.g. datasource/1/meta_data
         data : type
@@ -96,15 +98,20 @@ class Tally:
             Description of returned object.
 
         """
-
+        # http doesn't support nested data structures, so we flatten the params
+        if 'params' in data.keys():
+            data['params'] = json.dumps(data['params'])
         if len(action) == 0:
             request_path = "{}/{}/".format(self.base_url, resource)
         else:
             request_path = "{}/{}/{}/".format(self.base_url, resource, action)
-        result = requests.post(request_path,
-                               headers=self._get_headers(),
-                               data=json.dumps(data)
-                               )
+        if files is not None:
+            headers = self._get_headers()
+            if "Content-Type" in headers.keys():
+                del headers["Content-Type"]
+            result = requests.post(request_path, headers=self._get_headers(), data=data, files=files)
+        else:
+            result = requests.post(request_path, headers=self._get_headers(), data=json.dumps(data))
         return result
 
     def put_request(self, resource, data):
@@ -142,6 +149,18 @@ class Tally:
         else:
             return self.host.replace("api2", "")
 
+    def build_excel(self, filename=None, params={}):
+        """
+        Build Excel tables with aggregated results.
+
+        Parameters
+        ----------
+        filename : string
+            Name of file that has the survey data. to be used 
+
+        """
+
+
     def weight(self):
         """Get a list of all the datasources this account has.
 
@@ -156,26 +175,7 @@ class Tally:
         result = self.get_request('datasource')
         return result
 
-    def crosstab(self, spss_file=None, csv_data=None, json_meta=None, params={}, returnDataframe=True):
-        payload = {
-            'data': csv_data.to_csv(),
-            'meta': json.dumps(json_meta),
-            'params': json.dumps({
-                'x': ['q1'],
-                'y': ['gender']
-            })
-        }
-        response = self.post_request('tally', 'crosstab', payload)
-        json_dict = json.loads(response.content)
-
-        if 'result' in json_dict:
-            if returnDataframe:
-                return self.result_to_dataframe(json_dict['result'])
-            else:
-                return response.content
-        else:
-            raise ValueError
-
+    @classmethod
     def result_to_dataframe(self, json_dict):
         """ Deserializes a dataframe that was serialized with orient='split'
         """
