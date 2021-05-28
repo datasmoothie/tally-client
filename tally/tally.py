@@ -107,7 +107,8 @@ class Tally:
             request_path = "{}/{}/{}/".format(self.base_url, resource, action)
         if files is not None:
             headers = self._get_headers()
-            del headers["Content-Type"]
+            if "Content-Type" in headers.keys():
+                del headers["Content-Type"]
             result = requests.post(request_path, headers=self._get_headers(), data=data, files=files)
         else:
             result = requests.post(request_path, headers=self._get_headers(), data=json.dumps(data))

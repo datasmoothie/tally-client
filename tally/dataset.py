@@ -2,6 +2,7 @@ import json
 import requests
 import pandas as pd
 import os
+import io
 
 from .decorators import add_data
 from .tally import Tally
@@ -21,8 +22,9 @@ class DataSet:
     qp_data = None
     tally = None
 
-    def __init__(self, name=None):
+    def __init__(self, name=None, api_key=None, host='tally.datasmoothie.com/', ssl=True):
         self._name = name
+        self.add_credentials(api_key=api_key, host=host, ssl=ssl)
 
     def add_credentials(self, api_key=None, host='tally.datasmoothie.com/', ssl=True):
         tally = Tally(api_key=api_key, host=host, ssl=ssl)
@@ -84,3 +86,26 @@ class DataSet:
         result['csv'] = json_dict['csv']
         result['json'] = json_dict['json']
         return result
+
+    @add_data
+    def build_excel(self, data_params=None, filename=None, **kwargs):
+        files, payload = self.prepare_post_params(data_params, kwargs)
+        response = self.tally.post_request('tally', 'build_excel', payload, files)
+        file = open(filename, "wb")
+        file.write(response.content)
+        file.close()
+        return response
+
+    @add_data
+    def build_powerpoint(self, data_params=None, filename=None, powerpoint_template=None, **kwargs):
+        files, payload = self.prepare_post_params(data_params, kwargs)
+        files['pptx_template'] = (
+            'template.pptx', 
+            open(powerpoint_template, 'rb').read(), 
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+        )
+        response = self.tally.post_request('tally', 'build_powerpoint', payload, files)
+        file = open(filename, "wb")
+        file.write(response.content)
+        file.close()
+        return response
