@@ -52,8 +52,7 @@ class DataSet:
         self.qp_data = pd.read_csv(data_csv).to_csv()
         self.dataset_type = 'quantipy'
 
-    @add_data
-    def crosstab(self, data_params=None, **kwargs):
+    def prepare_post_params(self, data_params, params={}):
         # initialise the payload with our chosen data
         if 'binary_data' in data_params:
             files = data_params['binary_data']
@@ -61,7 +60,13 @@ class DataSet:
         else:
             files = None
             payload = data_params
-        payload['params'] = kwargs
+        payload['params'] = params
+        return (files, payload)
+
+    @add_data
+    def crosstab(self, data_params=None, **kwargs):
+        # initialise the payload with our chosen data
+        files, payload = self.prepare_post_params(data_params, kwargs)
         response = self.tally.post_request('tally', 'crosstab', payload, files)
         json_dict = json.loads(response.content)
         if 'result' in json_dict.keys():
@@ -69,3 +74,13 @@ class DataSet:
             return df
         else:
             raise ValueError
+
+    @add_data
+    def convert_spss_to_csv_json(self, data_params=None):
+        files, payload = self.prepare_post_params(data_params)
+        response = self.tally.post_request('tally', 'convert_spss_to_csv_json', payload, files)
+        json_dict = json.loads(response.content)
+        result = {}
+        result['csv'] = json_dict['csv']
+        result['json'] = json_dict['json']
+        return result
