@@ -4,16 +4,14 @@ import setuptools
 setuptools.setup(
     name="datasmoothie-tally-client",
     packages=setuptools.find_packages(),
-    #extras_require={':python_version>"3.0"': ['importlib-resources']},
     install_requires=[
         'numpy',
         'pandas',
     ],
-    version="0.1",
+    version="0.2",
     license='MIT',
     include_package_data=True,
     url="https://github.com/datasmoothie/datasmoothie-tally-client",
-    #download_url="https://github.com/datasmoothie/datasmoothie-tally-client/archive/v0.0.1.tar.gz",
     author="Geir Freysson",
     author_email="geir@datasmoothie.com",
     description="Python wrapper for the Tally API.",
