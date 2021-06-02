@@ -1,16 +1,26 @@
 # Tally Python client
-The Tally Python client is a wrapper for Datasmoothie's Tally API for market research and survey data. It's a RESTful
+The Tally Python client is a wrapper for [Datasmoothie's Tally API](https://tally.datasmoothie.com) for market research and survey data. Tally is a RESTful
 API that leverages Quantipy and other techologies to give users access to all the data processing, aggregation and
 exporting functions they need.
+
+Those who want to use python to communicate with Tally can both use the traditional
+`requests` library, or they can use this wrapper for convenience.
+
+# Installation
+```pip isntall datasmoothie-tally-client```
+
+The Tally client is compatible with all versions of Python 3.
 
 # Quick start
 Tally is compatible with both SPSS (.sav) files and Quantipy files.
 
 ```
+import tally
+
 ds = tally.DataSet(api_token=[your_token])
 ds.use_spss('my_spss_file.sav')
 
-pandas_dataframe = ds.crosstab(x=['q1', 'q2'], y=['gender', ['locality'], sig_level=[0.05]])
+pandas_dataframe = ds.crosstab(x=['q1', 'q2'], y=['gender'], ['locality'], sig_level=[0.05])
 
 ds.build_powerpoint(filename='my_powerpoint.pptx',
                     powerpoint_template='My_Branded_Template.pptx', 
