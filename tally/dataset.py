@@ -22,8 +22,7 @@ class DataSet:
     qp_data = None
     tally = None
 
-    def __init__(self, name=None, api_key=None, host='tally.datasmoothie.com/', ssl=True):
-        self._name = name
+    def __init__(self, api_key=None, host='tally.datasmoothie.com/', ssl=True):
         self.add_credentials(api_key=api_key, host=host, ssl=ssl)
 
     def add_credentials(self, api_key=None, host='tally.datasmoothie.com/', ssl=True):
@@ -75,7 +74,8 @@ class DataSet:
             df = Tally.result_to_dataframe(json_dict['result'])
             return df
         else:
-            raise ValueError
+            print(response.content)
+            raise ValueError(response.content)
 
     @add_data
     def convert_spss_to_csv_json(self, data_params=None):
