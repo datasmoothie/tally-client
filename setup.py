@@ -5,7 +5,7 @@ setuptools.setup(
     name="datasmoothie-tally",
     packages=setuptools.find_packages(),
     extras_require={':python_version>"3.0"': ['importlib-resources']},
-    version="0.01",
+    version="0.1",
     license='MIT',
     include_package_data=True,
     url="https://github.com/datasmoothie/datasmoothie-tally-client",
