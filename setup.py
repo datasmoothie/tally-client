@@ -4,7 +4,11 @@ import setuptools
 setuptools.setup(
     name="datasmoothie-tally-client",
     packages=setuptools.find_packages(),
-    extras_require={':python_version>"3.0"': ['importlib-resources']},
+    #extras_require={':python_version>"3.0"': ['importlib-resources']},
+    install_requires=[
+        'numpy',
+        'pandas',
+    ],
     version="0.1",
     license='MIT',
     include_package_data=True,
