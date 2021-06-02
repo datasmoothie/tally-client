@@ -2,7 +2,7 @@ import setuptools
 
 
 setuptools.setup(
-    name="datasmoothie-tally",
+    name="datasmoothie-tally-client",
     packages=setuptools.find_packages(),
     extras_require={':python_version>"3.0"': ['importlib-resources']},
     version="0.1",
