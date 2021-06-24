@@ -53,6 +53,15 @@ class DataSet:
         self.qp_data = pd.read_csv(data_csv).to_csv()
         self.dataset_type = 'quantipy'
 
+    def use_csv(self, csv_file):
+        csv = pd.read_csv(csv_file).to_csv()
+        payload = {'csv': csv}
+        response = self.tally.post_request('tally', 'convert_data_to_csv_json', payload)
+        result = json.loads(response.content)
+        self.qp_meta = json.dumps(result['json'])
+        self.qp_data = result['csv']
+        self.dataset_type = 'quantipy'
+
     def prepare_post_params(self, data_params, params={}):
         # initialise the payload with our chosen data
         if 'binary_data' in data_params:
