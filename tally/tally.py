@@ -176,7 +176,7 @@ class Tally:
         return result
 
     @classmethod
-    def result_to_dataframe(self, json_dict):
+    def result_to_dataframe(cls, json_dict):
         """ Deserializes a dataframe that was serialized with orient='split'
         """
         columns = pd.MultiIndex.from_tuples(json_dict['columns'], names=json_dict['column_names'])
