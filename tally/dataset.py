@@ -62,6 +62,25 @@ class DataSet:
         self.qp_data = result['csv']
         self.dataset_type = 'quantipy'
 
+    def use_confirmit(self, source_projectid, source_idp_url, source_client_id, source_client_secret, source_public_url):
+        payload = {
+            'datasource': {
+                'type': 'Confirmit',
+                'source_idp_url' : source_idp_url,
+                'source_projectid': source_projectid,
+                'source_client_id' : source_client_id,
+                'source_client_secret' : source_client_secret,
+                'source_public_site_url' : source_public_url
+            },
+        }
+        response = self.tally.post_request('tally', 'convert_data_to_csv_json', payload)
+        result = json.loads(response.content)
+        import pdb; pdb.set_trace()
+        self.qp_meta = json.dumps(result['json'])
+        self.qp_data = result['csv']
+        self.dataset_type = 'quantipy'
+
+
     def prepare_post_params(self, data_params, params={}):
         # initialise the payload with our chosen data
         if 'binary_data' in data_params:
