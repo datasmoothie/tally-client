@@ -16,8 +16,12 @@ def test_spss_crosstab(token, api_url):
     
     ds.use_spss('tests/fixtures/Example Data (A).sav')
 
-    result = ds.crosstab(x='q1', y='gender', sig_level=0.05)
+    result = ds.crosstab(x='q1', y='gender', sig_level=[0.05])
     assert isinstance(result, pd.DataFrame)
+
+    result2 = ds.crosstab(x='q2', y='locality', sig_level=[0.05])
+    assert isinstance(result, pd.DataFrame)
+
 
 def test_csv_crosstab(token, api_url):
     ds = tally.DataSet()
@@ -53,7 +57,7 @@ def test_build_excel(token, api_url):
     
     ds.use_spss('tests/fixtures/Example Data (A).sav')
 
-    result = ds.build_excel(filename='my_tables.xlsx', x='q1', y='gender', sig_level=[0.05])
+    result = ds.build_excel(filename='my_tables.xlsx', x=['q1', 'q2'], y=['gender', 'locality'], sig_level=[0.05])
     os.remove('my_tables.xlsx')
     assert result.status_code == 200
 
@@ -65,7 +69,7 @@ def test_build_powerpoint(token, api_url):
     result = ds.build_powerpoint(filename='my_powerpoint.pptx',
                                  powerpoint_template='tests/fixtures/Datasmoothie_Template.pptx', 
                                  x=['q1', 'q2', 'q3'], 
-                                 y=['gender', 'locality']
+                                 y=['@', 'gender', 'locality']
                                  )
     os.remove('my_powerpoint.pptx')
     assert result.status_code == 200

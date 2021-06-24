@@ -1,6 +1,7 @@
 import json
 import requests
 import pandas as pd
+import copy
 
 class Tally:
     """Tally is a wrapper for the cloud-based Tally API.
@@ -106,10 +107,10 @@ class Tally:
         else:
             request_path = "{}/{}/{}/".format(self.base_url, resource, action)
         if files is not None:
-            headers = self._get_headers()
+            headers = copy.deepcopy(self._get_headers())
             if "Content-Type" in headers.keys():
                 del headers["Content-Type"]
-            result = requests.post(request_path, headers=self._get_headers(), data=data, files=files)
+            result = requests.post(request_path, headers=headers, data=data, files=files)
         else:
             result = requests.post(request_path, headers=self._get_headers(), data=json.dumps(data))
         return result

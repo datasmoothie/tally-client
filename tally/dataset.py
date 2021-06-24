@@ -39,13 +39,18 @@ class DataSet:
                 Path to the sav file we want to use as our data.
         """
         # this is okay because the path format will be the same as the OS running this
-        self.filename = os.path.basename(file_path)
+        filename = os.path.basename(file_path)
 
         with open(file_path, mode='rb') as file:
             fileContent = file.read()
         
-        self.dataset_type = 'sav'
-        self.sav_data = fileContent
+        payload={}
+        files=[ ('spss',('Example Data (A).sav',io.BytesIO(fileContent),'application/x-spss-sav')) ]
+        response = self.tally.post_request('tally', 'convert_data_to_csv_json', payload, files)
+        result = json.loads(response.content)
+        self.qp_meta = json.dumps(result['json'])
+        self.qp_data = result['csv']
+        self.dataset_type = 'quantipy'
 
     def use_quantipy(self, meta_json, data_csv):
         with open(meta_json) as json_file:
@@ -75,7 +80,6 @@ class DataSet:
         }
         response = self.tally.post_request('tally', 'convert_data_to_csv_json', payload)
         result = json.loads(response.content)
-        import pdb; pdb.set_trace()
         self.qp_meta = json.dumps(result['json'])
         self.qp_data = result['csv']
         self.dataset_type = 'quantipy'
@@ -127,6 +131,8 @@ class DataSet:
     @add_data
     def build_powerpoint(self, data_params=None, filename=None, powerpoint_template=None, **kwargs):
         files, payload = self.prepare_post_params(data_params, kwargs)
+        if files is None:
+            files = {}
         files['pptx_template'] = (
             'template.pptx', 
             open(powerpoint_template, 'rb').read(), 
