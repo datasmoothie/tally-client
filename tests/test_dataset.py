@@ -60,12 +60,8 @@ def test_weight(token, api_url):
             'gender':{1:49.0, 2:51.0}
         }
     result = ds.weight(name='my weight', variable='weight_c', unique_key='resp_id', scheme=scheme)
-    import pdb; pdb.set_trace()
     ct1 = ds.crosstab(x='gender', ci=['c%'], w='weight_c')
-    ct2 = ds.crosstab(x='locality', ci=['c%'], w='weight_c')
-    import pdb; pdb.set_trace()
-    
-
+    assert ct1.loc[('gender. ','Female')][0] == 49.1
 
 def test_csv_crosstab(token, api_url):
     ds = tally.DataSet()
