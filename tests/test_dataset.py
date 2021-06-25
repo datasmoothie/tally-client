@@ -23,6 +23,50 @@ def test_spss_crosstab(token, api_url):
     assert isinstance(result, pd.DataFrame)
 
 
+def test_variables(token, api_url):
+    ds = tally.DataSet()
+    ds.add_credentials(api_key=token, host=api_url, ssl=True)
+    ds.use_csv('tests/fixtures/Example Data (A) no-meta.csv')
+    result = ds.variables()
+    assert 'single' in result.keys()
+
+def test_meta(token, api_url):
+    ds = tally.DataSet()
+    ds.add_credentials(api_key=token, host=api_url, ssl=True)
+    ds.use_csv('tests/fixtures/Example Data (A) no-meta.csv')
+    result = ds.meta(variable='q1')
+    assert result.shape == (12, 3)
+
+def test_derive(token, api_url):
+    ds = tally.DataSet()
+    ds.add_credentials(api_key=token, host=api_url, ssl=True)
+    ds.use_csv('tests/fixtures/Example Data (A) no-meta.csv')
+    cond_map = [
+        (1, "Urban", {'locality':[1,2]}),
+        (2, "Rural", {'locality':[3,4]})
+    ]
+    result = ds.derive(name='urban', label='Urban or rural', cond_map=cond_map, qtype="single")
+
+    crosstab = ds.crosstab(x='urban')
+    assert crosstab.shape == (3,1) 
+
+def test_weight(token, api_url):
+    ds = tally.DataSet()
+    ds.add_credentials(api_key=token, host=api_url, ssl=True)
+    ds.use_csv('tests/fixtures/Example Data (A) no-meta.csv')
+
+    scheme={
+            'locality':{1:36.0, 2:27.4, 3:16.0, 4:10.0, 5:10.6},
+            'gender':{1:49.0, 2:51.0}
+        }
+    result = ds.weight(name='my weight', variable='weight_c', unique_key='resp_id', scheme=scheme)
+    import pdb; pdb.set_trace()
+    ct1 = ds.crosstab(x='gender', ci=['c%'], w='weight_c')
+    ct2 = ds.crosstab(x='locality', ci=['c%'], w='weight_c')
+    import pdb; pdb.set_trace()
+    
+
+
 def test_csv_crosstab(token, api_url):
     ds = tally.DataSet()
     ds.add_credentials(api_key=token, host=api_url, ssl=True)

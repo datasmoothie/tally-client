@@ -180,8 +180,12 @@ class Tally:
     def result_to_dataframe(cls, json_dict):
         """ Deserializes a dataframe that was serialized with orient='split'
         """
-        columns = pd.MultiIndex.from_tuples(json_dict['columns'], names=json_dict['column_names'])
-        index = pd.MultiIndex.from_tuples(json_dict['index'], names=json_dict['index_names'])
+        if 'column_names' and 'index_names' in json_dict.keys():
+            columns = pd.MultiIndex.from_tuples(json_dict['columns'], names=json_dict['column_names'])
+            index = pd.MultiIndex.from_tuples(json_dict['index'], names=json_dict['index_names'])
+        else:
+            columns = json_dict['columns']
+            index = json_dict['index']
         df = pd.DataFrame(data=json_dict['data'])
         df.columns = columns
         df.index = index

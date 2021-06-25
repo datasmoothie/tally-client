@@ -110,6 +110,46 @@ class DataSet:
             raise ValueError(response.content)
 
     @add_data
+    def variables(self, data_params=None):
+        files, payload = self.prepare_post_params(data_params)
+        response = self.tally.post_request('tally', 'variables', payload, files)
+        json_dict = json.loads(response.content)
+        return json_dict
+
+    @add_data
+    def meta(self, data_params=None, **kwargs):
+        files, payload = self.prepare_post_params(data_params, kwargs)
+        response = self.tally.post_request('tally', 'meta', payload, files)
+        json_dict = json.loads(response.content)
+        return Tally.result_to_dataframe(json_dict)
+
+    @add_data
+    def derive(self, data_params=None, **kwargs):
+        files, payload = self.prepare_post_params(data_params, kwargs)
+        response = self.tally.post_request('tally', 'derive', payload, files)
+        json_dict = json.loads(response.content)
+        self.add_column_to_data(kwargs['name'], json_dict['data'], json_dict['meta'])
+        return json_dict
+
+    @add_data
+    def weight(self, data_params=None, **kwargs):
+        files, payload = self.prepare_post_params(data_params, kwargs)
+        response = self.tally.post_request('tally', 'weight', payload, files)
+        json_dict = json.loads(response.content)
+        self.add_column_to_data(kwargs['variable'], json_dict['weight_data'], json_dict['weight_var_meta'])
+        return json_dict
+
+    def add_column_to_data(self, name, data, new_meta):
+        df = pd.read_csv(io.StringIO(self.qp_data))
+        new_series = pd.Series(data)
+        new_series.index = [int(i) for i in new_series.index]
+        df[name] = new_series
+        meta = json.loads(self.qp_meta)
+        meta['columns'][name] = new_meta
+        self.qp_meta = json.dumps(meta)
+        self.qp_data = df.to_csv()
+
+    @add_data
     def convert_spss_to_csv_json(self, data_params=None):
         files, payload = self.prepare_post_params(data_params)
         response = self.tally.post_request('tally', 'convert_spss_to_csv_json', payload, files)
