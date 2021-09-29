@@ -83,6 +83,14 @@ def test_confirmit_crosstab(token, api_url):
     result = ds.crosstab(x='q1')
     assert isinstance(result, pd.DataFrame)
 
+# uncomment to test nebu api
+#def test_nebu_crosstab(token, api_url):
+#    ds = tally.DataSet()
+#    ds.add_credentials(api_key=token, host=api_url, ssl=True)
+#    ds.use_nebu('https://app.nebu.com/app/rest/spss/[insert_key]?language=en')
+#    result = ds.crosstab(x='Gender')
+#    import pdb; pdb.set_trace()
+#    assert isinstance(result, pd.DataFrame)
 
 def test_spss_to_csv_json(token, api_url):
     ds = tally.DataSet()

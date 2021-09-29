@@ -67,6 +67,19 @@ class DataSet:
         self.qp_data = result['csv']
         self.dataset_type = 'quantipy'
 
+    def use_nebu(self, nebu_url):
+        payload = {
+            'datasource': {
+                'type' : 'Nebu',
+                'nebu_url' : nebu_url
+            }
+        }
+        response = self.tally.post_request('tally', 'convert_data_to_csv_json', payload)
+        result = json.loads(response.content)
+        self.qp_meta = json.dumps(result['json'])
+        self.qp_data = result['csv']
+        self.dataset_type = 'quantipy'
+
     def use_confirmit(self, source_projectid, source_idp_url, source_client_id, source_client_secret, source_public_url):
         payload = {
             'datasource': {
@@ -84,6 +97,8 @@ class DataSet:
         self.qp_data = result['csv']
         self.dataset_type = 'quantipy'
 
+    def get_dataframe(self):
+        return pd.read_csv(io.StringIO(self.qp_data))
 
     def prepare_post_params(self, data_params, params={}):
         # initialise the payload with our chosen data
