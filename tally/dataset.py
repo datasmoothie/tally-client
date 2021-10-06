@@ -39,7 +39,6 @@ class DataSet:
                 Path to the sav file we want to use as our data.
         """
         # this is okay because the path format will be the same as the OS running this
-        filename = os.path.basename(file_path)
 
         with open(file_path, mode='rb') as file:
             fileContent = file.read()
@@ -92,6 +91,25 @@ class DataSet:
             },
         }
         response = self.tally.post_request('tally', 'convert_data_to_csv_json', payload)
+        result = json.loads(response.content)
+        self.qp_meta = json.dumps(result['json'])
+        self.qp_data = result['csv']
+        self.dataset_type = 'quantipy'
+
+    def use_unicom(self, mdd_filename, ddf_filename):
+        with open(mdd_filename, mode='rb') as file:
+            fileContent_mdd = file.read()
+
+        with open(ddf_filename, mode='rb') as file:
+            fileContent_ddf = file.read()
+        
+        payload={}
+
+        files=[ 
+            ('mdd',(mdd_filename,io.BytesIO(fileContent_mdd),'text/xml')),
+            ('ddf', (ddf_filename,io.BytesIO(fileContent_ddf), 'application/x-sqlite3')) 
+        ]
+        response = self.tally.post_request('tally', 'convert_data_to_csv_json', payload, files)
         result = json.loads(response.content)
         self.qp_meta = json.dumps(result['json'])
         self.qp_data = result['csv']

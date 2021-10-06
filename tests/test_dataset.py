@@ -63,6 +63,17 @@ def test_weight(token, api_url):
     ct1 = ds.crosstab(x='gender', ci=['c%'], w='weight_c')
     assert ct1.loc[('gender. ','Female')][0] == 49.1
 
+def test_unicom_crosstab(token, api_url):
+    ds = tally.DataSet()
+    ds.add_credentials(api_key=token, host=api_url, ssl=True)
+
+    ds.use_unicom('tests/fixtures/Example_Museum.mdd', 'tests/fixtures/Example_Museum.ddf')
+
+    result = ds.crosstab(x='gender')
+    print(result)
+    assert isinstance(result, pd.DataFrame)
+
+
 def test_csv_crosstab(token, api_url):
     ds = tally.DataSet()
     ds.add_credentials(api_key=token, host=api_url, ssl=True)
