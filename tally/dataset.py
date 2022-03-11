@@ -96,6 +96,30 @@ class DataSet:
         self.qp_data = result['csv']
         self.dataset_type = 'quantipy'
 
+    def use_parquet(self, pq_data_filename, pq_meta_filename=None):
+
+        with open(pq_data_filename, mode='rb') as file:
+            fileContent_data = file.read()
+        
+        payload={}
+
+        files=[ 
+            ('pq', (pq_data_filename,io.BytesIO(fileContent_data), 'application/x-parquet')) 
+        ]
+
+        if pq_meta_filename is not None:
+            with open(pq_meta_filename, mode='rb') as file:
+                fileContent_meta = file.read()
+            files.append(
+                ('pq_meta',(pq_meta_filename,io.BytesIO(fileContent_meta),'text/plain')),
+            )
+        response = self.tally.post_request('tally', 'convert_data_to_csv_json', payload, files)
+        result = json.loads(response.content)
+        self.qp_meta = json.dumps(result['json'])
+        self.qp_data = result['csv']
+        self.dataset_type = 'quantipy'
+
+
     def use_unicom(self, mdd_filename, ddf_filename):
         with open(mdd_filename, mode='rb') as file:
             fileContent_mdd = file.read()
