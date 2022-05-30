@@ -64,18 +64,27 @@ Click the button to get started developing the wrapper with GitPod:
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/datasmoothie/tally-client/)
 
+Once you are up and running in GitPod, the tests can be run with 
 
-### running pytest
+```python -m pytest --token=[my_token]```
 
-To contribute to the wrapper, install the required files from required_dev.txt
-```
-pip install -r requirements_dev.txt
-```
+In this case the tests will run against the live Tally server, which will count against your API calls quota. 
 
-This is best run against a development API, like one run by gitpod. This might look like: 
+Or if you have a development server of Tally running, use
 
-python -m pytest --api_url=8000-coral-mackerel-9cdy66vz.ws-eu04.gitpod.io --token=[my_token]
+```python -m pytest --api_url=[url_for_tally] --token=[my_token]```
 
-To run the test against Tally itself (this will count against your API request quota) use
-python -m pytest --token=[my_token]
+### Developing the wrapper
 
+We use pytest to test. Example pytest commands are
+
+Run all tests
+```python -m pytest --token=[your_token]```
+
+Run all tests for SPSS files
+```python -m pytest -k spss --token=[your_token]```
+
+Run test called `test_spss_crosstab`
+```python -m pytest -k test_spss_crosstab --token=[your_token]```
+
+The `-k` parameter for pytest uses the supplied argument as a keyword and runs all tests that match the string. 
