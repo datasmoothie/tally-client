@@ -4,7 +4,7 @@ import pandas as pd
 import os
 import io
 
-from .decorators import add_data
+from .decorators import add_data, format_response
 from .tally import Tally
 
 class DataSet:
@@ -154,17 +154,25 @@ class DataSet:
         return (files, payload)
 
     @add_data
+    @format_response
     def crosstab(self, data_params=None, **kwargs):
         # initialise the payload with our chosen data
-        files, payload = self.prepare_post_params(data_params, kwargs)
-        response = self.tally.post_request('tally', 'crosstab', payload, files)
+        # construct a crosstab option which references the dataset we are uploading with the request
+        kwargs['dataset'] = 'one'
+        params = {"crosstabs":[kwargs]}
+        files, payload = self.prepare_post_params(data_params, params)
+        # the datasource will be a quantipy one, so we provide meta and data
+        datasources={"one":{"meta":payload.pop('meta'), "data":payload.pop('data')}}
+        payload['params']['datasources'] = datasources
+        response = self.tally.post_request('tally', 'joined_crosstab', payload, files)
         json_dict = json.loads(response.content)
         if 'result' in json_dict.keys():
-            df = Tally.result_to_dataframe(json_dict['result'])
-            return df
+            return json_dict['result']
         else:
-            print(response.content)
-            raise ValueError(response.content)
+            if 'message' in json_dict.keys():
+                raise ValueError(json_dict['message'])
+            else:
+                raise ValueError("Crosstab returned no result.")
 
     @add_data
     def variables(self, data_params=None):

@@ -9,7 +9,15 @@ def test_qp_crosstab(token, api_url):
     
     ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
 
-    ds.crosstab(x='q1', y='gender')
+    df = ds.crosstab(x='q1', y='gender')
+    assert isinstance(df,pd.core.frame.DataFrame)
+
+    json_result = ds.crosstab(x='q1', y='gender', format='dict')
+    assert isinstance(json_result, dict)
+
+    json_result = ds.crosstab(x='q1', y='gender', format='json')
+    assert isinstance(json_result, str)
+
 
 def test_spss_crosstab(token, api_url):
     ds = tally.DataSet()
@@ -22,6 +30,7 @@ def test_spss_crosstab(token, api_url):
 
     result2 = ds.crosstab(x='q2b', y='locality', sig_level=[0.05])
     assert isinstance(result, pd.DataFrame)
+    
 
 
 def test_variables(token, api_url):
@@ -64,6 +73,7 @@ def test_weight(token, api_url):
     ct1 = ds.crosstab(x='gender', ci=['c%'], w='weight_c')
     assert ct1.loc[('gender. ','Female')][0] == 49.1
 
+@pytest.mark.skip(reason="Need to finalise unicom conversion")
 def test_unicom_crosstab(token, api_url):
     ds = tally.DataSet()
     ds.add_credentials(api_key=token, host=api_url, ssl=True)
@@ -94,6 +104,7 @@ def test_csv_crosstab(token, api_url):
     result = ds.crosstab(x='q1', y='gender', sig_level=[0.05])
     assert isinstance(result, pd.DataFrame)
 
+@pytest.mark.skip(reason="Don't test on live confirmit api")
 def test_confirmit_crosstab(token, api_url):
     ds = tally.DataSet()
     ds.add_credentials(api_key=token, host=api_url, ssl=True)
