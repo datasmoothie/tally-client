@@ -4,7 +4,7 @@ import pandas as pd
 
 def pytest_addoption(parser):
     parser.addoption("--token", action="store", default="")
-    parser.addoption("--api_url", action="store", default="")
+    parser.addoption("--api_url", action="store", default="tally.datasmoothie.com")
 
 
 def pytest_generate_tests(metafunc):

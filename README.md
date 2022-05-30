@@ -57,9 +57,25 @@ ds.use_quantipy(path_to_json_metadata, path_to_csv_data)
 ```
 
 
-## contributing and running pytest
+# Developing the Tally Python client
+
+## Gitpod
+Click the button to get started developing the wrapper with GitPod:
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/datasmoothie/tally-client/)
+
+
+### running pytest
+
+To contribute to the wrapper, install the required files from required_dev.txt
+```
+pip install -r requirements_dev.txt
+```
 
 This is best run against a development API, like one run by gitpod. This might look like: 
 
 python -m pytest --api_url=8000-coral-mackerel-9cdy66vz.ws-eu04.gitpod.io --token=[my_token]
+
+To run the test against Tally itself (this will count against your API request quota) use
+python -m pytest --token=[my_token]
 
