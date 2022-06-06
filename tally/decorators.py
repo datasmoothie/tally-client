@@ -2,8 +2,7 @@ import functools
 import io
 import json
 
-from .tally import Tally
-
+import tally
 
 def add_data(func):
     @functools.wraps(func)
@@ -28,12 +27,12 @@ def format_response(func):
     def wrapper(*aargs, **kkwargs):
         format = kkwargs.pop('format', 'dataframe')
         result = func(*aargs, **kkwargs)
-        if format is 'dict':
+        if format == 'dict':
             result = result
-        elif format is 'json':
+        elif format == 'json':
             result = json.dumps(result)
-        elif format is 'dataframe':
-            result = Tally.result_to_dataframe(result)
+        elif format == 'dataframe':
+            result = tally.result_to_dataframe(result['result'])
         else:
             pass # Do nothint, internally use json
         return result

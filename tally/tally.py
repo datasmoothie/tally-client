@@ -3,6 +3,20 @@ import requests
 import pandas as pd
 import copy
 
+def result_to_dataframe(json_dict):
+    """ Deserializes a dataframe that was serialized with orient='split'
+    """
+    if 'column_names' and 'index_names' in json_dict.keys():
+        columns = pd.MultiIndex.from_tuples(json_dict['columns'], names=json_dict['column_names'])
+        index = pd.MultiIndex.from_tuples(json_dict['index'], names=json_dict['index_names'])
+    else:
+        columns = json_dict['columns']
+        index = json_dict['index']
+    df = pd.DataFrame(data=json_dict['data'])
+    df.columns = columns
+    df.index = index
+    return df
+
 class Tally:
     """Tally is a wrapper for the cloud-based Tally API.
 
@@ -176,17 +190,3 @@ class Tally:
         result = self.get_request('datasource')
         return result
 
-    @classmethod
-    def result_to_dataframe(cls, json_dict):
-        """ Deserializes a dataframe that was serialized with orient='split'
-        """
-        if 'column_names' and 'index_names' in json_dict.keys():
-            columns = pd.MultiIndex.from_tuples(json_dict['columns'], names=json_dict['column_names'])
-            index = pd.MultiIndex.from_tuples(json_dict['index'], names=json_dict['index_names'])
-        else:
-            columns = json_dict['columns']
-            index = json_dict['index']
-        df = pd.DataFrame(data=json_dict['data'])
-        df.columns = columns
-        df.index = index
-        return df

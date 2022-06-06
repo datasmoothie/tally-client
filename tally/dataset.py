@@ -5,6 +5,7 @@ import os
 import io
 
 from .decorators import add_data, format_response
+import tally
 from .tally import Tally
 
 class DataSet:
@@ -167,7 +168,7 @@ class DataSet:
         response = self.tally.post_request('tally', 'joined_crosstab', payload, files)
         json_dict = json.loads(response.content)
         if 'result' in json_dict.keys():
-            return json_dict['result']
+            return json_dict
         else:
             if 'message' in json_dict.keys():
                 raise ValueError(json_dict['message'])
@@ -186,7 +187,7 @@ class DataSet:
         files, payload = self.prepare_post_params(data_params, kwargs)
         response = self.tally.post_request('tally', 'meta', payload, files)
         json_dict = json.loads(response.content)
-        return Tally.result_to_dataframe(json_dict)
+        return tally.result_to_dataframe(json_dict)
 
     @add_data
     def derive(self, data_params=None, **kwargs):

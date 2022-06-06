@@ -18,6 +18,26 @@ def test_qp_crosstab(token, api_url):
     json_result = ds.crosstab(x='q1', y='gender', format='json')
     assert isinstance(json_result, str)
 
+def test_crosstab_formats(token, api_url):
+    ds = tally.DataSet()
+    ds.add_credentials(api_key=token, host=api_url, ssl=True)
+    
+    ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
+
+    df = ds.crosstab(x='q1', y='gender')
+    assert isinstance(df,pd.core.frame.DataFrame)
+
+    dict_result = ds.crosstab(x='q1', y='gender', format='dict')
+    assert isinstance(dict_result, dict)
+
+    df = tally.result_to_dataframe(dict_result['result'])
+    df2 = ds.crosstab(x='q1', y='gender')
+    assert df.equals(df2)
+
+    json_result = ds.crosstab(x='q1', y='gender', format='json')
+    assert isinstance(json_result, str)
+
+
 
 def test_spss_crosstab(token, api_url):
     ds = tally.DataSet()
