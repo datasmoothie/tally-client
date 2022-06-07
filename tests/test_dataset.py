@@ -18,6 +18,20 @@ def test_qp_crosstab(token, api_url):
     json_result = ds.crosstab(x='q1', y='gender', format='json')
     assert isinstance(json_result, str)
 
+def test_rebase(token, api_url):
+    ds = tally.DataSet()
+    ds.add_credentials(api_key=token, host=api_url, ssl=True)
+    
+    ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
+
+    df = ds.crosstab(x='q1', ci=['c%'])
+    df2 = ds.crosstab(x='q2b', ci=['c%'])
+    df3 = ds.crosstab(x='q2b', ci=['c%'], rebase='q1')
+
+    # base in q2b should be the q1 base
+    assert df3.iloc[0,0] == df.iloc[0,0]
+    assert df2.iloc[0,0] != df3.iloc[0,0]
+
 def test_crosstab_formats(token, api_url):
     ds = tally.DataSet()
     ds.add_credentials(api_key=token, host=api_url, ssl=True)
@@ -66,6 +80,15 @@ def test_meta(token, api_url):
     ds.use_csv('tests/fixtures/Example Data (A) no-meta.csv')
     result = ds.meta(variable='q1')
     assert result.shape == (12, 3)
+
+def test_invalid_params(token, api_url):
+    ds = tally.DataSet()
+    ds.add_credentials(api_key=token, host=api_url, ssl=True)
+    ds.use_csv('tests/fixtures/Example Data (A) no-meta.csv')
+    with pytest.raises(ValueError):
+        result = ds.meta(var='q1')
+
+
 
 def test_derive(token, api_url):
     ds = tally.DataSet()

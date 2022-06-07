@@ -37,3 +37,22 @@ def format_response(func):
             pass # Do nothint, internally use json
         return result
     return wrapper
+
+def valid_params(valid_params_list):
+    """
+    A decorator that gets list of valid parameters and returns an error if user supplies a parameter
+    that isn't in the list. Useful for making sure invalid params aren't sent up to Tally.
+    """
+    def actual_decorator(func):
+        @functools.wraps(func)
+        def wrapper(*aargs, **kkwargs):
+            sent_args = list(kkwargs.keys())
+            invalid = list(set(sent_args) - set(valid_params_list))
+            if len(invalid) > 0:
+                raise ValueError("invalid parameter: {}. Valid parameters are: {}\n See https://tally.datasmoothie.com for documentation.".format(invalid, valid_params_list))
+            result = func(*aargs, **kkwargs)
+            return result
+        return wrapper
+    return actual_decorator
+
+

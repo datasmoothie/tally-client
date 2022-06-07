@@ -4,7 +4,7 @@ import pandas as pd
 import os
 import io
 
-from .decorators import add_data, format_response
+from .decorators import add_data, format_response, valid_params
 import tally
 from .tally import Tally
 
@@ -154,6 +154,7 @@ class DataSet:
         payload['params'] = params
         return (files, payload)
 
+    @valid_params(['x', 'y', 'w', 'f', 'ci', 'stats', 'sig_level', 'decimals', 'base', 'painted', 'rebase', 'factors', 'format'])
     @add_data
     @format_response
     def crosstab(self, data_params=None, **kwargs):
@@ -182,6 +183,7 @@ class DataSet:
         json_dict = json.loads(response.content)
         return json_dict
 
+    @valid_params(['variable'])
     @add_data
     def meta(self, data_params=None, **kwargs):
         files, payload = self.prepare_post_params(data_params, kwargs)
@@ -189,6 +191,7 @@ class DataSet:
         json_dict = json.loads(response.content)
         return tally.result_to_dataframe(json_dict)
 
+    @valid_params(['name', 'label', 'qtype', 'cond_map'])
     @add_data
     def derive(self, data_params=None, **kwargs):
         files, payload = self.prepare_post_params(data_params, kwargs)
@@ -197,6 +200,7 @@ class DataSet:
         self.add_column_to_data(kwargs['name'], json_dict['data'], json_dict['meta'])
         return json_dict
 
+    @valid_params(['scheme', 'unique_key', 'variable', 'name'])
     @add_data
     def weight(self, data_params=None, **kwargs):
         files, payload = self.prepare_post_params(data_params, kwargs)
@@ -225,6 +229,7 @@ class DataSet:
         result['json'] = json_dict['json']
         return result
 
+    @valid_params(['filename', 'sig_level', 'x', 'y', 'w', 'f', 'decimals'])
     @add_data
     def build_excel(self, data_params=None, filename=None, **kwargs):
         files, payload = self.prepare_post_params(data_params, kwargs)
@@ -234,6 +239,7 @@ class DataSet:
         file.close()
         return response
 
+    @valid_params(['x', 'y', 'w', 'f', 'decimals', 'filename', 'powerpoint_template'])
     @add_data
     def build_powerpoint(self, data_params=None, filename=None, powerpoint_template=None, **kwargs):
         files, payload = self.prepare_post_params(data_params, kwargs)
