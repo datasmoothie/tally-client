@@ -177,6 +177,17 @@ def test_spss_to_csv_json(token, api_url):
     result = ds.convert_spss_to_csv_json()
     assert 'csv' in result.keys()
 
+def test_build_excel_from_dataframes(token, api_url):
+    ds = tally.DataSet(api_key=token, host=api_url, ssl=True)
+    ds.add_credentials(api_key=token, host=api_url, ssl=True)
+
+    ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
+
+    ct1 = ds.crosstab(x=['q1'], y=['gender'], ci=['counts', 'c%'], w='weight_a', format='dict')
+    ct2 = ds.crosstab(x=['q3'], y=['gender'], ci=['counts', 'c%'], w='weight_a', format='dict')
+    dataframes = [ct1, ct2]
+    res = ds.build_excel_from_dataframes(filename='myfile.xlsx', dataframes=dataframes)
+
 def test_build_excel(token, api_url):
     ds = tally.DataSet(api_key=token, host=api_url, ssl=True)
     
