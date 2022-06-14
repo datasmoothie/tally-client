@@ -239,6 +239,17 @@ class DataSet:
         file.close()
         return response
 
+    @valid_params(['filename', 'dataframes'])
+    @add_data
+    def build_excel_from_dataframes(self, data_params=None, filename=None, **kwargs):
+        files, payload = self.prepare_post_params(data_params, kwargs)
+        payload = kwargs
+        response = self.tally.post_request('tally', 'build_excel_from_dataframes', payload, files)
+        file = open(filename, "wb")
+        file.write(response.content)
+        file.close()
+        return response
+
     @valid_params(['x', 'y', 'w', 'f', 'decimals', 'filename', 'powerpoint_template'])
     @add_data
     def build_powerpoint(self, data_params=None, filename=None, powerpoint_template=None, **kwargs):
