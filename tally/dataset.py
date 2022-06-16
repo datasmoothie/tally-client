@@ -154,14 +154,20 @@ class DataSet:
         payload['params'] = params
         return (files, payload)
 
-    @valid_params(['x', 'y', 'w', 'f', 'ci', 'stats', 'sig_level', 'decimals', 'base', 'painted', 'rebase', 'factors', 'format'])
+    @valid_params(['crosstabs', 'x', 'y', 'w', 'f', 'ci', 'stats', 'sig_level', 'decimals', 'base', 'painted', 'rebase', 'factors', 'format'])
     @add_data
     @format_response
     def crosstab(self, data_params=None, **kwargs):
         # initialise the payload with our chosen data
         # construct a crosstab option which references the dataset we are uploading with the request
-        kwargs['dataset'] = 'one'
-        params = {"crosstabs":[kwargs]}
+        if 'crosstabs' not in kwargs.keys():
+            kwargs['dataset'] = 'one'
+            params = {"crosstabs":[kwargs]}
+        else:
+            crosstabs = kwargs['crosstabs']
+            for ct in crosstabs:
+                ct['dataset'] = 'one'
+            params = {"crosstabs":crosstabs}
         files, payload = self.prepare_post_params(data_params, params)
         # the datasource will be a quantipy one, so we provide meta and data
         datasources={"one":{"meta":payload.pop('meta'), "data":payload.pop('data')}}
