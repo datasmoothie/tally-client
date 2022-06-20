@@ -3,10 +3,13 @@ import requests
 import pandas as pd
 import os
 import io
+from functools import partial
 
 from .decorators import add_data, format_response, valid_params
 import tally
 from .tally import Tally
+
+VARIABLE_KEYS = ['meta', 'data']
 
 class DataSet:
     """
@@ -25,6 +28,29 @@ class DataSet:
 
     def __init__(self, api_key=None, host='tally.datasmoothie.com/', ssl=True):
         self.add_credentials(api_key=api_key, host=host, ssl=ssl)
+
+    #@add_data
+    def __getattr__(self, name):
+        method = partial(self._call_tally, name)
+        return method
+
+    @add_data
+    @format_response
+    def _call_tally(self, api_endpoint, *args, **kwargs):
+        data_params = kwargs.pop('data_params')
+        files, payload = self.prepare_post_params(data_params, kwargs)
+        response = self.tally.post_request('tally', api_endpoint, payload, files)
+        json_dict = json.loads(response.content)
+        if self._has_keys(json_dict, VARIABLE_KEYS):
+            self.add_column_to_data(kwargs['name'], json_dict['data'], json_dict['meta'])
+        return json_dict
+
+    def _has_keys(self, response, required_keys):
+        return all(elem in response.keys() for elem in required_keys)
+
+    def _is_response_new_variable(self, response):
+        required_keys = ['meta', 'data']
+        return all(elem in response.keys() for elem in required_keys)
 
     def add_credentials(self, api_key=None, host='tally.datasmoothie.com/', ssl=True):
         tally = Tally(api_key=api_key, host=host, ssl=ssl)
@@ -178,33 +204,10 @@ class DataSet:
             return json_dict
         else:
             if 'message' in json_dict.keys():
+                import pdb; pdb.set_trace()
                 raise ValueError(json_dict['message'])
             else:
                 raise ValueError("Crosstab returned no result.")
-
-    @add_data
-    def variables(self, data_params=None):
-        files, payload = self.prepare_post_params(data_params)
-        response = self.tally.post_request('tally', 'variables', payload, files)
-        json_dict = json.loads(response.content)
-        return json_dict
-
-    @valid_params(['variable'])
-    @add_data
-    def meta(self, data_params=None, **kwargs):
-        files, payload = self.prepare_post_params(data_params, kwargs)
-        response = self.tally.post_request('tally', 'meta', payload, files)
-        json_dict = json.loads(response.content)
-        return tally.result_to_dataframe(json_dict)
-
-    @valid_params(['name', 'label', 'qtype', 'cond_map'])
-    @add_data
-    def derive(self, data_params=None, **kwargs):
-        files, payload = self.prepare_post_params(data_params, kwargs)
-        response = self.tally.post_request('tally', 'derive', payload, files)
-        json_dict = json.loads(response.content)
-        self.add_column_to_data(kwargs['name'], json_dict['data'], json_dict['meta'])
-        return json_dict
 
     @valid_params(['scheme', 'unique_key', 'variable', 'name'])
     @add_data

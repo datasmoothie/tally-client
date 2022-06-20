@@ -103,7 +103,23 @@ def test_invalid_params(token, api_url):
     with pytest.raises(ValueError):
         result = ds.meta(var='q1')
 
+def test_to_delimited_set(token, api_url):
+    ds = tally.DataSet()
+    ds.add_credentials(api_key=token, host=api_url, ssl=True)
+    ds.use_spss('tests/fixtures/Example Data (B).sav')
+    result = ds.to_delimited_set(name='satisfaction', label="Sports", variables=['overall', 'price', 'service'], from_dichotomous=False)
+    ct = ds.crosstab(x='satisfaction')
+    print(ct)
 
+def test_feature_select(token, api_url):
+    ds = tally.DataSet()
+    ds.add_credentials(api_key=token, host=api_url, ssl=True)
+    ds.use_spss('tests/fixtures/Example Data (B).sav')
+    categoricals = ds.variables(format='dict')['single']
+    categoricals.remove('overall')
+    result = ds.feature_select(x=categoricals, y="overall")
+    import pdb; pdb.set_trace()
+    assert result['features'][0] == 'service'
 
 def test_derive(token, api_url):
     ds = tally.DataSet()

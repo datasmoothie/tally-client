@@ -34,3 +34,10 @@ def dataset_spss():
     with open(fileName, mode='rb') as file:
         fileContent = file.read()
     return fileContent
+
+@pytest.fixture(scope="session")
+def dataset_spss_b():
+    fileName = 'tests/fixtures/Example Data (B).sav'
+    with open(fileName, mode='rb') as file:
+        fileContent = file.read()
+    return fileContent
