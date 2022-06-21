@@ -1,6 +1,7 @@
 import functools
 import io
 import json
+import pandas as pd
 
 import tally
 
@@ -32,7 +33,14 @@ def format_response(func):
         elif format == 'json':
             result = json.dumps(result)
         elif format == 'dataframe':
-            result = tally.result_to_dataframe(result['result'])
+            if 'result' in result.keys():
+                result = tally.result_to_dataframe(result['result'])
+            elif all(elem in result.keys() for elem in ['index', 'columns', 'data']):
+                result = tally.result_to_dataframe(result)
+            else:
+                if 'params' in result:
+                    del result['params']
+                result = pd.DataFrame({k:pd.Series(v) for k,v in result.items()})
         else:
             pass # Do nothint, internally use json
         return result
