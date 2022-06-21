@@ -80,6 +80,40 @@ def test_spss_crosstab(token, api_url):
     result2 = ds.crosstab(x='q2b', y='locality', sig_level=[0.05])
     assert isinstance(result, pd.DataFrame)
     
+def test_filter(token, api_url):
+    ds = tally.DataSet()
+    ds.add_credentials(api_key=token, host=api_url, ssl=True)
+    ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
+    result = ds.filter(alias='women', condition={'gender':[2]})
+    assert ds.crosstab(x='q1').iloc[0,0] == 4303.0
+
+def test_set_value_texts(token, api_url):
+    ds = tally.DataSet()
+    ds.add_credentials(api_key=token, host=api_url, ssl=True)
+    ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
+    result = ds.set_value_texts(name="gender", renamed_vals={1:"Men", 2:"Women"})
+    assert list(ds.crosstab(x='gender').index.get_level_values(1)) == ['Base', 'Men', 'Women']
+
+def test_copy_variable(token, api_url):
+    ds = tally.DataSet()
+    ds.add_credentials(api_key=token, host=api_url, ssl=True)
+    ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
+    result = ds.copy(name="q1", suffix="test")
+    assert ds.crosstab(x='q1_test').iloc[0,0] == 8255.0
+
+def test_find(token, api_url):
+    ds = tally.DataSet()
+    ds.add_credentials(api_key=token, host=api_url, ssl=True)
+    ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
+    result = ds.find(str_tags=['q14'], format=dict)
+    assert result['variables'] == ['q14_1', 'q14_2', 'q14_3']
+
+def test_values(token, api_url):
+    ds = tally.DataSet()
+    ds.add_credentials(api_key=token, host=api_url, ssl=True)
+    ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
+    result = ds.values(name="q1", format="dict")
+    assert list(result['values'].keys()) == ['1', '2', '3', '4', '5', '6', '7', '8', '9', '96', '98', '99']
 
 
 def test_variables(token, api_url):
@@ -118,7 +152,6 @@ def test_feature_select(token, api_url):
     categoricals = ds.variables(format='dict')['single']
     categoricals.remove('overall')
     result = ds.feature_select(x=categoricals, y="overall")
-    import pdb; pdb.set_trace()
     assert result['features'][0] == 'service'
 
 def test_derive(token, api_url):

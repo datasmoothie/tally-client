@@ -9,7 +9,10 @@ from .decorators import add_data, format_response, valid_params
 import tally
 from .tally import Tally
 
+# these are the keys returned in results that indicate what should happen with the local dataset
 VARIABLE_KEYS = ['meta', 'data']
+META_VARIABLE_KEYS = ['meta']
+NEW_DATASET_KEYS = ['dataset_meta', 'dataset_data']
 
 class DataSet:
     """
@@ -42,7 +45,12 @@ class DataSet:
         response = self.tally.post_request('tally', api_endpoint, payload, files)
         json_dict = json.loads(response.content)
         if self._has_keys(json_dict, VARIABLE_KEYS):
-            self.add_column_to_data(kwargs['name'], json_dict['data'], json_dict['meta'])
+            self.add_column_to_data(json_dict['meta']['name'], json_dict['data'], json_dict['meta'])
+        if self._has_keys(json_dict, META_VARIABLE_KEYS):
+            self.add_column_to_data(json_dict['meta']['name'], None, json_dict['meta'])
+        if self._has_keys(json_dict, NEW_DATASET_KEYS):
+            self.qp_data = json_dict['dataset_data']
+            self.qp_meta = json.dumps(json_dict['dataset_meta'])
         return json_dict
 
     def _has_keys(self, response, required_keys):
@@ -204,7 +212,6 @@ class DataSet:
             return json_dict
         else:
             if 'message' in json_dict.keys():
-                import pdb; pdb.set_trace()
                 raise ValueError(json_dict['message'])
             else:
                 raise ValueError("Crosstab returned no result.")
@@ -219,14 +226,15 @@ class DataSet:
         return json_dict
 
     def add_column_to_data(self, name, data, new_meta):
-        df = pd.read_csv(io.StringIO(self.qp_data))
-        new_series = pd.Series(data)
-        new_series.index = [int(i) for i in new_series.index]
-        df[name] = new_series
+        if data is not None:
+            df = pd.read_csv(io.StringIO(self.qp_data))
+            new_series = pd.Series(data)
+            new_series.index = [int(i) for i in new_series.index]
+            df[name] = new_series
+            self.qp_data = df.to_csv()
         meta = json.loads(self.qp_meta)
         meta['columns'][name] = new_meta
         self.qp_meta = json.dumps(meta)
-        self.qp_data = df.to_csv()
 
     @add_data
     def convert_spss_to_csv_json(self, data_params=None):
