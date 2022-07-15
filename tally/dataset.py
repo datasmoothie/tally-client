@@ -44,6 +44,7 @@ class DataSet:
         files, payload = self.prepare_post_params(data_params, kwargs)
         response = self.tally.post_request('tally', api_endpoint, payload, files)
         json_dict = json.loads(response.content)
+        json_dict = self._clean_error_response(json_dict)
         if self._has_keys(json_dict, VARIABLE_KEYS):
             self.add_column_to_data(json_dict['meta']['name'], json_dict['data'], json_dict['meta'])
         if self._has_keys(json_dict, META_VARIABLE_KEYS):
@@ -52,6 +53,14 @@ class DataSet:
             self.qp_data = json_dict['dataset_data']
             self.qp_meta = json.dumps(json_dict['dataset_meta'])
         return json_dict
+
+    def _clean_error_response(self, error_response):
+        if 'error' in error_response:
+            if 'payload' in error_response['error'] and error_response['error']['payload'] == {}:
+                del error_response['error']['payload'] 
+            if 'detailed_message' in error_response['error'] and error_response['error']['detailed_message'] == error_response['error']['message']:
+                del error_response['error']['detailed_message']
+        return error_response
 
     def _has_keys(self, response, required_keys):
         return all(elem in response.keys() for elem in required_keys)
@@ -218,14 +227,29 @@ class DataSet:
         files, payload = self.prepare_post_params(data_params, kwargs)
         response = self.tally.post_request('tally', 'weight', payload, files)
         json_dict = json.loads(response.content)
-        self.add_column_to_data(kwargs['variable'], json_dict['weight_data'], json_dict['weight_var_meta'])
+        if 'error' in json_dict:
+            json_dict = self._clean_error_response(json_dict)
+            return json_dict
+        self.merge_column_to_data(kwargs['variable'], json_dict['weight_data'], json_dict['weight_var_meta'], kwargs['unique_key'])
         return json_dict
+
+    def merge_column_to_data(self, name, data, new_meta, merge_on):
+        df = pd.read_csv(io.StringIO(self.qp_data))
+        new_series = pd.Series(data)
+        new_series.index = new_series.index.astype(df[merge_on].dtype)
+        new_series.name = name
+        df = pd.merge(df, new_series, left_on=merge_on, right_on=new_series.index)
+        self.qp_data = df.to_csv()
+        meta = json.loads(self.qp_meta)
+        meta['columns'][name] = new_meta
+        self.qp_meta = json.dumps(meta)
+
 
     def add_column_to_data(self, name, data, new_meta):
         if data is not None:
             df = pd.read_csv(io.StringIO(self.qp_data))
             new_series = pd.Series(data)
-            new_series.index = [int(i) for i in new_series.index]
+            new_series.index = new_series.index.astype(int)
             df[name] = new_series
             self.qp_data = df.to_csv()
         meta = json.loads(self.qp_meta)
