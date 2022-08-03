@@ -91,6 +91,16 @@ class DataSet:
         self.qp_data = result['csv']
         self.dataset_type = 'quantipy'
 
+    @add_data
+    def write_spss(self, file_path, data_params, **kwargs):
+        payload = {}
+        files, payload = self.prepare_post_params(data_params, {})
+        response = self.tally.post_request('tally', 'convert_data_to_sav', payload, files)
+        file = open(file_path, "wb")
+        file.write(response.content)
+        file.close()
+        return response
+
     def use_quantipy(self, meta_json, data_csv):
         with open(meta_json) as json_file:
             self.qp_meta = json.dumps(json.load(json_file))
@@ -193,7 +203,7 @@ class DataSet:
         payload['params'] = params
         return (files, payload)
 
-    @valid_params(['crosstabs', 'x', 'y', 'w', 'f', 'ci', 'stats', 'sig_level', 'decimals', 'base', 'painted', 'rebase', 'factors', 'format'])
+    @valid_params(['crosstabs', 'x', 'y', 'w', 'f', 'ci', 'stats', 'sig_level', 'decimals', 'base', 'painted', 'rebase', 'factors', 'format', 'add_format_column'])
     @add_data
     @format_response
     def crosstab(self, data_params=None, **kwargs):
