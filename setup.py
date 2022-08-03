@@ -8,7 +8,7 @@ setuptools.setup(
         'numpy',
         'pandas',
     ],
-    version="0.13",
+    version="0.14",
     license='MIT',
     include_package_data=True,
     url="https://github.com/datasmoothie/datasmoothie-tally-client",
