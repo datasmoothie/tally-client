@@ -40,7 +40,7 @@ class Sheet:
         self.options = {}
         self.table_options = {}
 
-    def add_data(self, stub, options={}, dataset=None):
+    def add_table(self, stub, options={}, dataset=None):
         if self.default_dataset and dataset is None:
             dataset = self.default_dataset
         crosstab = {**stub, **{'y':self.banner, 'add_format_column':True}}
@@ -52,17 +52,18 @@ class Sheet:
         df = self.apply_sheet_options(df, self.options)
         self.dataframes.append(df)
 
-    def apply_table_options(self, df, options):
-        if 'base' in options:
-            df = self.apply_base_options(df, options['base'])
-        return df
-
     def apply_sheet_options(self, df, options):
         if 'pull_base_up' in options:
             if options['pull_base_up'] == False:
                 df['FORMAT'] = df['FORMAT'].str.replace('base','counts')
         return df
 
+    def apply_table_options(self, df, options):
+        if 'base' in options:
+            df = self.apply_base_options(df, options['base'])
+        if 'base_label' in options:
+            df = df.rename(index={'Base':options['base_label']}, level=1)
+        return df
 
     def apply_base_options(self, df, option):
         if option == 'hide':

@@ -14,9 +14,9 @@ def test_add_table(token, api_url):
     sheet.options = {'pull_base_up': False}
 
     # base can be outside, above (default), hide
-    sheet.add_data(stub={'x':'q1', 'f':{'locality':[1]}, 'w':'weight_a', 'base':'both'})
-    sheet.add_data(stub={'x':'q3', 'f':{'locality':[1]}, 'w':'weight_a'}, options={'base':'hide'})
-    sheet.add_data(stub={'x':'q2b', 'f':{'locality':[1]}, 'w':'weight_a'}, dataset=ds)
+    sheet.add_table(stub={'x':'q1', 'f':{'locality':[2]}, 'w':'weight_a', 'base':'both'})
+    sheet.add_table(stub={'x':'q3', 'f':{'locality':[1]}, 'w':'weight_a'}, options={'base':'hide'})
+    sheet.add_table(stub={'x':'q2b', 'f':{'locality':[1]}, 'w':'weight_a'}, dataset=ds)
 
     print(sheet.combine_dataframes())
     build.save_excel('test.xlsx')
