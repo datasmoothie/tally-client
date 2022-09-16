@@ -14,24 +14,31 @@ class Build:
     def __init__(self, name=None, default_dataset=None):
         self.name = name
         self.default_dataset = default_dataset
-        self.tables = []
+        self.sheets = []
 
-    def add_table(self, name=None, banner='@'):
-        t = Table(banner=banner, default_dataset=self.default_dataset)
-        self.tables.append(t)
-        return t
+    def add_sheet(self, name=None, banner='@'):
+        sheet = Sheet(banner=banner, default_dataset=self.default_dataset)
+        self.sheets.append(sheet)
+        return sheet
 
     def save_excel(self, filename):
-        payload = json.loads(result.to_json(orient='split'))
-        payload['index_names'] = result.index.names.copy()
-        payload['column_names'] = result.columns.names.copy()
-        ds.build_excel_from_dataframes(filename='seperate_bases.xlsx', dataframes=[payload])
+        dataframes_payload = []
+        for sheet in self.sheets:
+            df = sheet.combine_dataframes()
+            payload = json.loads(df.to_json(orient='split'))
+            payload['index_names'] = df.index.names.copy()
+            payload['column_names'] = df.columns.names.copy()
+            dataframes_payload.append(payload)
+
+        self.default_dataset.build_excel_from_dataframes(filename=filename, dataframes=dataframes_payload)
     
-class Table:
+class Sheet:
     def __init__(self, banner='@', default_dataset=None):
         self.banner = banner
         self.dataframes = []
         self.default_dataset = default_dataset
+        self.options = {}
+        self.table_options = {}
 
     def add_data(self, stub, options={}, dataset=None):
         if self.default_dataset and dataset is None:
@@ -40,13 +47,22 @@ class Table:
         df = dataset.crosstab(
             crosstabs=[crosstab]
         )
-        df = self.apply_options(df, options)
+        options = {**self.table_options, **options}
+        df = self.apply_table_options(df, options)
+        df = self.apply_sheet_options(df, self.options)
         self.dataframes.append(df)
 
-    def apply_options(self, df, options):
+    def apply_table_options(self, df, options):
         if 'base' in options:
             df = self.apply_base_options(df, options['base'])
         return df
+
+    def apply_sheet_options(self, df, options):
+        if 'pull_base_up' in options:
+            if options['pull_base_up'] == False:
+                df['FORMAT'] = df['FORMAT'].str.replace('base','counts')
+        return df
+
 
     def apply_base_options(self, df, option):
         if option == 'hide':
