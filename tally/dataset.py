@@ -217,6 +217,7 @@ class DataSet:
             for ct in crosstabs:
                 ct['dataset'] = 'one'
             params = {"crosstabs":crosstabs}
+        print(params)
         files, payload = self.prepare_post_params(data_params, params)
         # the datasource will be a quantipy one, so we provide meta and data
         datasources={"one":{"meta":payload.pop('meta'), "data":payload.pop('data')}}

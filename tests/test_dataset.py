@@ -293,6 +293,23 @@ def test_spss_to_csv_json(token, api_url):
     result = ds.convert_spss_to_csv_json()
     assert 'csv' in result.keys()
 
+def test_crosstabs_with_format_column(token, api_url):
+    ds = tally.DataSet(api_key=token, host=api_url, ssl=True)
+    ds.add_credentials(api_key=token, host=api_url, ssl=True)
+
+    ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
+
+    ct1 = ds.crosstab(x="q1", y="gender", add_format_column=True)
+    print(ct1)
+
+    ct2 = ds.crosstab(
+        crosstabs= [{'x': 'q1', 'y': 'gender', 'add_format_column': True},
+                    {'x': 'q2', 'y': 'gender', 'add_format_column': True}]
+    )
+    print(ct2)
+
+
+
 def test_build_excel_from_dataframes(token, api_url):
     ds = tally.DataSet(api_key=token, host=api_url, ssl=True)
     ds.add_credentials(api_key=token, host=api_url, ssl=True)
@@ -322,7 +339,7 @@ def test_build_excel_from_dataframes(token, api_url):
 
     dataframes = [ct1['result'], ct2['result']]
     res = ds.build_excel_from_dataframes(filename='myfile.xlsx', dataframes=dataframes)
-    os.remove('myfile.xlsx')
+    #os.remove('myfile.xlsx')
 
 def test_build_excel(token, api_url):
     ds = tally.DataSet(api_key=token, host=api_url, ssl=True)
