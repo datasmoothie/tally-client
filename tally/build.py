@@ -90,11 +90,17 @@ class Sheet:
             type (string): can be base, count, percentage or any type returned by the Tally API
             format (dict): what gets merged with cell_format
         """
+        def apply_format(x, new_format):
+            old_format = json.loads(x)
+            resulting_format = old_format
+            resulting_format['cell_format'] = {**old_format['cell_format'], **new_format}
+            return json.dumps(resulting_format)
+
         new_format = format
         location = df[df['FORMAT'].str.contains(f'\"type\": \"{type}\"')].index
         if len(location) == 0:
             location = df[df['FORMAT'].str.contains(f'\"original_type\": \"{type}\"')].index
-        df.at[location, ('FORMAT',)] = df.loc[location]['FORMAT'].apply(lambda x, new_format: json.dumps({**json.loads(x), **new_format}), args=[new_format])
+        df.at[location, ('FORMAT',)] = df.loc[location]['FORMAT'].apply(apply_format, args=[new_format])
         return df
 
     def apply_base_options(self, df, option):
