@@ -10,7 +10,12 @@ def test_add_table(token, api_url):
     build = tally.Build(name='client A', default_dataset=ds)
 
     sheet = build.add_sheet(banner=['gender', 'locality'])
-    sheet.table_options = {'base': 'outside'}
+    sheet.table_options = {
+        'base': 'outside',
+        'format': {
+            'base':{"font_color":"#ff00ff", "bold":True}
+        }
+    }
     sheet.options = {'pull_base_up': False}
 
     # base can be outside, above (default), hide

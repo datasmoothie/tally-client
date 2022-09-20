@@ -48,14 +48,24 @@ class Sheet:
             crosstabs=[crosstab]
         )
         options = {**self.table_options, **options}
-        df = self.apply_table_options(df, options)
+        # the format column should always have a cell_options key
+        df['FORMAT'] = df['FORMAT'].apply(lambda x: json.dumps({**json.loads(x), **{'cell_format':{}}}))
         df = self.apply_sheet_options(df, self.options)
+        df = self.apply_table_options(df, options)
         self.dataframes.append(df)
 
     def apply_sheet_options(self, df, options):
         if 'pull_base_up' in options:
             if options['pull_base_up'] == False:
-                df['FORMAT'] = df['FORMAT'].str.replace('base','counts')
+                # we need to hide the 'question'
+                new_format = {
+                        "original_type":"base",
+                        "question":{ 
+                            "format": {"font_color":"#FFFFFF", "bg_color":"#ffffff"}
+                        }
+                }
+                df = self.set_format_for_type(df, 'base', new_format)
+                df['FORMAT'] = df['FORMAT'].str.replace('"type\": \"base\"','\"type\": \"counts\"')
         return df
 
     def apply_table_options(self, df, options):
@@ -63,6 +73,28 @@ class Sheet:
             df = self.apply_base_options(df, options['base'])
         if 'base_label' in options:
             df = df.rename(index={'Base':options['base_label']}, level=1)
+        if 'format' in options:
+            df = self.apply_table_format_options(df, options['format'])
+        return df
+
+    def apply_table_format_options(self, df, options):
+        if 'base' in options:
+            new_format = {0:{'format':options['base']}}
+            df = self.set_format_for_type(df, 'base', new_format)
+        return df
+
+    def set_format_for_type(self, df, type, format):
+        """ Method to add/alter format json per cell or per question type.
+
+        Parameters:
+            type (string): can be base, count, percentage or any type returned by the Tally API
+            format (dict): what gets merged with cell_format
+        """
+        new_format = format
+        location = df[df['FORMAT'].str.contains(f'\"type\": \"{type}\"')].index
+        if len(location) == 0:
+            location = df[df['FORMAT'].str.contains(f'\"original_type\": \"{type}\"')].index
+        df.at[location, ('FORMAT',)] = df.loc[location]['FORMAT'].apply(lambda x, new_format: json.dumps({**json.loads(x), **new_format}), args=[new_format])
         return df
 
     def apply_base_options(self, df, option):
