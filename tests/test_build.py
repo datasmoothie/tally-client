@@ -78,5 +78,4 @@ def test_add_many_sheets(token):
                                      'format':{'bg_color':'#F15A30'}
                             }}
                             )
-    import pdb; pdb.set_trace()
     build.save_excel('test.xlsx')
