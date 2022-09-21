@@ -45,11 +45,24 @@ class Sheet:
                 "base":{},
                 "percentage": {},
                 "counts": {},
-            }
+            },
+            "stub": {"ci":["c%"]}
         }
 
     def set_base_position(self, position):
         self.table_options['base'] = 'outside'
+
+    def set_show_table_base_column(self, xtotal):
+        self.table_options['stub']['xtotal'] = xtotal
+
+    def set_sig_test_levels(self,sig_test_level):
+        self.table_options['stub']['sig_level'] = [sig_test_level]
+
+    def set_default_ci(self, ci):
+        self.table_options['stub']['ci'] = ci
+
+    def set_default_stub(self, default_stub):
+        self.table_options['stub'] = {**self.table_options['stub'], **default_stub}
 
     def set_answer_format(self, answer_type, format):
         new_format = {0: {"format": format}}
@@ -69,7 +82,7 @@ class Sheet:
     def add_table(self, stub, options={}, dataset=None):
         if self.default_dataset and dataset is None:
             dataset = self.default_dataset
-        crosstab = {**stub, **{'y':self.banner, 'add_format_column':True}}
+        crosstab = {**{**self.table_options['stub'], **stub}, **{'y':self.banner, 'add_format_column':True}}
         df = dataset.crosstab(
             crosstabs=[crosstab]
         )
@@ -78,7 +91,6 @@ class Sheet:
         df['FORMAT'] = df['FORMAT'].apply(lambda x: json.dumps({**json.loads(x), **{'cell_format':{}}}))
         df = self.apply_sheet_options(df, self.options)
         df = self.apply_table_options(df, options)
-        print(df.index.names)
         self.dataframes.append(df)
 
     def apply_sheet_options(self, df, options):
@@ -102,6 +114,8 @@ class Sheet:
             df = df.rename(index={'Base':options['base_label']}, level=1)
         if 'format' in options:
             df = self.apply_table_format_options(df, options['format'])
+        if 'row_format' in options:
+            df = self.set_row_format(df, options['row_format'])
         return df
 
     def apply_table_format_options(self, df, options):
@@ -112,6 +126,19 @@ class Sheet:
             new_format = options['percentage']
             df = self.set_format_for_type(df, 'percentage', new_format)
         return df
+
+    def set_row_format(self, df, format):
+        def apply_row_format(x, new_format):
+            current_format = json.loads(x)
+            for i in list(range(df.shape[1])):
+                if str(i) in current_format['cell_format']:
+                    current_format['cell_format'][str(i)]['format'] = {**current_format['cell_format'][str(i)]['format'], **new_format['format']}
+                else:
+                    current_format['cell_format'][str(i)] = {'format':new_format['format']}
+            return json.dumps(current_format)
+        for row in format['rows']:
+            df.iat[row, -1] = apply_row_format(df.iloc[row, -1], format)
+        return df        
 
     def set_format_for_type(self, df, type, format):
         """ Method to add/alter format json per cell or per question type.
@@ -164,5 +191,4 @@ class Sheet:
         return df
 
     def combine_dataframes(self):
-        import pdb; pdb.set_trace()
         return pd.concat(self.dataframes)
