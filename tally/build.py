@@ -25,6 +25,7 @@ class Build:
         dataframes_payload = []
         for sheet in self.sheets:
             df = sheet.combine_dataframes()
+            df = df.replace({'null':0})
             payload = json.loads(df.to_json(orient='split'))
             payload['index_names'] = df.index.names.copy()
             payload['column_names'] = df.columns.names.copy()
@@ -38,7 +39,32 @@ class Sheet:
         self.dataframes = []
         self.default_dataset = default_dataset
         self.options = {}
-        self.table_options = {}
+        self.table_options = {
+            "base": {},
+            "format":{
+                "base":{},
+                "percentage": {},
+                "counts": {},
+            }
+        }
+
+    def set_base_position(self, position):
+        self.table_options['base'] = 'outside'
+
+    def set_answer_format(self, answer_type, format):
+        new_format = {0: {"format": format}}
+        old_format = self.table_options['format'][answer_type]
+        self.table_options['format'][answer_type] = {**old_format, **new_format}
+
+    def set_question_format(self, answer_type, format):
+        new_format = {"question": {"format": format}}
+        old_format = self.table_options['format'][answer_type]
+        self.table_options['format'][answer_type] = {**old_format, **new_format}
+
+    def set_column_format(self, answer_type, column_index, format):
+        new_format = {column_index: {"format":format}}
+        old_format = self.table_options['format'][answer_type]
+        self.table_options['format'][answer_type] = {**old_format, **new_format}
 
     def add_table(self, stub, options={}, dataset=None):
         if self.default_dataset and dataset is None:
@@ -52,6 +78,7 @@ class Sheet:
         df['FORMAT'] = df['FORMAT'].apply(lambda x: json.dumps({**json.loads(x), **{'cell_format':{}}}))
         df = self.apply_sheet_options(df, self.options)
         df = self.apply_table_options(df, options)
+        print(df.index.names)
         self.dataframes.append(df)
 
     def apply_sheet_options(self, df, options):
@@ -79,8 +106,11 @@ class Sheet:
 
     def apply_table_format_options(self, df, options):
         if 'base' in options:
-            new_format = {0:{'format':options['base']}}
+            new_format = options['base']
             df = self.set_format_for_type(df, 'base', new_format)
+        if 'percentage' in options:
+            new_format = options['percentage']
+            df = self.set_format_for_type(df, 'percentage', new_format)
         return df
 
     def set_format_for_type(self, df, type, format):
@@ -97,10 +127,17 @@ class Sheet:
             return json.dumps(resulting_format)
 
         new_format = format
+
+        # set index temporarily to (question, 0), (question, 1) ... to insure unique indices
+        question = df.index.levels[0].values[0]
+        old_index = df.index
+        df.index = pd.MultiIndex.from_tuples([(question, i) for i in range(df.shape[0])])
         location = df[df['FORMAT'].str.contains(f'\"type\": \"{type}\"')].index
         if len(location) == 0:
             location = df[df['FORMAT'].str.contains(f'\"original_type\": \"{type}\"')].index
         df.at[location, ('FORMAT',)] = df.loc[location]['FORMAT'].apply(apply_format, args=[new_format])
+        df.index = old_index
+        df.index = df.index.set_names(['Question', 'Values'])
         return df
 
     def apply_base_options(self, df, option):
@@ -127,4 +164,5 @@ class Sheet:
         return df
 
     def combine_dataframes(self):
+        import pdb; pdb.set_trace()
         return pd.concat(self.dataframes)
