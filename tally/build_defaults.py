@@ -29,21 +29,42 @@ build_default_formats = {
     "sub_column":{
         "border": None, #continous border
         "top": 0,
-        "bottom": 0
+        "bottom": 0,
+        "text_wrap": True
     },
     "super_column":{
         "bold": True,
+        "text_wrap": True
     },
     "sub_index":{
         "align": "right",
         "valign": "vcenter",
-        "right": 0
+        "right": 0,
+        "text_wrap": True
     },
     "super_index":{
         "bold": True,
         "align": "left",
+        "valign": "vcenter",
+        "text_wrap": True,
         "top": 0,
         "right": 0
     },
-    "row_colors": [ "#FFFFFF", "#FFFFFF" ]
+
+    "row_colors": [ "FFFFFF", "FFFFFF" ],
+
+    "offsets": {
+        "top": 6,
+        "left": 0,
+        "column": 1,  # This is how many cells we shift from the left
+        "row": 2  # This is how many rows we shift from the top,
+    },
+
+#    "set_rows":[
+#        {"row":6,
+#            "height":100,
+#            "format":{"border":1, "bold":True}}
+#    ],
+
+
 }
