@@ -1,5 +1,10 @@
 import pandas as pd
 import json
+from openpyxl import load_workbook
+from openpyxl.styles import Font
+
+from .build_defaults import build_default_formats
+
 
 class Build:
     """
@@ -11,9 +16,11 @@ class Build:
         Name for the dataset
     """
 
-    def __init__(self, name=None, default_dataset=None):
+    def __init__(self, name=None, subtitle=None, default_dataset=None, table_of_contents=False):
         self.name = name
+        self.subtitle = subtitle
         self.default_dataset = default_dataset
+        self.table_of_contents = table_of_contents
         self.sheets = []
 
     def add_sheet(self, name=None, banner='@'):
@@ -23,22 +30,51 @@ class Build:
 
     def save_excel(self, filename):
         dataframes_payload = []
+        formats = []
         for sheet in self.sheets:
             df = sheet.combine_dataframes()
             df = df.replace({'null':0})
             payload = json.loads(df.to_json(orient='split'))
             payload['index_names'] = df.index.names.copy()
             payload['column_names'] = df.columns.names.copy()
-            dataframes_payload.append(payload)
+            dataframes_payload.append(payload)        
+            formats.append(sheet.formats)
 
-        self.default_dataset.build_excel_from_dataframes(filename=filename, dataframes=dataframes_payload)
-    
+        self.default_dataset.build_excel_from_dataframes(filename=filename, dataframes=dataframes_payload, client_formats=formats)
+
+
+        # add table of contents
+        if len(self.sheets)>1:
+            offset_y = 10
+
+            wb = load_workbook(filename)
+            wb_sheet = wb.create_sheet('Contents', 0)
+            wb_sheet.cell(row=offset_y, column=2, value='Contents')
+            wb_sheet.column_dimensions['B'].width = 20
+            wb_sheet.column_dimensions['C'].width = 70
+
+            if self.name is not None:
+                title = wb_sheet.cell(3, 2, value=self.name)
+                title.font = Font(size="20")
+            if self.subtitle is not None:
+                subtitle = wb_sheet.cell(4, 2, value=self.subtitle)
+                subtitle.font = Font(size="14")
+            for index, sheet in enumerate(self.sheets):
+                wb_sheet.cell(row=index+1+offset_y, column=3, value=sheet.get_name())
+                link_value = '=HYPERLINK("#{}!A1", "Table {}")'.format(wb.sheetnames[index+1], index+1)
+                cell = wb_sheet.cell(row=index+1+offset_y, column=2, value=link_value)
+                cell.font = Font(color="2A64C5", underline="single")
+
+        wb.save(filename)
+
 class Sheet:
-    def __init__(self, banner='@', default_dataset=None):
+    def __init__(self, banner='@', default_dataset=None, name=None):
         self.banner = banner
         self.dataframes = []
         self.default_dataset = default_dataset
         self.options = {}
+        self.name = name
+        self.formats = build_default_formats
         self.table_options = {
             "base": {},
             "format":{
@@ -48,9 +84,26 @@ class Sheet:
             },
             "stub": {"ci":["c%"]}
         }
+        self.set_question_format('percentage', {'text_wrap':True})
+        self.set_question_format('counts', {'text_wrap':True})
+
+    def get_name(self):
+        if self.name is not None:
+            return self.name
+        else:
+            if len(self.dataframes)>0:
+                name = self.dataframes[0].index.get_level_values(0)[0]
+                if name == 'Base':                       
+                    return self.dataframes[0].index.get_level_values(0)[1]
+                else:
+                    return name
+            else:
+                return ""
 
     def set_base_position(self, position):
-        self.table_options['base'] = 'outside'
+        if position == 'outside':
+            self.set_question_format('base', {'font_color':'#ffffff', 'bg_color':'#ffffff', 'font_size':1})
+        self.table_options['base'] = position
 
     def set_show_table_base_column(self, xtotal):
         self.table_options['stub']['xtotal'] = xtotal
@@ -63,6 +116,28 @@ class Sheet:
 
     def set_default_stub(self, default_stub):
         self.table_options['stub'] = {**self.table_options['stub'], **default_stub}
+
+    def freeze_panes(self, row=10, column=1):
+        freeze = {
+            "row": row,
+            "col": column
+        }
+        self.formats['freeze_panes'] = freeze
+
+
+    def set_row_colors(self, colors):
+        """
+        Params:
+
+        colors - list of colours that will be alternated across (supply to colours to get stripes)
+        """
+        if type(colors) == list:
+            self.formats['row_colors'] = colors
+        else:
+            raise ValueError("The colours must be a list of one or more colours")
+
+    def set_format(self, name, new_format):
+        self.formats[name] = {**self.formats[name], **new_format}
 
     def set_answer_format(self, answer_type, format):
         new_format = {0: {"format": format}}

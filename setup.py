@@ -7,6 +7,7 @@ setuptools.setup(
     install_requires=[
         'numpy',
         'pandas',
+        'openpyxl'
     ],
     version="0.16",
     license='MIT',

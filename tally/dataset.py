@@ -287,7 +287,7 @@ class DataSet:
         file.close()
         return response
 
-    @valid_params(['filename', 'dataframes'])
+    @valid_params(['filename', 'dataframes', 'client_formats'])
     @add_data
     def build_excel_from_dataframes(self, data_params=None, filename=None, **kwargs):
         files, payload = self.prepare_post_params(data_params, kwargs)
