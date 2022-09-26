@@ -61,9 +61,11 @@ def test_add_simple_table(token):
     #sheet.set_question_format('percentage', {"bg_color":'fffff', 'text_wrap':True})
     #sheet.set_answer_format('base', {"font_color":"F15A30", "bold":True})
 
+    sheet.set_banner_border(True)
+
     sheet.set_show_table_base_column(True)
-    sheet.set_column_format('base', 1, {"bold":True})
-    sheet.set_column_format('percentage', 1, {"bold":True})
+    sheet.set_column_format_for_type('base', 1, {"bold":True})
+    sheet.set_column_format_for_type('percentage', 1, {"bold":True})
 
 
     sheet.set_base_position('outside')

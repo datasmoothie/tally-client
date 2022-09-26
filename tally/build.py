@@ -146,7 +146,9 @@ class Sheet:
                 "percentage": {},
                 "counts": {},
             },
-            "stub": {"ci":["c%"]}
+            "stub": {"ci":["c%"]},
+            "banner_border": True
+
         }
         self.set_question_format('percentage', {'text_wrap':True})
         self.set_question_format('counts', {'text_wrap':True})
@@ -189,6 +191,8 @@ class Sheet:
     def set_default_weight(self, weight):
         self.table_options['stub']['w'] = 'weight_a'
 
+    def set_banner_border(self, border):
+        self.table_options['banner_border'] = border
 
     def freeze_panes(self, row=10, column=1):
         freeze = {
@@ -222,7 +226,7 @@ class Sheet:
         old_format = self.table_options['format'][answer_type]
         self.table_options['format'][answer_type] = {**old_format, **new_format}
 
-    def set_column_format(self, answer_type, column_index, format):
+    def set_column_format_for_type(self, answer_type, column_index, format):
         new_format = {column_index: {"format":format}}
         old_format = self.table_options['format'][answer_type]
         self.table_options['format'][answer_type] = {**old_format, **new_format}
@@ -264,6 +268,8 @@ class Sheet:
             df = self.apply_table_format_options(df, options['format'])
         if 'row_format' in options:
             df = self.set_row_format(df, options['row_format'])
+        if 'banner_border' in options:
+            df = self.add_banner_border(df)
         return df
 
     def apply_table_format_options(self, df, options):
@@ -287,6 +293,22 @@ class Sheet:
         for row in format['rows']:
             df.iat[row, -1] = apply_row_format(df.iloc[row, -1], format)
         return df        
+
+    def set_column_format(self, df, col_index, format):
+        def apply_column_format(x, col_index, new_format):
+            current_format = json.loads(x)
+            for i in col_index:
+                if str(i) in current_format['cell_format']:
+                    current_format['cell_format'][str(i)]['format'] = {**current_format['cell_format'][str(i)]['format'], **new_format}
+                else:
+                    current_format['cell_format'][str(i)] = {'format':new_format}
+            return json.dumps(current_format)
+        # users can send int and lists
+        if type(col_index) != list:
+            col_index = [col_index]
+        for row in list(range(df.shape[0])):
+            df.iat[row, -1] = apply_column_format(df.iloc[row, -1], col_index, format)
+        return df     
 
     def set_format_for_type(self, df, type, format):
         """ Method to add/alter format json per cell or per question type.
@@ -315,6 +337,17 @@ class Sheet:
             df.iat[row, -1] = apply_format(df.iloc[row,-1], new_format)
         df.index = old_index
         df.index = df.index.set_names(['Question', 'Values'])
+        return df
+
+    def add_banner_border(self, df):
+        all_questions = df.columns.to_frame().index.to_series().reset_index()['Question']
+        # find location of first unique question (this is the far left column in each subframe)
+        all_questions = list(all_questions.drop_duplicates()[:-1].index)
+        # the question column is col 0 and we don't count that
+        if 0 in all_questions:
+            all_questions.remove(0)
+        all_questions = [i+1 for i in all_questions]
+        self.set_column_format(df, all_questions, {'left':1})
         return df
 
     def apply_base_options(self, df, option):
