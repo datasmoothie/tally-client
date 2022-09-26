@@ -310,7 +310,9 @@ class Sheet:
         location = df[df['FORMAT'].str.contains(f'\"type\": \"{type}\"')].index
         if len(location) == 0:
             location = df[df['FORMAT'].str.contains(f'\"original_type\": \"{type}\"')].index
-        df.at[location, ('FORMAT',)] = df.loc[location]['FORMAT'].apply(apply_format, args=[new_format])
+        loc_row_index = list(location.get_level_values(1))
+        for row in loc_row_index:
+            df.iat[row, -1] = apply_format(df.iloc[row,-1], new_format)
         df.index = old_index
         df.index = df.index.set_names(['Question', 'Values'])
         return df

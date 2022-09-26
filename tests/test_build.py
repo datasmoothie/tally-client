@@ -30,6 +30,23 @@ def test_add_table(token, api_url):
 
     build.save_excel('test.xlsx')
 
+def test_default_options(token):
+    ds = tally.DataSet(api_key=token)
+    ds.use_spss('tests/fixtures/Example Data (A).sav')
+
+    build = tally.Build(name='Client A', subtitle="Datasmoothie", default_dataset=ds)
+
+    all_variables = ds.variables()
+    banner_vars = ['gender', 'locality']
+    stub_vars = [i for i in all_variables['single'] if i not in banner_vars]
+    stub_vars = stub_vars + list(all_variables['delimited set'])
+
+    sheet = build.add_sheet(banner=['gender', 'locality'])
+
+    sheet.add_table(stub={'x':stub_vars[0]})
+
+    build.sheets[0].add_table(stub={'x':'ethnicity'})
+
 def test_add_simple_table(token):
     ds = tally.DataSet(api_key=token)
     ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
