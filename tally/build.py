@@ -26,7 +26,7 @@ class Build:
         self.sheets = []
         self.logo_path = None
         self.index_options = {
-            'header_color': 'efefef',
+            'header_color': 'ffffff',
             'body_color': 'ffffff',
             'link_color': '2A64C5'
         }
@@ -243,6 +243,7 @@ class Sheet:
         df['FORMAT'] = df['FORMAT'].apply(lambda x: json.dumps({**json.loads(x), **{'cell_format':{}}}))
         df = self.apply_sheet_options(df, self.options)
         df = self.apply_table_options(df, options)
+        df = self._append_row_to_dataframe(df)
         self.dataframes.append(df)
 
     def apply_sheet_options(self, df, options):
@@ -307,7 +308,8 @@ class Sheet:
         if type(col_index) != list:
             col_index = [col_index]
         for row in list(range(df.shape[0])):
-            df.iat[row, -1] = apply_column_format(df.iloc[row, -1], col_index, format)
+            if 'spacer' not in json.loads(df.iloc[row, -1]):
+                df.iat[row, -1] = apply_column_format(df.iloc[row, -1], col_index, format)
         return df     
 
     def set_format_for_type(self, df, type, format):
@@ -369,8 +371,17 @@ class Sheet:
                 df = df.drop('Unweighted base', level=1)
             if 'Base' in df.index.get_level_values(1):            
                 df = df.drop('Base', level=1)
+            bases = self._append_row_to_dataframe(bases)
             df = pd.concat([bases,df])
 
+        return df
+
+    def _append_row_to_dataframe(self, df):
+        last_question = df.index.get_level_values(0)[-1]
+        mi = pd.MultiIndex.from_tuples([(last_question, ' ')])
+        empty_row_df = pd.DataFrame(columns=df.columns, data=[['']*df.shape[1]], index=mi)
+        empty_row_df.iloc[-1, -1] = '{"type":"counts", "spacer":true, "cell_format":{}}'
+        df = pd.concat([df, empty_row_df])
         return df
 
     def combine_dataframes(self):
