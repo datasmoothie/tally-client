@@ -25,6 +25,8 @@ class Build:
         self.table_of_contents = table_of_contents
         self.sheets = []
         self.logo_path = None
+        self.font_name = None
+        self.font_size = None
         self.index_options = {
             'header_color': 'ffffff',
             'body_color': 'ffffff',
@@ -61,6 +63,8 @@ class Build:
         try:
             wb = load_workbook(filename)
 
+            default_font = Font(name=self.font_name, size=self.font_size)
+            
             # add table of contents
             if len(self.sheets)>1:
                 offset_y = 12
@@ -92,17 +96,23 @@ class Build:
                         color_cell = wb_sheet.cell(row_range, col_range)
                         color_cell.fill = PatternFill(start_color=self.index_options['header_color'], end_color=self.index_options['header_color'], fill_type="solid")
 
+                # self.sheets tells us how many entries are in the index
                 for row_range in range(10, len(self.sheets)+100):
                     for col_range in range(1, 30):
                         color_cell = wb_sheet.cell(row_range, col_range)
                         color_cell.fill = PatternFill(start_color=self.index_options['body_color'], end_color=self.index_options['body_color'], fill_type="solid")
+                        color_cell.font = default_font
 
                 for index, sh in enumerate(self.sheets):
                     top_offset = sh.formats['offsets']['top']
                     wb_sheet = wb.worksheets[index+1]
                     wb_sheet.row_dimensions[top_offset+1].height=30
                     wb_sheet.row_dimensions[top_offset+2].height=70
-                    
+
+                    for row in wb_sheet.rows:
+                        for cell in row:
+                            cell.font = default_font                
+
                     for col_range in range(1,30):
                         wb_sheet.cell(top_offset+1,col_range).alignment = Alignment(wrap_text=True, vertical='center', horizontal='center')
                         wb_sheet.cell(top_offset+2,col_range).alignment = Alignment(wrap_text=True, vertical='center', horizontal='center')
@@ -127,8 +137,13 @@ class Build:
                     wb_sheet.cell(top_offset+1,col_range).alignment = Alignment(wrap_text=True, vertical='center', horizontal='center')
                     wb_sheet.cell(top_offset+2,col_range).alignment = Alignment(wrap_text=True, vertical='center', horizontal='center')
 
+                for row in wb_sheet.rows:
+                    for cell in row.cells:
+                        cell.font = default_font    
+
             wb.save(filename)
-        except:
+        except Exception as e:
+            print('Warning: Could not apply Excel styles. Make sure all colors are defined as ffffff rather than #ffffff.')
             pass
             
 class Sheet:

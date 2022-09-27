@@ -14,8 +14,8 @@ def test_add_table(token, api_url):
     sheet.set_base_position('outside')
     sheet.set_answer_format('base', {"font_color":"#F15A30", "bold":True})
     sheet.set_question_format('percentage', {"bold":True})
-    sheet.set_column_format('base', 1, {"bold":True})
-    sheet.set_column_format('percentage', 1, {"bold":True})
+    sheet.set_column_format_for_type('base', 1, {"bold":True})
+    sheet.set_column_format_for_type('percentage', 1, {"bold":True})
 
     sheet.options = {'pull_base_up': False}
     #sheet.options = {'sig_test_level': 0.05}
@@ -86,6 +86,7 @@ def test_global_options(token):
 
     build.add_logo('tests/fixtures/datasmoothie-logo.png')
     build.set_index_option('link_color', '57215B')
+    build.font_size = '12'
 
     sheet = build.add_sheet(banner=['gender', 'locality'])
     sheet2 = build.add_sheet(banner=['gender', 'locality'])
