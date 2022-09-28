@@ -87,13 +87,14 @@ def test_global_options(token):
     build.add_logo('tests/fixtures/datasmoothie-logo.png')
     build.set_index_option('link_color', '57215B')
     build.font_size = '12'
+    build.font_name = 'Arial'
 
     sheet = build.add_sheet(banner=['gender', 'locality'])
     sheet2 = build.add_sheet(banner=['gender', 'locality'])
 
     [i.set_base_position('outside') for i in build.sheets]
     [i.freeze_panes(9,1) for i in build.sheets]
-    [i.set_format('base', {'border': '1'}) for i in build.sheets]
+    [i.set_format('base', {'bold':True, 'border': 1, 'border_color':'efefef'}) for i in build.sheets]
     [i.set_default_weight('weight_a') for i in build.sheets]
     [i.set_default_show_bases('both') for i in build.sheets]
 

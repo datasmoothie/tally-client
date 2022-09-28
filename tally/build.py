@@ -101,7 +101,7 @@ class Build:
                     for col_range in range(1, 30):
                         color_cell = wb_sheet.cell(row_range, col_range)
                         color_cell.fill = PatternFill(start_color=self.index_options['body_color'], end_color=self.index_options['body_color'], fill_type="solid")
-                        color_cell.font = default_font
+                        #color_cell.font = default_font
 
                 for index, sh in enumerate(self.sheets):
                     top_offset = sh.formats['offsets']['top']
@@ -111,7 +111,8 @@ class Build:
 
                     for row in wb_sheet.rows:
                         for cell in row:
-                            cell.font = default_font                
+                            pass
+                            #cell.font = default_font                
 
                     for col_range in range(1,30):
                         wb_sheet.cell(top_offset+1,col_range).alignment = Alignment(wrap_text=True, vertical='center', horizontal='center')
@@ -139,11 +140,13 @@ class Build:
 
                 for row in wb_sheet.rows:
                     for cell in row.cells:
-                        cell.font = default_font    
+                        pass
+                        #cell.font = default_font    
 
             wb.save(filename)
         except Exception as e:
-            print('Warning: Could not apply Excel styles. Make sure all colors are defined as ffffff rather than #ffffff.')
+            print('Warning: Something went wrong in prettifying the Excel. Make sure all colors are defined as ffffff rather than #ffffff.')
+            print(e)
             pass
             
 class Sheet:
