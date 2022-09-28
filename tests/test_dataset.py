@@ -130,6 +130,14 @@ def test_meta(token, api_url):
     result = ds.meta(variable='q1')
     assert result.shape == (12, 3)
 
+def test_get_variable_text(token, api_url):
+    ds = tally.DataSet()
+    ds.add_credentials(api_key=token, host=api_url, ssl=True)
+    ds.use_spss('tests/fixtures/Example Data (A).sav')
+    result = ds.get_variable_text(name='gender')
+    assert result == 'What is your gender?'
+
+
 @pytest.mark.skip(reason="Change this to reflect error message from API")
 def test_invalid_params(token, api_url):
     ds = tally.DataSet()

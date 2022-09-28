@@ -28,6 +28,8 @@ def format_response(func):
     def wrapper(*aargs, **kkwargs):
         format = kkwargs.pop('format', 'dataframe')
         result = func(*aargs, **kkwargs)
+        if 'text' in result:
+            return result['text']
         if format == 'dict':
             result = result
         elif format == 'json':
