@@ -56,6 +56,65 @@ ds.use_csv(path_to_csv_file)
 ds.use_quantipy(path_to_json_metadata, path_to_csv_data)
 ```
 
+# Building Excel tables
+
+The Tally Python client has a convenience class called Build which wraps common Tally API tasks into an interface for easily building Excel Tables for surveys and market research.
+
+## Get started with Build
+
+Every build has a default dataset it uses to add tables. Users can also pass other datasets to the build process, for example when dealing with multple waves.
+
+```
+ds = tally.DataSet(api_key=your_token)
+ds.use_spss('Example Data (A).sav')
+
+build = tally.Build(name='client A', default_dataset=ds)
+```
+
+## Setting options for the build (layout, visuals, etc.)
+A Build supports setting multiple options both on a sheet-by-sheet basis and on the build as a whole, which will apply to every sheet.
+
+```
+build.options.freeze_panes(9,1)
+build.options.set_base_position('outside')
+build.options.set_answer_format(
+    'base', 
+    {
+        "font_color":"F15A30", 
+        "bold":True,
+        'text_wrap': True}
+    )
+build.options.set_question_format('percentage', {"bold":True})
+build.options.set_format('base', {"bold":True})
+
+sheet.options.set_format('base', {"bold": False})
+```
+
+## Adding tables to sheets of a build
+
+```
+sheet = build.add_sheet(banner=['gender', 'locality'])
+sheet2 = build.add_sheet(banner=['gender', 'ethnicity'])
+
+# set option that only applies to this sheet, not all of them
+sheet2.options.set_format('stats', {"font_color":"98B4DF"})
+sheet2.options.set_stats(stats=['mean', 'stddev'])
+
+# add tables to the build, each sheet will have two questions
+sheet.add_table(stub={'x':'q1'})
+sheet.add_table(stub={'x':'q2b'})
+
+sheet2.add_table(stub={'x':'q1'})
+sheet2.add_table(stub={'x':'q2b'})
+```
+## Saving to Excel
+
+Once the build is ready, saving the Excel output is simple.
+```
+build.save_excel('test_build_options.xlsx')
+```
+
+When the build is first created, the user can also decide on whether to auto-generate a table of contents or add a logo to the file.
 
 # Developing the Tally Python client
 
