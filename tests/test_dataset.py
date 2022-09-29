@@ -137,6 +137,16 @@ def test_get_variable_text(token, api_url):
     result = ds.get_variable_text(name='gender')
     assert result == 'What is your gender?'
 
+def test_expand_with_data(token, api_url):
+    ds = tally.DataSet()
+    ds.add_credentials(api_key=token, host=api_url, ssl=True)
+    ds.use_spss('tests/fixtures/Example Data (A).sav')
+    ds.extend_values(
+        name='locality', 
+        ext_values=[[6, "Urban/CBD"], [7, "Rural/Remote"]],
+        add_data={6: {"locality": [1,2]}, 7: {"locality": [4,5]}}
+    )
+
 
 @pytest.mark.skip(reason="Change this to reflect error message from API")
 def test_invalid_params(token, api_url):

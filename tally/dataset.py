@@ -101,6 +101,14 @@ class DataSet:
         file.close()
         return response
 
+    def write_quantipy(self, file_path_json, file_path_csv):
+        json_file = open(file_path_json, "w")
+        n = json_file.write(self.qp_meta)
+        json_file.close()
+        csv_file = open(file_path_csv, "w")
+        n = csv_file.write(self.qp_data)
+        csv_file.close()
+
     def use_quantipy(self, meta_json, data_csv):
         with open(meta_json) as json_file:
             self.qp_meta = json.dumps(json.load(json_file))
