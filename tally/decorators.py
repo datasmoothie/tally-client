@@ -42,7 +42,7 @@ def format_response(func):
             else:
                 if 'params' in result:
                     del result['params']
-                result = pd.DataFrame({k:pd.Series(v) for k,v in result.items()})
+                result = pd.DataFrame({k:pd.Series(v, dtype='float64') for k,v in result.items()})
         else:
             pass # Do nothint, internally use json
         return result
