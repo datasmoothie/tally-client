@@ -23,7 +23,7 @@ class Sheet:
         else:
             if len(self.dataframes)>0:
                 name = self.dataframes[0].index.get_level_values(0)[0]
-                if name == 'Base':
+                if name == 'Base' or name == 'Unweighted base':
                     return self.dataframes[0][~self.dataframes[0]['FORMAT'].str.contains('base')].index[0][0]                       
                 else:
                     return name
@@ -128,7 +128,7 @@ class Sheet:
     def add_banner_border(self, df):
         all_questions = df.columns.to_frame().index.to_series().reset_index()['Question']
         # find location of first unique question (this is the far left column in each subframe)
-        all_questions = list(all_questions.drop_duplicates()[:-1].index)
+        all_questions = list(all_questions.drop_duplicates().iloc[:-1].index)
         # the question column is col 0 and we don't count that
         if 0 in all_questions:
             all_questions.remove(0)
