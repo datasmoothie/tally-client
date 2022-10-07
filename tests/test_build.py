@@ -162,7 +162,7 @@ def test_add_many_sheets(token):
 
     for question in questions:
         sheet = build.add_sheet(banner=['gender', 'locality'])
-        #sheet.options.set_sig_test_levels(0.05)
+        sheet.options.set_sig_test_levels([0.05])
         for store in stores:
             value = f"q14r0{question}c0{store}"
             sheet.add_table(stub={'x' : value} ,
