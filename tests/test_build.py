@@ -30,6 +30,48 @@ def test_add_table(token, api_url):
     wb = openpyxl.load_workbook('test.xlsx')
     os.remove('test.xlsx')
 
+def test_add_table_bug(token):
+    ds = tally.DataSet(api_key=token)
+    ds.use_spss('tests/fixtures/Example Data (A).sav')
+
+    build = tally.Build(name='client A', default_dataset=ds, table_of_contents=True)
+    #build.logo = 'drive/MyDrive/projects/GWI_Tally/specs/gwi-logo.png'
+
+    build.options.set_default_weight('weight_a')
+    build.options.set_default_ci(['c%', 'counts'])
+    build.options.set_stats(['mean', 'stddev'])
+
+    sheet = build.add_sheet(banner=['gender'])
+
+    sheet.options.set_base_position('outside')
+    # sheet.options.set_answer_format('base', {"font_color":"F15A30", "bold":True,'text_wrap': True})
+    # sheet.options.set_question_format('percentage', {"bold":True})
+    # sheet.set_format('base', {"bold":True})
+    # sheet.options.set_format('base', {'bold':True, 'border': 1, 'border_color':'efefef'})
+    # sheet.set_format('percentage', {"bold":True})
+
+    #sheet.options = {'pull_base_up': False}
+    sheet.add_table(stub={'x' : "q1", 'base':'both'})
+    sheet.add_table(stub={'x':'q2b', 'xtotal':True})
+
+    sheet2 = build.add_sheet(banner=['gender'])
+
+#    sheet2.options.set_base_position('outside')
+#    sheet2.options.set_answer_format('base', {"font_color":"F15A30", "bold":True,'text_wrap': True})
+#    sheet2.options.set_question_format('percentage', {"bold":True})
+    # sheet.set_format('base', {"bold":True})
+#    sheet2.options.set_format('base', {'bold':True, 'border': 1, 'border_color':'efefef'})
+    # sheet.set_format('percentage', {"bold":True})
+
+    #sheet.options = {'pull_base_up': False}
+    sheet2.add_table(stub={'x' : "q1", 'ci':['c%','counts'], 'base':'both'})
+    sheet2.add_table(stub={'x':'q2b', 'ci':['c%', 'counts'], 'xtotal':True, 'stats':['mean', 'stddev']}, dataset=ds)
+
+
+    build.save_excel('test_simple_table_bug.xlsx')
+    wb = openpyxl.load_workbook('test_simple_table_bug.xlsx')
+#    os.remove('test_simple_table_bug.xlsx')
+
 
 def test_default_options(token):
     ds = tally.DataSet(api_key=token)

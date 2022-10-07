@@ -273,20 +273,15 @@ def test_parquet_crosstab(token, api_url):
     assert isinstance(result, pd.DataFrame)
 
     ds.derive(
-            name="banner_var_10", 
-            label="Total",
-            cond_maps=[(1, 'Total', {'$has_any': {'q2': [1, 2]}})],
+            name="banner_var_4", 
+            label="Location",
+            cond_maps=[(1, 'Central Scotland', {'q4': [1]})],
             qtype="single"
     )
 
-    ds.extend_values(
-        name="q4",
-        ext_values=[[15, 'England']],
-        add_data={15: {'q4':[2, 3, 4, 5, 6, 7, 8, 11, 12, 14]}}
-    )
+    ds.extend_values(name="banner_var_4",ext_values=[[2, 'East England']], add_data={2: {'q4':[2]}})
 
-    import pdb; pdb.set_trace()
-
+ 
 
 def test_csv_crosstab(token, api_url):
     ds = tally.DataSet()

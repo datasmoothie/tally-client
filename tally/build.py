@@ -143,23 +143,19 @@ class Build:
                     img = Image(self.logo_path)
                     wb_sheet.add_image(img, 'B2')
 
-                for row_range in range(1, self.sheets[0].formats['offsets']['top']+1):
+                for row_range in range(1, self.sheets[0].options.formats['offsets']['top']+1):
                     for col_range in range(1, 30):
                         color_cell = wb_sheet.cell(row_range, col_range)
                         color_cell.fill = PatternFill(start_color=self.index_options['header_color'], end_color=self.index_options['body_color'], fill_type="solid")
 
-                top_offset = self.sheets[0].formats['offsets']['top']
+                top_offset = self.sheets[0].options.formats['offsets']['top']
                 wb_sheet.row_dimensions[top_offset+1].height=30
                 wb_sheet.row_dimensions[top_offset+2].height=70
                 
                 for col_range in range(1,30):
                     wb_sheet.cell(top_offset+1,col_range).alignment = Alignment(wrap_text=True, vertical='center', horizontal='center')
                     wb_sheet.cell(top_offset+2,col_range).alignment = Alignment(wrap_text=True, vertical='center', horizontal='center')
-
-                for row in wb_sheet.rows:
-                    for cell in row.cells:
-                        pass
-                        #cell.font = default_font    
+ 
 
             wb.save(filename)
         except Exception as e:
