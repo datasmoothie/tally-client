@@ -25,7 +25,7 @@ class Build:
         self.default_dataset = default_dataset
         self.table_of_contents = table_of_contents
         self.sheets = []
-        self.logo_path = None
+        self.logo = None
         self.font_name = None
         self.font_size = None
         self.index_options = {
@@ -57,7 +57,7 @@ class Build:
         return sheet
 
     def add_logo(self, path):
-        self.logo_path = path
+        self.logo = path
 
     def set_index_option(self, name, option):
         self.index_options[name] = option
@@ -105,8 +105,8 @@ class Build:
                     cell = wb_sheet.cell(row=index+1+offset_y, column=2, value=link_value)
                     cell.font = Font(color="2A64C5", underline="single")
 
-                if self.logo_path is not None:
-                    img = Image(self.logo_path)
+                if self.logo is not None:
+                    img = Image(self.logo)
                     wb_sheet.add_image(img, 'B2')
 
                 for row_range in range(1, 10):
@@ -139,8 +139,8 @@ class Build:
 
             else:
                 wb_sheet = wb.worksheets[0]
-                if self.logo_path is not None:                
-                    img = Image(self.logo_path)
+                if self.logo is not None:                
+                    img = Image(self.logo)
                     wb_sheet.add_image(img, 'B2')
 
                 for row_range in range(1, self.sheets[0].options.formats['offsets']['top']+1):
