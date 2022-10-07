@@ -19,13 +19,13 @@ class Build:
         Name for the dataset
     """
 
-    def __init__(self, name=None, subtitle=None, default_dataset=None, table_of_contents=False):
+    def __init__(self, name=None, subtitle=None, default_dataset=None, table_of_contents=False, logo=None):
         self.name = name
         self.subtitle = subtitle
         self.default_dataset = default_dataset
         self.table_of_contents = table_of_contents
         self.sheets = []
-        self.logo = None
+        self.logo = logo
         self.font_name = None
         self.font_size = None
         self.index_options = {
