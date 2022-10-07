@@ -14,23 +14,28 @@ class Options:
         self.table_options['stub']['xtotal'] = xtotal
 
     def set_sig_test_levels(self,sig_test_level):
-        self.table_options['stub']['sig_level'] = [sig_test_level]
+        if type(sig_test_level) == list:
+            self.table_options['stub']['sig_level'] = sig_test_level
+        else:
+            self.table_options['stub']['sig_level'] = [sig_test_level]
+
+
 
     def set_stats(self, stats=['mean']):
         self.table_options['stub']['stats'] = stats
 
-    def set_default_ci(self, ci):
+    def set_ci(self, ci):
         self.table_options['stub']['ci'] = ci
 
-    def set_default_show_bases(self, bases):
+    def set_show_bases(self, bases):
         if bases not in ['auto', 'weighted', 'unweighted', 'both']:
             raise ValueError('Bases to show must be both, auto, weighted or unweighted')
         self.table_options['stub']['base'] = bases
 
-    def set_default_stub(self, default_stub):
+    def set_stub(self, default_stub):
         self.table_options['stub'] = {**self.table_options['stub'], **default_stub}
 
-    def set_default_weight(self, weight):
+    def set_weight(self, weight):
         self.table_options['stub']['w'] = 'weight_a'
 
     def set_banner_border(self, border):
