@@ -24,7 +24,8 @@ class Sheet:
             if len(self.dataframes)>0:
                 name = self.dataframes[0].index.get_level_values(0)[0]
                 if name == 'Base' or name == 'Unweighted base':
-                    return self.dataframes[0][~self.dataframes[0]['FORMAT'].str.contains('base')].index[0][0]                       
+                    #check the format column if this is either a base or space row
+                    return self.dataframes[0][~self.dataframes[0]['FORMAT'].str.contains('base|spacer', regex=True, case=False)].index[0][0]                       
                 else:
                     return name
             else:
