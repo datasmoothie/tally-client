@@ -60,6 +60,8 @@ build_default_formats = {
         "row": 2  # This is how many rows we shift from the top,
     },
 
+    "set_page_setup": {}
+
 #    "set_rows":[
 #        {"row":6,
 #            "height":100,

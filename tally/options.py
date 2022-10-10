@@ -19,7 +19,13 @@ class Options:
         else:
             self.table_options['stub']['sig_level'] = [sig_test_level]
 
-
+    def set_hide_gridlines(self, hide):
+        """
+        0 Don’t hide gridlines.
+        1 Hide printed gridlines only.
+        2 Hide screen and printed gridlines.
+        """
+        self._set_page_setup('hide_gridlines', {"option":hide})
 
     def set_stats(self, stats=['mean']):
         self.table_options['stub']['stats'] = stats
@@ -77,3 +83,6 @@ class Options:
         new_format = {column_index: {"format":format}}
         old_format = self.table_options['format'][answer_type]
         self.table_options['format'][answer_type] = {**old_format, **new_format}
+
+    def _set_page_setup(self, key, value):
+        self.formats['set_page_setup'][key] = value
