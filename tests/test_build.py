@@ -104,6 +104,30 @@ def test_add_simple_table(token):
     wb = openpyxl.load_workbook('test_simple_table.xlsx')
     os.remove('test_simple_table.xlsx')
 
+def test_build_after_sheet_options(token):
+    ds = tally.DataSet(api_key=token)
+    ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
+    build = tally.Build(name='client A', default_dataset=ds)
+
+    build.add_logo('tests/fixtures/datasmoothie-logo.png')
+    build.options.freeze_panes(9,1)
+    build.options.set_base_position('outside')
+    build.options.set_answer_format('base', {"font_color":"F15A30", "bold":True,'text_wrap': True})
+
+    sheet = build.add_sheet(banner=['gender', 'locality'])
+    sheet2 = build.add_sheet(banner=['gender', 'ethnicity'])
+    sheet2.options.set_format('stats', {"font_color":"98B4DF"})
+    sheet2.options.set_stats(stats=['mean', 'stddev'])
+
+    sheet.add_table(stub={"x":'q1'})
+    sheet2.add_table(stub={"x":'q2b'})
+
+    build.options.set_format('base', {"bold":True})
+    build.options.set_question_format('percentage', {"bold":True})
+
+    build.save_excel('test_build_before_sheet.xlsx')
+    wb = openpyxl.load_workbook('test_build_before_sheet.xlsx')
+    os.remove('test_build_before_sheet.xlsx')
 
 def test_global_options(token):
     ds = tally.DataSet(api_key=token)

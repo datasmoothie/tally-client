@@ -4,18 +4,12 @@ import pandas as pd
 import copy
 
 class Sheet:
-    def __init__(self, banner='@', default_dataset=None, name=None, table_options=None, formats=None):
+    def __init__(self, banner='@', default_dataset=None, name=None):
         self.banner = banner
-        self.dataframes = []
+        self.tables = []
         self.default_dataset = default_dataset
         self.name = name
-        self.options = Options(
-            table_options = copy.deepcopy(table_options),
-            formats = copy.deepcopy(formats)
-        )
-
-        self.options.set_question_format('percentage', {'text_wrap':True})
-        self.options.set_question_format('counts', {'text_wrap':True})
+        self.options = Options()
 
     def get_name(self):
         if self.name is not None:
@@ -38,12 +32,18 @@ class Sheet:
         df = dataset.crosstab(
             crosstabs=[crosstab]
         )
-        options = {**self.options.table_options, **options}
-        # the format column should always have a cell_options key
-        df['FORMAT'] = df['FORMAT'].apply(lambda x: json.dumps({**json.loads(x), **{'cell_format':{}}}))
-        df = self.apply_table_options(df, options)
-        df = self._append_row_to_dataframe(df)
-        self.dataframes.append(df)
+        self.tables.append({"dataframe":df, "options":options})
+
+    def paint_dataframes(self):
+        for table in self.tables:
+            options = {**self.options.table_options, **table['options']}
+            df = table['dataframe']
+            # the format column should always have a cell_options key
+            df['FORMAT'] = df['FORMAT'].apply(lambda x: json.dumps({**json.loads(x), **{'cell_format':{}}}))
+            df = self.apply_table_options(df, options)
+            df = self._append_row_to_dataframe(df)
+            table['dataframe'] = df
+
 
     def apply_table_options(self, df, options):
         if 'base' in options:
@@ -169,5 +169,13 @@ class Sheet:
         df = pd.concat([df, empty_row_df])
         return df
 
-    def combine_dataframes(self):
-        return pd.concat(self.dataframes)
+    def build_dataframes(self, build_options=None):
+        if len(self.tables) == 0:
+            raise Exception("Sheet {} has no tables".format(self.name))
+        self.options.merge(build_options)
+        self.options.set_question_format('percentage', {'text_wrap':True})
+        self.options.set_question_format('counts', {'text_wrap':True})
+
+        self.paint_dataframes()
+        dataframes = [i['dataframe'] for i in self.tables]
+        return pd.concat(dataframes)

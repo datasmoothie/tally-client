@@ -1,8 +1,19 @@
 class Options:
 
-    def __init__(self, table_options, formats):
-        pass
-        self.table_options = table_options
+    def __init__(self, table_options=None, formats={}):
+        if table_options is None:
+            self.table_options = {
+                "format":{
+                    "base":{},
+                    "percentage":{},
+                    "counts":{}
+                },
+                "stub": {"ci":["c%"]},
+                "banner_border": True
+            }
+        else:
+            self.table_options = table_options
+
         self.formats = formats
 
     def set_base_position(self, position):
@@ -67,7 +78,10 @@ class Options:
             raise ValueError("The colours must be a list of one or more colours")
 
     def set_format(self, name, new_format):
-        self.formats[name] = {**self.formats[name], **new_format}
+        if name in self.formats:
+            self.formats[name] = {**self.formats[name], **new_format}
+        else:
+            self.formats[name] = new_format
 
     def set_answer_format(self, answer_type, format):
         new_format = {0: {"format": format}}
@@ -86,3 +100,25 @@ class Options:
 
     def _set_page_setup(self, key, value):
         self.formats['set_page_setup'][key] = value
+
+    def merge(self,  options):
+        """ Merge two Option objects together, this one overriding the incoming one
+        """
+        self.table_options = self.merge_dict(self.table_options, options.table_options)
+        self.formats = self.merge_dict(self.formats, options.formats)
+
+    def merge_dict(self, source, destination):
+        """
+        >>> a = { 'first' : { 'all_rows' : { 'pass' : 'dog', 'number' : '1' } } }
+        >>> b = { 'first' : { 'all_rows' : { 'fail' : 'cat', 'number' : '5' } } }
+        >>> merge(b, a) == { 'first' : { 'all_rows' : { 'pass' : 'dog', 'fail' : 'cat', 'number' : '5' } } }
+        """
+        for key, value in source.items():
+            if isinstance(value, dict):
+                # get node or create one
+                node = destination.setdefault(key, {})
+                self.merge_dict(value, node)
+            else:
+                destination[key] = value
+
+        return destination

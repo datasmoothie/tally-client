@@ -34,24 +34,16 @@ class Build:
             'link_color': '2A64C5'
         }
         self.options = Options(
-            table_options= {
-                "format":{
-                    "base":{},
-                    "percentage":{},
-                    "counts":{}
-                },
-                "stub": {"ci":["c%"]},
-                "banner_border": True
-            },
             formats=copy.deepcopy(build_default_formats)
         )
 
     def add_sheet(self, name=None, banner='@'):
+        if name is None:
+            name = "Table {}".format(str(len(self.sheets)+1))
         sheet = Sheet(
             banner=banner, 
             default_dataset=self.default_dataset, 
-            table_options=self.options.table_options, 
-            formats=self.options.formats
+            name=name
             )
         self.sheets.append(sheet)
         return sheet
@@ -66,7 +58,7 @@ class Build:
         dataframes_payload = []
         formats = []
         for sheet in self.sheets:
-            df = sheet.combine_dataframes()
+            df = sheet.build_dataframes(self.options)
             df = df.replace({'null':0})
             payload = json.loads(df.to_json(orient='split'))
             payload['index_names'] = df.index.names.copy()
