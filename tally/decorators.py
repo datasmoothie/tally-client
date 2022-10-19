@@ -65,4 +65,14 @@ def valid_params(valid_params_list):
         return wrapper
     return actual_decorator
 
+    
+def verify_no_tables(func):
+    @functools.wraps(func)
+    def wrapper(*aargs, **kkwargs):
+        error = f"You are using {func.__name__} after you have used sheet.add_table. Options have to be set before add_table is called"
+        if aargs[0].parent.table_count() > 0:
+            raise Exception(error)
 
+        result = func(*aargs, **kkwargs)
+        return result
+    return wrapper

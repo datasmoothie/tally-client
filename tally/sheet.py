@@ -4,12 +4,13 @@ import pandas as pd
 import copy
 
 class Sheet:
-    def __init__(self, banner='@', default_dataset=None, name=None):
+    def __init__(self, banner='@', default_dataset=None, name=None, parent=None):
         self.banner = banner
         self.tables = []
         self.default_dataset = default_dataset
         self.name = name
-        self.options = Options()
+        self.options = Options(parent=self)
+        self.parent = parent
 
     def get_name(self):
         if self.name is not None:
@@ -28,7 +29,8 @@ class Sheet:
     def add_table(self, stub, options={}, dataset=None):
         if self.default_dataset and dataset is None:
             dataset = self.default_dataset
-        crosstab = {**{**self.options.table_options['stub'], **stub}, **{'y':self.banner, 'add_format_column':True}}
+        merged_table_options = self.options.merge_dict(self.options.table_options, self.parent.options.table_options)
+        crosstab = {**{**merged_table_options['stub'], **stub}, **{'y':self.banner, 'add_format_column':True}}
         df = dataset.crosstab(
             crosstabs=[crosstab]
         )
@@ -179,3 +181,6 @@ class Sheet:
         self.paint_dataframes()
         dataframes = [i['dataframe'] for i in self.tables]
         return pd.concat(dataframes)
+
+    def table_count(self):
+        return len(self.tables)

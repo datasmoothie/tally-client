@@ -139,13 +139,13 @@ def test_global_options(token):
     build.font_size = '12'
     build.font_name = 'Arial'
 
+    build.options.set_base_position('outside')
+    build.options.set_format('base', {'bold':True, 'border': 1, 'border_color':'efefef'})
+    build.options.set_weight('weight_a')
+
     sheet = build.add_sheet(banner=['gender', 'locality'])
     sheet2 = build.add_sheet(banner=['gender', 'locality'])
 
-    [i.options.set_base_position('outside') for i in build.sheets]
-    [i.options.freeze_panes(9,1) for i in build.sheets]
-    [i.options.set_format('base', {'bold':True, 'border': 1, 'border_color':'efefef'}) for i in build.sheets]
-    [i.options.set_weight('weight_a') for i in build.sheets]
     [i.options.set_show_bases('both') for i in build.sheets]
 
     sheet.add_table(stub={'x' : 'q14r01c01', 'stats':["mean", "stddev"]}) 

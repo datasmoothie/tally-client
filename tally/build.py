@@ -34,7 +34,8 @@ class Build:
             'link_color': '2A64C5'
         }
         self.options = Options(
-            formats=copy.deepcopy(build_default_formats)
+            formats=copy.deepcopy(build_default_formats),
+            parent=self
         )
 
     def add_sheet(self, name=None, banner='@'):
@@ -43,7 +44,8 @@ class Build:
         sheet = Sheet(
             banner=banner, 
             default_dataset=self.default_dataset, 
-            name=name
+            name=name,
+            parent=self
             )
         self.sheets.append(sheet)
         return sheet
@@ -154,3 +156,7 @@ class Build:
             print('Warning: Something went wrong in prettifying the Excel. Make sure all colors are defined as ffffff rather than #ffffff.')
             print(e)
             pass
+
+    def table_count(self):
+        table_counts = [i.table_count() for i in self.sheets]
+        return sum(table_counts)

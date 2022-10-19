@@ -1,6 +1,9 @@
+from .decorators import verify_no_tables
+
+
 class Options:
 
-    def __init__(self, table_options=None, formats={}):
+    def __init__(self, table_options=None, formats={}, parent=None):
         if table_options is None:
             self.table_options = {
                 "format":{
@@ -15,6 +18,7 @@ class Options:
             self.table_options = table_options
 
         self.formats = formats
+        self.parent = parent
 
     def set_base_position(self, position):
         if position == 'outside':
@@ -38,23 +42,29 @@ class Options:
         """
         self._set_page_setup('hide_gridlines', {"option":hide})
 
+    @verify_no_tables
     def set_stats(self, stats=['mean']):
         self.table_options['stub']['stats'] = stats
 
+    @verify_no_tables
     def set_ci(self, ci):
         self.table_options['stub']['ci'] = ci
 
+    @verify_no_tables
     def set_show_bases(self, bases):
         if bases not in ['auto', 'weighted', 'unweighted', 'both']:
             raise ValueError('Bases to show must be both, auto, weighted or unweighted')
         self.table_options['stub']['base'] = bases
 
+    @verify_no_tables
     def set_stub(self, default_stub):
         self.table_options['stub'] = {**self.table_options['stub'], **default_stub}
 
+    @verify_no_tables
     def set_weight(self, weight):
         self.table_options['stub']['w'] = 'weight_a'
 
+    @verify_no_tables
     def set_banner_border(self, border):
         self.table_options['banner_border'] = border
 
@@ -83,16 +93,19 @@ class Options:
         else:
             self.formats[name] = new_format
 
+    @verify_no_tables
     def set_answer_format(self, answer_type, format):
         new_format = {0: {"format": format}}
         old_format = self.table_options['format'][answer_type]
         self.table_options['format'][answer_type] = {**old_format, **new_format}
 
+    @verify_no_tables
     def set_question_format(self, answer_type, format):
         new_format = {"question": {"format": format}}
         old_format = self.table_options['format'][answer_type]
         self.table_options['format'][answer_type] = {**old_format, **new_format}
 
+    @verify_no_tables
     def set_column_format_for_type(self, answer_type, column_index, format):
         new_format = {column_index: {"format":format}}
         old_format = self.table_options['format'][answer_type]
@@ -104,6 +117,7 @@ class Options:
     def merge(self,  options):
         """ Merge two Option objects together, this one overriding the incoming one
         """
+        import pdb; pdb.set_trace()
         self.table_options = self.merge_dict(self.table_options, options.table_options)
         self.formats = self.merge_dict(self.formats, options.formats)
 
