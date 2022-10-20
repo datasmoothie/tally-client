@@ -10,7 +10,7 @@ setuptools.setup(
         'openpyxl',
         'pillow'
     ],
-    version="0.28",
+    version="0.29",
     license='MIT',
     include_package_data=True,
     url="https://github.com/datasmoothie/datasmoothie-tally-client",
