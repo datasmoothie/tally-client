@@ -62,7 +62,7 @@ class Options:
 
     @verify_no_tables
     def set_weight(self, weight):
-        self.table_options['stub']['w'] = 'weight_a'
+        self.table_options['stub']['w'] = weight
 
     @verify_no_tables
     def set_banner_border(self, border):
