@@ -83,7 +83,9 @@ def test_add_simple_table(token):
     build = tally.Build(name='Client A', subtitle="Datasmoothie", default_dataset=ds)
     build.add_logo('tests/fixtures/datasmoothie-logo.png')
 
-    sheet = build.add_sheet(banner=['gender', 'locality'])
+    build.options.set_sig_test_levels(0.05)
+
+    sheet = build.add_sheet(banner=['gender > locality', 'locality > q2b'])
 
     sheet.options.set_banner_border(True)
 
@@ -102,7 +104,7 @@ def test_add_simple_table(token):
 
     build.save_excel('test_simple_table.xlsx')
     wb = openpyxl.load_workbook('test_simple_table.xlsx')
-    os.remove('test_simple_table.xlsx')
+    #os.remove('test_simple_table.xlsx')
 
 def test_build_after_sheet_options(token):
     ds = tally.DataSet(api_key=token)

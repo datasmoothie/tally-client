@@ -99,7 +99,6 @@ class Options:
         old_format = self.table_options['format'][answer_type]
         self.table_options['format'][answer_type] = {**old_format, **new_format}
 
-    @verify_no_tables
     def set_question_format(self, answer_type, format):
         new_format = {"question": {"format": format}}
         old_format = self.table_options['format'][answer_type]
@@ -117,7 +116,6 @@ class Options:
     def merge(self,  options):
         """ Merge two Option objects together, this one overriding the incoming one
         """
-        import pdb; pdb.set_trace()
         self.table_options = self.merge_dict(self.table_options, options.table_options)
         self.formats = self.merge_dict(self.formats, options.formats)
 

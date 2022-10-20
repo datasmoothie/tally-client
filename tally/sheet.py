@@ -129,7 +129,14 @@ class Sheet:
         return df
 
     def add_banner_border(self, df):
-        all_questions = df.columns.to_frame().index.to_series().reset_index()['Question']
+        # when we decide where to put the vertical border, we drop all the levels we won't use for the border
+        # if we have nested banners
+        df_for_index_calculation = df.copy()
+        nested_depth = len([i for i in df.columns.droplevel(0).names if i =='Values'])
+        if nested_depth > 1:
+            drop_how_many = (nested_depth - 1)*2
+            df_for_index_calculation.columns = df.columns.droplevel(level=list(range(drop_how_many)))
+        all_questions = df_for_index_calculation.columns.to_frame().index.to_series().reset_index()['Question']
         # find location of first unique question (this is the far left column in each subframe)
         all_questions = list(all_questions.drop_duplicates().iloc[:-1].index)
         # the question column is col 0 and we don't count that
