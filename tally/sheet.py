@@ -34,7 +34,7 @@ class Sheet:
         df = dataset.crosstab(
             crosstabs=[crosstab]
         )
-        self.tables.append({"dataframe":df, "options":options})
+        self.tables.append({"dataframe":df, "options":merged_table_options})
 
     def paint_dataframes(self):
         for table in self.tables:
@@ -170,12 +170,15 @@ class Sheet:
 
         return df
 
-    def _append_row_to_dataframe(self, df):
+    def _append_row_to_dataframe(self, df, row_data=None, row_format={}):
         last_question = df.index.get_level_values(0)[-1]
         mi = pd.MultiIndex.from_tuples([(last_question, ' ')])
-        empty_row_df = pd.DataFrame(columns=df.columns, data=[['']*df.shape[1]], index=mi)
-        empty_row_df.iloc[-1, -1] = '{"type":"counts", "spacer":true, "cell_format":{}}'
-        df = pd.concat([df, empty_row_df])
+        if row_data is None:
+            row_df = pd.DataFrame(columns=df.columns, data=[['']*df.shape[1]], index=mi)
+        else:
+            row_df = pd.DataFrame(columns=df.columns, data=[row_data], index=mi)
+        row_df.iloc[-1, -1] = '{{"type":"counts", "cell_format":{}}}'.format(row_format)
+        df = pd.concat([df, row_df])
         return df
 
     def build_dataframes(self, build_options=None):
@@ -184,10 +187,46 @@ class Sheet:
         self.options.merge(build_options)
         self.options.set_question_format('percentage', {'text_wrap':True})
         self.options.set_question_format('counts', {'text_wrap':True})
-
         self.paint_dataframes()
         dataframes = [i['dataframe'] for i in self.tables]
-        return pd.concat(dataframes)
+        result_df = pd.concat(dataframes)
+        result_df = self._add_annotations(result_df)
+        return result_df
+
+    def _add_annotations(self, df):
+        annotations = []
+        table_options = [list(i['options']['stub'].keys()) for i in self.tables]
+        options = [item for sublist in table_options for item in sublist]
+        sig_levels = [i['options']['stub']['sig_level'] for i in self.tables if 'sig_level' in i['options']['stub']]
+        if len(sig_levels) > 0:
+            sig_levels = [item for sublist in sig_levels for item in sublist]
+            sig_levels = sorted(set(sig_levels), key=sig_levels.index)
+            level_str = ", ".join(["{0:.0%}".format(i) for i in sig_levels])
+            sig_str = "Significance test: Column proportions with significance level {}. Minimum base: 30 (**), Small base: 100 (*)".format(level_str)
+            annotations.append(sig_str)
+
+        filters = [i['options']['stub']['f'] for i in self.tables if 'f' in i['options']['stub']]
+        if len(filters) > 0:
+            pass
+        
+        weights = [i['options']['stub']['w'] for i in self.tables if 'w' in i['options']['stub']]
+        if len(weights) > 1:
+            weights = sorted(set(weights), key=weights.index)
+            weight_str = ", ".join(["{}".format(i) for i in weights])
+            weights_str = "Weighted with variable {}.".format(weight_str)
+            annotations.append(weights_str)
+
+        if len(annotations) > 0:
+            for annotation in annotations:
+                new_row = ['']*df.shape[1]
+                new_row[0] = annotation
+                df = self._append_row_to_dataframe(df, new_row, format)
+        
+        return df
+
+
+
+
 
     def table_count(self):
         return len(self.tables)

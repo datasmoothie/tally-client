@@ -84,7 +84,7 @@ def test_add_simple_table(token):
     build.add_logo('tests/fixtures/datasmoothie-logo.png')
 
     build.options.set_sig_test_levels(0.05)
-
+    build.options.set_weight('weight_b')
     sheet = build.add_sheet(banner=['gender > locality', 'locality > q2b'])
 
     sheet.options.set_banner_border(True)
