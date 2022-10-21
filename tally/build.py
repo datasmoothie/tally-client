@@ -73,6 +73,12 @@ class Build:
 
         # wrapped in try because openpyxl is brittle
         try:
+            heights = {
+                'Question': 30,
+                'Values': 70,
+                'Test-IDs': 30
+            }
+
             wb = load_workbook(filename)
 
             default_font = Font(name=self.font_name, size=self.font_size)
@@ -118,17 +124,16 @@ class Build:
                 for index, sh in enumerate(self.sheets):
                     top_offset = sh.options.formats['offsets']['top']
                     wb_sheet = wb.worksheets[index+1]
-                    wb_sheet.row_dimensions[top_offset+1].height=30
-                    wb_sheet.row_dimensions[top_offset+2].height=70
+                    for index, header in enumerate(sh.tables[0]['dataframe'].columns.names):
+                        wb_sheet.row_dimensions[top_offset+index+1].height=heights[header]
+                        for col_range in range(1,100):
+                            wb_sheet.cell(top_offset+index+1,col_range).alignment = Alignment(wrap_text=True, vertical='center', horizontal='center')
 
                     for row in wb_sheet.rows:
                         for cell in row:
                             pass
                             #cell.font = default_font                
 
-                    for col_range in range(1,30):
-                        wb_sheet.cell(top_offset+1,col_range).alignment = Alignment(wrap_text=True, vertical='center', horizontal='center')
-                        wb_sheet.cell(top_offset+2,col_range).alignment = Alignment(wrap_text=True, vertical='center', horizontal='center')
 
 
             else:
@@ -143,12 +148,10 @@ class Build:
                         color_cell.fill = PatternFill(start_color=self.index_options['header_color'], end_color=self.index_options['body_color'], fill_type="solid")
 
                 top_offset = self.sheets[0].options.formats['offsets']['top']
-                wb_sheet.row_dimensions[top_offset+1].height=30
-                wb_sheet.row_dimensions[top_offset+2].height=70
-                
-                for col_range in range(1,30):
-                    wb_sheet.cell(top_offset+1,col_range).alignment = Alignment(wrap_text=True, vertical='center', horizontal='center')
-                    wb_sheet.cell(top_offset+2,col_range).alignment = Alignment(wrap_text=True, vertical='center', horizontal='center')
+                for index, header in enumerate(self.sheets[0].tables[0]['dataframe'].columns.names):
+                    wb_sheet.row_dimensions[top_offset+index+1].height=heights[header]
+                    for col_range in range(1,100):
+                        wb_sheet.cell(top_offset+index+1,col_range).alignment = Alignment(wrap_text=True, vertical='center', horizontal='center')
  
 
             wb.save(filename)
