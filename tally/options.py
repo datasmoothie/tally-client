@@ -47,6 +47,10 @@ class Options:
         self.table_options['stub']['stats'] = stats
 
     @verify_no_tables
+    def set_filter(self, filter):
+        self.table_options['stub']['f'] = filter
+
+    @verify_no_tables
     def set_ci(self, ci):
         self.table_options['stub']['ci'] = ci
 
