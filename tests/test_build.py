@@ -95,7 +95,7 @@ def test_add_simple_table(token):
 
 
     sheet.options.set_base_position('outside')
-    sheet.options.set_filter({'gender':[1]})
+    sheet.options.set_filter({'gender':[1], 'locality':[1,2]})
 
     sheet.add_table(stub={'x' : 'q14r01c01'}) 
     sheet.add_table(stub={'x' : 'q14r02c01', 'stats':['mean']})

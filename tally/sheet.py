@@ -195,8 +195,6 @@ class Sheet:
 
     def _add_annotations(self, df):
         annotations = []
-        table_options = [list(i['options']['stub'].keys()) for i in self.tables]
-        options = [item for sublist in table_options for item in sublist]
         sig_levels = [i['options']['stub']['sig_level'] for i in self.tables if 'sig_level' in i['options']['stub']]
         if len(sig_levels) > 0:
             sig_levels = [item for sublist in sig_levels for item in sublist]
@@ -206,9 +204,20 @@ class Sheet:
             annotations.append(sig_str)
 
         filters = [i['options']['stub']['f'] for i in self.tables if 'f' in i['options']['stub']]
-        if len(filters) > 0:
-            pass
-        
+        if 'f' in self.tables[0]['options']['stub']:
+            # e.g. {'gender':[1], 'agecat':[1,2]}
+            filter = self.tables[0]['options']['stub']['f']
+            filter_str = ""
+            meta_data = {}
+            for filter_key in filter:
+                meta_data[filter_key] = self.default_dataset.values(name=[filter_key], include_variable_texts=True, format='dict')
+                values = filter[filter_key]
+                # e.g. London, Reykjavik
+                value_string = ", ".join([meta_data[filter_key]['values'][filter_key][str(i)] for i in values])
+                question_string = meta_data[filter_key]["variable_texts"][filter_key]
+                filter_str = filter_str + "{}: {}. ".format(question_string, value_string)
+            annotations.append(filter_str)
+
         weights = [i['options']['stub']['w'] for i in self.tables if 'w' in i['options']['stub']]
         if len(weights) > 1:
             weights = sorted(set(weights), key=weights.index)
