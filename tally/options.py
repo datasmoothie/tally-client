@@ -25,6 +25,9 @@ class Options:
             self.set_question_format('base', {'font_color':'ffffff', 'bg_color':'ffffff', 'font_size':1})
         self.table_options['base'] = position
 
+    def set_language_key(self, text_key):
+        self.table_options['stub']['text_key'] = text_key
+
     def set_show_table_base_column(self, xtotal):
         self.table_options['stub']['xtotal'] = xtotal
 
