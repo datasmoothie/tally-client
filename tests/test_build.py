@@ -84,7 +84,7 @@ def test_add_simple_table(token):
     build.add_logo('tests/fixtures/datasmoothie-logo.png')
 
     build.options.set_sig_test_levels(0.05)
-
+    build.options.set_weight('weight_b')
     sheet = build.add_sheet(banner=['gender > locality', 'locality > q2b'])
 
     sheet.options.set_banner_border(True)
@@ -95,6 +95,7 @@ def test_add_simple_table(token):
 
 
     sheet.options.set_base_position('outside')
+    sheet.options.set_filter({'gender':[1], 'locality':[1,2]})
 
     sheet.add_table(stub={'x' : 'q14r01c01'}) 
     sheet.add_table(stub={'x' : 'q14r02c01', 'stats':['mean']})
