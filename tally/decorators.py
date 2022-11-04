@@ -26,17 +26,20 @@ def add_data(func):
 def format_response(func):
     @functools.wraps(func)
     def wrapper(*aargs, **kkwargs):
+        format = kkwargs.pop('format', None)
         result = func(*aargs, **kkwargs)
         if result is None:
             return
         if 'text' in result:
             return result['text']
 
-        if all(k in result for k in ("index","columns","data")):
-            defaultformat = 'dataframe'
-        else:
-            defaultformat = 'dict'
-        format = kkwargs.pop('format', defaultformat)
+        if format is None:
+            if all(k in result for k in ("index","columns","data")):
+                format = 'dataframe'
+            elif 'result' in result and all(k in result['result'] for k in ("index","columns","data")):
+                format = 'dataframe'
+            else:
+                format = 'dict'
 
         if format == 'dict':
             result = result
