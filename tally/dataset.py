@@ -1,12 +1,11 @@
 import json
-import requests
 import pandas as pd
-import os
 import io
 from functools import partial
+import urllib.request
 
+from difflib import SequenceMatcher
 from .decorators import add_data, format_response, valid_params
-import tally
 from .tally import Tally
 
 # these are the keys returned in results that indicate what should happen with the local dataset
@@ -43,6 +42,8 @@ class DataSet:
         data_params = kwargs.pop('data_params')
         files, payload = self.prepare_post_params(data_params, kwargs)
         response = self.tally.post_request('tally', api_endpoint, payload, files)
+        if response.status_code == 404:
+            return self._method_not_found_response(api_endpoint)
         json_dict = json.loads(response.content)
         json_dict = self._clean_error_response(json_dict)
         if self._has_keys(json_dict, VARIABLE_KEYS):
@@ -53,6 +54,27 @@ class DataSet:
             self.qp_data = json_dict['dataset_data']
             self.qp_meta = json.dumps(json_dict['dataset_meta'])
         return json_dict
+
+    def _method_not_found_response(self, method):
+        try:
+            didyoumean = ""
+            with urllib.request.urlopen("https://tally.datasmoothie.com/openapi/?format=openapi-json") as url:
+                data = json.load(url)
+                endpoints = [i.replace('/tally/', '')[:-1] for i in data['paths'].keys()]
+                matches = []
+                for endpoint in endpoints:
+                    matches.append((endpoint, SequenceMatcher(None, method, endpoint).ratio()))
+                matches.sort(key=lambda tup: tup[1],reverse=True)
+                if matches[0][1] > 0.8:
+                    didyoumean = matches[0][0]
+        except:
+            pass
+        if len(didyoumean)>0:
+            infotext = "Unknown method '{}'. Did you mean '{}'? See https://tally.datasmoothie.com for available methods.".format(method, didyoumean)
+        else:
+            infotext = "Unknown method '{}'. See https://tally.datasmoothie.com for available methods.".format(method)
+        return {"text":infotext}
+
 
     def _clean_error_response(self, error_response):
         if 'error' in error_response:
