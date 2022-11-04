@@ -48,11 +48,14 @@ class DataSet:
         json_dict = self._clean_error_response(json_dict)
         if self._has_keys(json_dict, VARIABLE_KEYS):
             self.add_column_to_data(json_dict['meta']['name'], json_dict['data'], json_dict['meta'])
+            return
         if self._has_keys(json_dict, META_VARIABLE_KEYS):
             self.add_column_to_data(json_dict['meta']['name'], None, json_dict['meta'])
+            return
         if self._has_keys(json_dict, NEW_DATASET_KEYS):
             self.qp_data = json_dict['dataset_data']
             self.qp_meta = json.dumps(json_dict['dataset_meta'])
+            return
         return json_dict
 
     def _method_not_found_response(self, method):
@@ -73,7 +76,7 @@ class DataSet:
             infotext = "Unknown method '{}'. Did you mean '{}'? See https://tally.datasmoothie.com for available methods.".format(method, didyoumean)
         else:
             infotext = "Unknown method '{}'. See https://tally.datasmoothie.com for available methods.".format(method)
-        return {"text":infotext}
+        raise ValueError(infotext)
 
 
     def _clean_error_response(self, error_response):
@@ -229,6 +232,8 @@ class DataSet:
             payload = {}
         else:
             files = None
+            if type(data_params) == str:
+                raise ValueError("The Tally client does not support non keyword arguments. For example, use dataset.crosstab(x='age'), not dataset.crosstab('age').")
             payload = data_params
         payload['params'] = params
         return (files, payload)
