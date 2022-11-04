@@ -39,4 +39,4 @@ jobs:
       env:
         TALLY_TOKEN: ${{ secrets.TALLY_TOKEN }}
       run: |
-        pytest --token=$TALLY_TOKEN
+        python -m pytest --token=$TALLY_TOKEN
