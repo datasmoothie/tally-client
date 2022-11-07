@@ -8,6 +8,8 @@ import tally
 def add_data(func):
     @functools.wraps(func)
     def wrapper(*aargs, **kkwargs):
+        if aargs[0].dataset_type is None:
+            raise ValueError("You haven't selected any data. Use one of the dataset.use_* methods to load data.")
         if aargs[0].dataset_type == 'quantipy':
             kkwargs['data_params'] = {
                 'meta': aargs[0].qp_meta, 
@@ -85,5 +87,16 @@ def verify_no_tables(func):
             raise Exception(error)
 
         result = func(*aargs, **kkwargs)
+        return result
+    return wrapper
+
+def verify_token(func):
+    @functools.wraps(func)
+    def wrapper(*aargs, **kkwargs):
+        result = func(*aargs, **kkwargs)
+        if result.status_code == 401:
+            result_dict = json.loads(result.content)
+            if 'detail' in result_dict and result_dict['detail'] == "Invalid token.":
+                raise ValueError("Invalid or expired API token: {}".format(aargs[0]._Tally__api_key))
         return result
     return wrapper

@@ -2,6 +2,7 @@ import json
 import requests
 import pandas as pd
 import copy
+from .decorators import verify_token
 
 def result_to_dataframe(json_dict):
     """ Deserializes a dataframe that was serialized with orient='split'
@@ -90,6 +91,7 @@ class Tally:
         result = json.loads(result.content)
         return result
 
+    @verify_token
     def post_request(self, resource, action="", data={}, files=None):
         """Send a POST request to the API with a wrapper.
 
