@@ -41,7 +41,7 @@ jobs:
       run: |
         echo $TALLY_TOKEN
     - name: Test with pytest
+      run: |
+        python -m pytest --token="$TALLY_TOKEN"
       env:
         TALLY_TOKEN: ${{ secrets.TALLY_TOKEN }}
-      run: |
-        python -m pytest --token=$TALLY_TOKEN
