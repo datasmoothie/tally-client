@@ -8,7 +8,8 @@ setuptools.setup(
         'numpy',
         'pandas',
         'openpyxl',
-        'pillow'
+        'pillow',
+        'requests'
     ],
     version="0.32",
     license='MIT',

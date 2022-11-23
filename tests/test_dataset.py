@@ -164,15 +164,6 @@ def test_to_delimited_set(token, api_url):
     ct = ds.crosstab(x='satisfaction')
     print(ct)
 
-def test_feature_select(token, api_url):
-    ds = tally.DataSet()
-    ds.add_credentials(api_key=token, host=api_url, ssl=True)
-    ds.use_spss('tests/fixtures/Example Data (B).sav')
-    categoricals = ds.variables(format='dict')['single']
-    categoricals.remove('overall')
-    result = ds.feature_select(x=categoricals, y="overall")
-    assert result['features'][0] == 'service'
-
 def test_derive(token, api_url):
     ds = tally.DataSet()
     ds.add_credentials(api_key=token, host=api_url, ssl=True)
@@ -218,24 +209,22 @@ def test_weight_spss(token, api_url):
             'gender':{1:49.0, 2:51.0}
         }
     result = ds.weight(name='my weight', variable='weight_c', unique_key='unique_id', scheme=scheme)
-    #import pdb; pdb.set_trace()
     ct1 = ds.crosstab(x='gender', ci=['c%'], w='weight_c')
-    assert ct1.loc[('gender. What is your gender?','Female')][0] == 51.1
+    assert ct1.loc[('What is your gender?','Female')][0] == 51.1
     ct2 = ds.crosstab(x='locality', ci=['c%'], w='weight_c')
-    assert ct2.loc[('locality. How would you describe the areas in which you live?','Urban')][0] == 27.4
+    assert ct2.loc[('How would you describe the areas in which you live?','Urban')][0] == 27.4
 
 def test_weight_unicom(token, api_url):
     ds = tally.DataSet()
     ds.add_credentials(api_key=token, host=api_url, ssl=True)
     ds.use_unicom('tests/fixtures/Example_Museum.mdd', 'tests/fixtures/Example_Museum.ddf')
-    #import pdb; pdb.set_trace()
     scheme={
             'gender':{1:49.0, 2:51.0}
         }
     result = ds.weight(name='my weight', variable='weight_c', unique_key='serial', scheme=scheme)
     ct1 = ds.crosstab(x='gender', ci=['c%'], w='weight_c')
     assert 'interest' in list(ds.variables()['single'])
-    assert ct1.loc[('gender. Gender of respondent','Female')][0] == 51.0
+    assert ct1.loc[('Gender of respondent','Female')][0] == 51.0
 
 def test_weight_csv(token, api_url):
     ds = tally.DataSet()
@@ -248,7 +237,7 @@ def test_weight_csv(token, api_url):
         }
     result = ds.weight(name='my weight', variable='weight_c', unique_key='resp_id', scheme=scheme)
     ct1 = ds.crosstab(x='gender', ci=['c%'], w='weight_c')
-    assert ct1.loc[('gender. ','Female')][0] == 49.1
+    assert ct1.loc[('','Female')][0] == 49.1
 
 @pytest.mark.skip(reason="Need to finalise unicom conversion")
 def test_unicom_crosstab(token, api_url):
@@ -310,7 +299,6 @@ def test_confirmit_crosstab(token, api_url):
 #    ds.add_credentials(api_key=token, host=api_url, ssl=True)
 #    ds.use_nebu('https://app.nebu.com/app/rest/spss/[insert_key]?language=en')
 #    result = ds.crosstab(x='Gender')
-#    import pdb; pdb.set_trace()
 #    assert isinstance(result, pd.DataFrame)
 
 def test_spss_to_csv_json(token, api_url):

@@ -11,6 +11,7 @@ class Sheet:
         self.name = name
         self.options = Options(parent=self)
         self.parent = parent
+        self.options._set_page_setup("write_string",{"row":2, "col":0, "string":name})
 
     def get_name(self):
         if self.name is not None:
@@ -43,8 +44,10 @@ class Sheet:
             # the format column should always have a cell_options key
             df['FORMAT'] = df['FORMAT'].apply(lambda x: json.dumps({**json.loads(x), **{'cell_format':{}}}))
             df = self.apply_table_options(df, options)
-            df = self._append_row_to_dataframe(df)
             table['dataframe'] = df
+            table['dataframe'] = self._append_row_to_dataframe(table['dataframe'])
+            table = self._add_annotations(table)
+            table['dataframe'] = self._append_row_to_dataframe(table['dataframe'])
 
 
     def apply_table_options(self, df, options):
@@ -190,23 +193,29 @@ class Sheet:
         self.paint_dataframes()
         dataframes = [i['dataframe'] for i in self.tables]
         result_df = pd.concat(dataframes)
-        result_df = self._add_annotations(result_df)
         return result_df
 
-    def _add_annotations(self, df):
+    def _add_annotations(self, table):
         annotations = []
-        sig_levels = [i['options']['stub']['sig_level'] for i in self.tables if 'sig_level' in i['options']['stub']]
-        if len(sig_levels) > 0:
-            sig_levels = [item for sublist in sig_levels for item in sublist]
+        df = table['dataframe']
+        if 'sig_level' in table['options']['stub']: 
+
+            # [[''], ['A', 'B'], ['C', 'D', 'E']]
+            sig_test_list = list(df.columns.to_frame()['Test-IDs'].groupby('Question').apply(list))
+            # ['A/B', 'C/D/E/F/G']
+            first_join = [i for i in [("/").join(i) for i in sig_test_list] if len(i)>0]
+            # 'A/B - C/D/E/F/G'
+            final_test_str = " - ".join(first_join)
+            sig_levels = table['options']['stub']['sig_level']
             sig_levels = sorted(set(sig_levels), key=sig_levels.index)
             level_str = ", ".join(["{0:.0%}".format(i) for i in sig_levels])
-            sig_str = "Significance test: Column proportions with significance level {}. Minimum base: 30 (**), Small base: 100 (*)".format(level_str)
+            sig_str = "Proportions/Means: Columns Tested ({} risk level) - {}.".format(level_str, final_test_str)
             annotations.append(sig_str)
+            annotations.append("Minimum base: 30 (**), Small base: 100 (*).")
 
-        filters = [i['options']['stub']['f'] for i in self.tables if 'f' in i['options']['stub']]
-        if 'f' in self.tables[0]['options']['stub']:
+        if 'f' in table['options']['stub']:
             # e.g. {'gender':[1], 'agecat':[1,2]}
-            filter = self.tables[0]['options']['stub']['f']
+            filter = table['options']['stub']['f']
             filter_str = ""
             meta_data = {}
             for filter_key in filter:
@@ -218,12 +227,9 @@ class Sheet:
                 filter_str = filter_str + "{}: {}. ".format(question_string, value_string)
             annotations.append(filter_str)
 
-        weights = [i['options']['stub']['w'] for i in self.tables if 'w' in i['options']['stub']]
-        if len(weights) > 1:
-            weights = sorted(set(weights), key=weights.index)
-            weight_str = ", ".join(["{}".format(i) for i in weights])
-            weights_str = "Weighted with variable {}.".format(weight_str)
-            annotations.append(weights_str)
+        if 'w' in table['options']['stub']:
+            weight_str = "Weighted with variable {}.".format(table['options']['stub']['w'])
+            annotations.append(weight_str)
 
         if len(annotations) > 0:
             for annotation in annotations:
@@ -231,7 +237,8 @@ class Sheet:
                 new_row[0] = annotation
                 df = self._append_row_to_dataframe(df, new_row, format)
         
-        return df
+        table['dataframe'] = df
+        return table
 
 
 
