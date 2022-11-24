@@ -56,7 +56,7 @@ def test_add_table_bug(token):
 
     build.save_excel('test_simple_table_bug.xlsx')
     wb = openpyxl.load_workbook('test_simple_table_bug.xlsx')
-    #os.remove('test_simple_table_bug.xlsx')
+    os.remove('test_simple_table_bug.xlsx')
 
 
 def test_default_options(token):
@@ -105,7 +105,7 @@ def test_add_simple_table(token):
 
     build.save_excel('test_simple_table.xlsx')
     wb = openpyxl.load_workbook('test_simple_table.xlsx')
-    #os.remove('test_simple_table.xlsx')
+    os.remove('test_simple_table.xlsx')
 
 def test_build_after_sheet_options(token):
     ds = tally.DataSet(api_key=token)

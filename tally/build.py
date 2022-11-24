@@ -124,15 +124,12 @@ class Build:
                 for index, sh in enumerate(self.sheets):
                     top_offset = sh.options.formats['offsets']['top']
                     wb_sheet = wb.worksheets[index+1]
+                    wb_sheet['A3'].font = Font(bold=True, size=16)
                     for index, header in enumerate(sh.tables[0]['dataframe'].columns.names):
                         wb_sheet.row_dimensions[top_offset+index+1].height=heights[header]
                         for col_range in range(1,100):
                             wb_sheet.cell(top_offset+index+1,col_range).alignment = Alignment(wrap_text=True, vertical='center', horizontal='center')
-
-                    for row in wb_sheet.rows:
-                        for cell in row:
-                            pass
-                            #cell.font = default_font                
+           
 
 
 
