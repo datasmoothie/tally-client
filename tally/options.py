@@ -1,9 +1,10 @@
-from .decorators import verify_no_tables
+import copy
 
+from .decorators import verify_no_tables
 
 class Options:
 
-    def __init__(self, table_options=None, formats={}, parent=None):
+    def __init__(self, table_options=None, formats=None, parent=None):
         if table_options is None:
             self.table_options = {
                 "format":{
@@ -18,6 +19,8 @@ class Options:
             self.table_options = table_options
 
         self.formats = formats
+        if formats is None:
+            self.formats = {}
         self.parent = parent
 
     def set_base_position(self, position):
@@ -118,13 +121,15 @@ class Options:
         self.table_options['format'][answer_type] = {**old_format, **new_format}
 
     def _set_page_setup(self, key, value):
+        if 'set_page_setup' not in self.formats:
+            self.formats['set_page_setup'] = {}
         self.formats['set_page_setup'][key] = value
 
     def merge(self,  options):
         """ Merge two Option objects together, this one overriding the incoming one
         """
         self.table_options = self.merge_dict(self.table_options, options.table_options)
-        self.formats = self.merge_dict(self.formats, options.formats)
+        self.formats = self.merge_dict(self.formats, copy.deepcopy(options.formats))
 
     def merge_dict(self, source, destination):
         """

@@ -35,3 +35,6 @@ MANIFEST
 # Pyenv
 env3.8
 .python-version
+
+# Don't commit xlsx files
+*.xlsx

@@ -24,9 +24,11 @@ def test_method_not_found_but_close(token, api_url, use_ssl):
 
     assert str(e.value) == "Unknown method 'variabbles'. Did you mean 'variables'? See https://tally.datasmoothie.com for available methods."
 
-@pytest.mark.skip(reason="It's impossible to get this errormessage I think. - Birgir ")
-def test_no_kwargs(token, api_url, use_ssl):
-    ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
+@pytest.mark.skip("not supported for now")
+def test_no_kwargs(token, api_url):
+    ds = tally.DataSet()
+    ds.add_credentials(api_key=token, host=api_url, ssl=True)
+    ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
 
     with pytest.raises(ValueError) as e:
         ds.crosstab('gender')

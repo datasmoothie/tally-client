@@ -163,7 +163,6 @@ def test_to_delimited_set(token, api_url, use_ssl):
     result = ds.to_delimited_set(name='satisfaction', label="Sports", variables=['overall', 'price', 'service'], from_dichotomous=False)
     ct = ds.crosstab(x='satisfaction')
 
-
 @pytest.mark.skip(reason="Tally was updated to always return 'features':[], so this this test should be fixed or Tally updated.")
 def test_feature_select(token, api_url, use_ssl):
     ds = tally.DataSet()
@@ -246,7 +245,7 @@ def test_weight_csv(token, api_url, use_ssl):
         }
     result = ds.weight(name='my weight', variable='weight_c', unique_key='resp_id', scheme=scheme)
     ct1 = ds.crosstab(x='gender', ci=['c%'], w='weight_c')
-    assert ct1.loc[('', 'Female')][0] == 49.1
+    assert ct1.loc[('','Female')][0] == 49.1
 
 @pytest.mark.skip(reason="Need to finalise unicom conversion")
 def test_unicom_crosstab(token, api_url, use_ssl):
@@ -307,7 +306,6 @@ def test_confirmit_crosstab(token, api_url, use_ssl):
 #    ds.add_credentials(api_key=token, host=api_url, ssl=use_ssl)
 #    ds.use_nebu('https://app.nebu.com/app/rest/spss/[insert_key]?language=en')
 #    result = ds.crosstab(x='Gender')
-#    import pdb; pdb.set_trace()
 #    assert isinstance(result, pd.DataFrame)
 
 def test_spss_to_csv_json(token, api_url, use_ssl):
