@@ -8,9 +8,10 @@ setuptools.setup(
         'numpy',
         'pandas',
         'openpyxl',
-        'pillow'
+        'pillow',
+        'requests'
     ],
-    version="0.32",
+    version="0.33",
     license='MIT',
     include_package_data=True,
     url="https://github.com/datasmoothie/datasmoothie-tally-client",
