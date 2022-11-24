@@ -5,6 +5,7 @@ import pandas as pd
 def pytest_addoption(parser):
     parser.addoption("--token", action="store", default="")
     parser.addoption("--api_url", action="store", default="tally.datasmoothie.com")
+    parser.addoption("--use_ssl", action="store", default="Bingo")
 
 
 def pytest_generate_tests(metafunc):
@@ -17,6 +18,11 @@ def pytest_generate_tests(metafunc):
     option_value = metafunc.config.option.api_url
     if 'api_url' in metafunc.fixturenames and option_value is not None:
         metafunc.parametrize("api_url", [option_value])
+
+    option_value = metafunc.config.option.use_ssl
+    if 'use_ssl' in metafunc.fixturenames and option_value is not None:
+        metafunc.parametrize("use_ssl", [option_value])
+
 
 
 @pytest.fixture(scope="session")
