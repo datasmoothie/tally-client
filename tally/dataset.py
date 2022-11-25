@@ -111,9 +111,7 @@ class DataSet:
         payload={}
         files=[ ('spss',('Example Data (A).sav',io.BytesIO(fileContent),'application/x-spss-sav')) ]
         response = self.tally.post_request('tally', 'convert_data_to_csv_json', payload, files)
-        from pprint import pprint as pp
-        pp(response.content)
-        result = json.loads(response.content)
+        result = response.json()
         self.qp_meta = json.dumps(result['json'])
         self.qp_data = result['csv']
         self.dataset_type = 'quantipy'
@@ -259,9 +257,7 @@ class DataSet:
         datasources={"one":{"meta":payload.pop('meta'), "data":payload.pop('data')}}
         payload['params']['datasources'] = datasources
         response = self.tally.post_request('tally', 'joined_crosstab', payload, files)
-        from pprint import pprint as pp
-        pp(response.content)
-        json_dict = json.loads(response.content)
+        json_dict = response.json()
         if 'result' in json_dict.keys():
             return json_dict
         else:
