@@ -259,6 +259,8 @@ class DataSet:
         datasources={"one":{"meta":payload.pop('meta'), "data":payload.pop('data')}}
         payload['params']['datasources'] = datasources
         response = self.tally.post_request('tally', 'joined_crosstab', payload, files)
+        from pprint import pprint as pp
+        pp(response.content)
         json_dict = json.loads(response.content)
         if 'result' in json_dict.keys():
             return json_dict
