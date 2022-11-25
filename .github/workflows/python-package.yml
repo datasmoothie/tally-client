@@ -8,10 +8,13 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  pull_request_target:
+    branches: [ "main" ]
+    
 
 jobs:
   build:
-
+    environment: pr_environment
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -37,11 +40,12 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=300 --statistics
     - name: Test token
       env:
-        TALLY_TOKEN: ${{ secrets.TALLY_TOKEN }}
+        TALLY_PR_TOKEN: ${{ secrets.TALLY_PR_TOKEN }}
       run: |
-        echo $TALLY_TOKEN
+        echo ${{ secrets.TALLY_PR_TOKEN }}
+        echo "-TOKEN ${TALLY_PR_TOKEN}"
     - name: Test with pytest
       run: |
-        python -m pytest --token="$TALLY_TOKEN"
+        python -m pytest --token="$TALLY_PR_TOKEN"
       env:
-        TALLY_TOKEN: ${{ secrets.TALLY_TOKEN }}
+        TALLY_PR_TOKEN: ${{ secrets.TALLY_PR_TOKEN }}
