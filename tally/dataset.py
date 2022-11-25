@@ -111,6 +111,8 @@ class DataSet:
         payload={}
         files=[ ('spss',('Example Data (A).sav',io.BytesIO(fileContent),'application/x-spss-sav')) ]
         response = self.tally.post_request('tally', 'convert_data_to_csv_json', payload, files)
+        from pprint import pprint as pp
+        pp(response.content)
         result = json.loads(response.content)
         self.qp_meta = json.dumps(result['json'])
         self.qp_data = result['csv']
