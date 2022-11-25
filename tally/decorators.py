@@ -3,7 +3,8 @@ import io
 import json
 import pandas as pd
 
-import tally
+from .helpers import result_to_dataframe, get_columns_from_crosstabs
+
 
 def add_data(func):
     @functools.wraps(func)
@@ -11,9 +12,19 @@ def add_data(func):
         if aargs[0].dataset_type is None:
             raise ValueError("You haven't selected any data. Use one of the dataset.use_* methods to load data.")
         if aargs[0].dataset_type == 'quantipy':
+            data_as_csv = aargs[0].qp_data
+
+            # The __qualname__ is the name of the method that the decorator applied to
+            # If it's in the list, then we reduce the dataset column size
+            if func.__qualname__ in ["crosstab"]:  # Only apply to function names in this list
+                columns = get_columns_from_crosstabs(crosstabs = kkwargs['crosstabs'])
+                data = pd.read_csv(io.StringIO(data_as_csv))
+                # Filter out columns that are needed and reserialize so we only send the columns we need
+                data_as_csv = data[columns].to_csv()
+
             kkwargs['data_params'] = {
                 'meta': aargs[0].qp_meta, 
-                'data': aargs[0].qp_data
+                'data': data_as_csv
             }
         elif aargs[0].dataset_type == 'sav':
             kkwargs['data_params'] = {
@@ -49,9 +60,9 @@ def format_response(func):
             result = json.dumps(result)
         elif format == 'dataframe':
             if 'result' in result.keys():
-                result = tally.result_to_dataframe(result['result'])
+                result = result_to_dataframe(result['result'])
             elif all(elem in result.keys() for elem in ['index', 'columns', 'data']):
-                result = tally.result_to_dataframe(result)
+                result = result_to_dataframe(result)
             else:
                 if 'params' in result:
                     del result['params']
@@ -100,3 +111,4 @@ def verify_token(func):
                 raise ValueError("Invalid or expired API token: {}".format(aargs[0]._Tally__api_key))
         return result
     return wrapper
+

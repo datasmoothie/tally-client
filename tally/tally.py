@@ -4,20 +4,6 @@ import pandas as pd
 import copy
 from .decorators import verify_token
 
-def result_to_dataframe(json_dict):
-    """ Deserializes a dataframe that was serialized with orient='split'
-    """
-    if 'column_names' and 'index_names' in json_dict.keys():
-        columns = pd.MultiIndex.from_tuples(json_dict['columns'], names=json_dict['column_names'])
-        index = pd.MultiIndex.from_tuples(json_dict['index'], names=json_dict['index_names'])
-    else:
-        columns = json_dict['columns']
-        index = json_dict['index']
-    df = pd.DataFrame(data=json_dict['data'])
-    df.columns = columns
-    df.index = index
-    return df
-
 class Tally:
     """Tally is a wrapper for the cloud-based Tally API.
 
@@ -50,7 +36,7 @@ class Tally:
 
         """
         self.host = host
-        if ssl:
+        if ssl == True or ssl == 'True':
             self.base_url = "https://{}".format(host)
         else:
             self.base_url = "http://{}".format(host)
