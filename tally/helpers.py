@@ -21,7 +21,7 @@ def find_columns_in_crosstab(key, crosstab):
     columns = []
     if key in crosstab:
         if key == 'f':
-            columns + list(crosstab[key].keys())
+            columns += list(crosstab[key].keys())
         elif isinstance(crosstab[key], str):
             columns.append(crosstab[key])
         elif isinstance(crosstab[key], list):

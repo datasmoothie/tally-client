@@ -4,8 +4,8 @@ import tally
 import pytest
 import openpyxl
 
-def test_add_table(token, api_url):
-    ds = tally.DataSet(api_key=token, host=api_url, ssl=True)
+def test_add_table(token, api_url, use_ssl):
+    ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
     ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
 
     build = tally.Build(name='client A', default_dataset=ds)
@@ -30,8 +30,8 @@ def test_add_table(token, api_url):
     wb = openpyxl.load_workbook('test.xlsx')
     os.remove('test.xlsx')
 
-def test_add_table_bug(token):
-    ds = tally.DataSet(api_key=token)
+def test_add_table_bug(token, api_url, use_ssl):
+    ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
     ds.use_spss('tests/fixtures/Example Data (A).sav')
 
     build = tally.Build(name='client A', default_dataset=ds, table_of_contents=True)
@@ -59,8 +59,8 @@ def test_add_table_bug(token):
     os.remove('test_simple_table_bug.xlsx')
 
 
-def test_default_options(token):
-    ds = tally.DataSet(api_key=token)
+def test_default_options(token, api_url, use_ssl):
+    ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
     ds.use_spss('tests/fixtures/Example Data (A).sav')
 
     build = tally.Build(name='Client A', subtitle="Datasmoothie", default_dataset=ds)
@@ -76,8 +76,8 @@ def test_default_options(token):
 
     build.sheets[0].add_table(stub={'x':'ethnicity'})
 
-def test_add_simple_table(token):
-    ds = tally.DataSet(api_key=token)
+def test_add_simple_table(token, api_url, use_ssl):
+    ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
     ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
 
     build = tally.Build(name='Client A', subtitle="Datasmoothie", default_dataset=ds)
@@ -107,8 +107,8 @@ def test_add_simple_table(token):
     wb = openpyxl.load_workbook('test_simple_table.xlsx')
     os.remove('test_simple_table.xlsx')
 
-def test_build_after_sheet_options(token):
-    ds = tally.DataSet(api_key=token)
+def test_build_after_sheet_options(token, api_url, use_ssl):
+    ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
     ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
     build = tally.Build(name='client A', default_dataset=ds)
 
@@ -132,8 +132,8 @@ def test_build_after_sheet_options(token):
     wb = openpyxl.load_workbook('test_build_before_sheet.xlsx')
     os.remove('test_build_before_sheet.xlsx')
 
-def test_global_options(token):
-    ds = tally.DataSet(api_key=token)
+def test_global_options(token, api_url, use_ssl):
+    ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
     ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
     build = tally.Build(name='client A', default_dataset=ds)
 
@@ -163,8 +163,8 @@ def test_global_options(token):
 
 
 
-def test_add_many_sheets(token):
-    ds = tally.DataSet(api_key=token)
+def test_add_many_sheets(token, api_url, use_ssl):
+    ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
     ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
 
     build = tally.Build(name='client A', default_dataset=ds)
@@ -187,8 +187,8 @@ def test_add_many_sheets(token):
     wb = openpyxl.load_workbook('test_many_sheets.xlsx')
     os.remove('test_many_sheets.xlsx')
 
-def test_build_options(token):
-    ds = tally.DataSet(api_key=token)
+def test_build_options(token, api_url, use_ssl):
+    ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
     ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
 
     build = tally.Build(name='client A', default_dataset=ds, table_of_contents=True)
