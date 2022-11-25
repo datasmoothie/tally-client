@@ -44,8 +44,7 @@ class DataSet:
         response = self.tally.post_request('tally', api_endpoint, payload, files)
         if response.status_code == 404:
             return self._method_not_found_response(api_endpoint)
-        json_dict = json.loads(response.content)
-        json_dict = self._clean_error_response(json_dict)
+        json_dict = self._clean_error_response(response.json())
         if self._has_keys(json_dict, VARIABLE_KEYS):
             self.add_column_to_data(json_dict['meta']['name'], json_dict['data'], json_dict['meta'])
             return
@@ -144,7 +143,7 @@ class DataSet:
         csv = pd.read_csv(csv_file).to_csv()
         payload = {'csv': csv}
         response = self.tally.post_request('tally', 'convert_data_to_csv_json', payload)
-        result = json.loads(response.content)
+        result = response.json()
         self.qp_meta = json.dumps(result['json'])
         self.qp_data = result['csv']
         self.dataset_type = 'quantipy'
@@ -157,7 +156,7 @@ class DataSet:
             }
         }
         response = self.tally.post_request('tally', 'convert_data_to_csv_json', payload)
-        result = json.loads(response.content)
+        result = response.json()
         self.qp_meta = json.dumps(result['json'])
         self.qp_data = result['csv']
         self.dataset_type = 'quantipy'
@@ -174,7 +173,7 @@ class DataSet:
             },
         }
         response = self.tally.post_request('tally', 'convert_data_to_csv_json', payload)
-        result = json.loads(response.content)
+        result = response.json()
         self.qp_meta = json.dumps(result['json'])
         self.qp_data = result['csv']
         self.dataset_type = 'quantipy'
@@ -197,7 +196,7 @@ class DataSet:
                 ('pq_meta',(pq_meta_filename,io.BytesIO(fileContent_meta),'text/plain')),
             )
         response = self.tally.post_request('tally', 'convert_data_to_csv_json', payload, files)
-        result = json.loads(response.content)
+        result = response.json()
         self.qp_meta = json.dumps(result['json'])
         self.qp_data = result['csv']
         self.dataset_type = 'quantipy'
@@ -217,7 +216,7 @@ class DataSet:
             ('ddf', (ddf_filename,io.BytesIO(fileContent_ddf), 'application/x-sqlite3')) 
         ]
         response = self.tally.post_request('tally', 'convert_data_to_csv_json', payload, files)
-        result = json.loads(response.content)
+        result = response.json()
         self.qp_meta = json.dumps(result['json'])
         self.qp_data = result['csv']
         self.dataset_type = 'quantipy'
@@ -271,7 +270,7 @@ class DataSet:
     def weight(self, data_params=None, **kwargs):
         files, payload = self.prepare_post_params(data_params, kwargs)
         response = self.tally.post_request('tally', 'weight', payload, files)
-        json_dict = json.loads(response.content)
+        json_dict = response.json()
         if 'error' in json_dict:
             json_dict = self._clean_error_response(json_dict)
             return json_dict
@@ -305,7 +304,7 @@ class DataSet:
     def convert_spss_to_csv_json(self, data_params=None):
         files, payload = self.prepare_post_params(data_params)
         response = self.tally.post_request('tally', 'convert_spss_to_csv_json', payload, files)
-        json_dict = json.loads(response.content)
+        json_dict = response.json()
         result = {}
         result['csv'] = json_dict['csv']
         result['json'] = json_dict['json']
