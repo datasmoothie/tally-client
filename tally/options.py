@@ -128,7 +128,7 @@ class Options:
     def merge(self,  options):
         """ Merge two Option objects together, this one overriding the incoming one
         """
-        self.table_options = self.merge_dict(self.table_options, options.table_options)
+        self.table_options = self.merge_dict(self.table_options, copy.deepcopy(options.table_options))
         self.formats = self.merge_dict(self.formats, copy.deepcopy(options.formats))
 
     def merge_dict(self, source, destination):

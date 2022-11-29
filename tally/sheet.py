@@ -30,7 +30,7 @@ class Sheet:
     def add_table(self, stub, options={}, dataset=None):
         if self.default_dataset and dataset is None:
             dataset = self.default_dataset
-        merged_table_options = self.options.merge_dict(self.options.table_options, self.parent.options.table_options)
+        merged_table_options = self.options.merge_dict(self.options.table_options, copy.deepcopy(self.parent.options.table_options))
         crosstab = {**{**merged_table_options['stub'], **stub}, **{'y':self.banner, 'add_format_column':True}}
         df = dataset.crosstab(
             crosstabs=[crosstab]

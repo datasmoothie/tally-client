@@ -58,6 +58,23 @@ def test_add_table_bug(token, api_url, use_ssl):
     wb = openpyxl.load_workbook('test_simple_table_bug.xlsx')
     os.remove('test_simple_table_bug.xlsx')
 
+def test_annotations(token, api_url, use_ssl):
+    ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
+    ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
+    build = tally.Build(name='Client A', subtitle="Datasmoothie", default_dataset=ds)
+
+    sheet = build.add_sheet(banner=['gender', 'locality'])
+    sheet.options.set_sig_test_levels(0.05)
+    sheet.add_table(stub={'x':'q1', 'ci':['c%'], 'xtotal':True, 'stats':['mean']}, dataset=ds)
+
+    sheet = build.add_sheet(banner=['gender', 'locality'])
+    sheet.add_table(stub={'x':'q1', 'ci':['c%'], 'xtotal':True, 'stats':['stddev']}, dataset=ds)
+
+    build.save_excel('test_annotations.xlsx')
+
+    wb = openpyxl.load_workbook('test_annotations.xlsx')
+    os.remove('test_annotations.xlsx')
+
 
 def test_default_options(token, api_url, use_ssl):
     ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
