@@ -27,9 +27,7 @@ jobs:
     - name: Install dependencies
       run: |
         PYTHONVERSION=$(python --version|awk '/3.10/{print substr($2,0,4)}')
-        echo "CURRENT PYTHONVERSION :: $PYTHONVERSION"
-        if [ "$PYTHONVERSION" == "3.10" ]; then sed -i 's/numpy==1.20.3/numpy==1.21.0/g' requirements.txt && sed -i 's/pandas==1.2.4/pandas==1.5.2/g' requirements.txt && echo "REPLACE THE requirements.txt" ; fi
-        cat requirements.txt
+        if [ "$PYTHONVERSION" == "3.10" ]; then sed -i 's/numpy==1.20.3/numpy==1.23.4/g' requirements.txt && sed -i 's/pandas==1.2.4/pandas==1.4.0/g' requirements.txt && echo "REPLACE THE requirements.txt" ; fi
         python -m pip install --upgrade pip
         python -m pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi

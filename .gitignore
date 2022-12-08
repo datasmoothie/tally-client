@@ -35,6 +35,7 @@ MANIFEST
 # Pyenv
 env3.8
 env3.9
+env3.10
 .python-version
 
 # Don't commit xlsx files
