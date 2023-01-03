@@ -39,6 +39,6 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=300 --statistics
     - name: Test with pytest
       run: |
-        python -m pytest --token="$TALLY_PR_TOKEN"
+        python -m pytest --token="$TALLY_PR_TOKEN" --api_url aws.tally.datasmoothie.com 
       env:
         TALLY_PR_TOKEN: ${{ secrets.TALLY_PR_TOKEN }}
