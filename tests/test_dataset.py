@@ -70,7 +70,7 @@ def test_joined_crosstab(token, api_url, use_ssl):
 
 def test_spss_crosstab(token, api_url, use_ssl):
     ds = tally.DataSet()
-    ds.add_credentials(api_key=token, host=api_url, ssl=use_ssl)
+    ds.add_credentials(api_key=token)
     
     ds.use_spss('tests/fixtures/Example Data (A).sav')
 

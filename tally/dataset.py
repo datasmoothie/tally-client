@@ -90,7 +90,7 @@ class DataSet:
     def _has_keys(self, response, required_keys):
         return all(elem in response.keys() for elem in required_keys)
 
-    def add_credentials(self, api_key=None, host='tally.datasmoothie.com/', ssl=True):
+    def add_credentials(self, api_key=None, host='tally.datasmoothie.com', ssl=True):
         tally = Tally(api_key=api_key, host=host, ssl=ssl)
         self.tally = tally
 
