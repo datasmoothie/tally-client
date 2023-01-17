@@ -28,7 +28,7 @@ class DataSet:
     qp_data = None
     tally = None
 
-    def __init__(self, api_key=None, host='tally.datasmoothie.com/', ssl=True):
+    def __init__(self, api_key=None, host='tally.datasmoothie.com', ssl=True):
         self.add_credentials(api_key=api_key, host=host, ssl=ssl)
 
     #@add_data

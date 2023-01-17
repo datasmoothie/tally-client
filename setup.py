@@ -11,7 +11,7 @@ setuptools.setup(
         'pillow',
         'requests'
     ],
-    version="0.37",
+    version="0.38",
     license='MIT',
     include_package_data=True,
     url="https://github.com/datasmoothie/datasmoothie-tally-client",
