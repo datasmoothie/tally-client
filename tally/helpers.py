@@ -6,7 +6,8 @@ import pandas as pd
 def result_to_dataframe(json_dict):
     """ Deserializes a dataframe that was serialized with orient='split'
     """
-    if 'column_names' and 'index_names' in json_dict.keys():
+    if 'column_names' and 'index_names' in json_dict.keys() and \
+        json_dict.get('column_names') != [None] and json_dict.get('index_names') != [None]:
         columns = pd.MultiIndex.from_tuples(json_dict['columns'], names=json_dict['column_names'])
         index = pd.MultiIndex.from_tuples(json_dict['index'], names=json_dict['index_names'])
     else:
