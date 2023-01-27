@@ -68,6 +68,11 @@ def test_annotations(token, api_url, use_ssl):
     sheet.add_table(stub={'x':'q1', 'ci':['c%'], 'xtotal':True, 'stats':['mean']}, dataset=ds)
 
     sheet = build.add_sheet(banner=['gender', 'locality'])
+    sheet.options.set_annotations(True)
+    sheet.options.set_sig_test_levels(0.05)
+    sheet.add_table(stub={'x':'q1', 'ci':['c%'], 'xtotal':True, 'stats':['stddev']}, dataset=ds)
+
+    sheet = build.add_sheet(banner=['gender', 'locality'])
     sheet.add_table(stub={'x':'q1', 'ci':['c%'], 'xtotal':True, 'stats':['stddev']}, dataset=ds)
 
     build.save_excel('test_annotations.xlsx')

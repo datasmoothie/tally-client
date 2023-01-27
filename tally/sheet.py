@@ -46,7 +46,8 @@ class Sheet:
             df = self.apply_table_options(df, options)
             table['dataframe'] = df
             table['dataframe'] = self._append_row_to_dataframe(table['dataframe'])
-            table = self._add_annotations(table)
+            if 'annotations' in self.options.table_options and self.options.table_options['annotations']:
+                table = self._add_annotations(table)
             table['dataframe'] = self._append_row_to_dataframe(table['dataframe'])
 
 

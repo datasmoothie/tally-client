@@ -13,7 +13,8 @@ class Options:
                     "counts":{}
                 },
                 "stub": {"ci":["c%"]},
-                "banner_border": True
+                "banner_border": True,
+                "annotations": False
             }
         else:
             self.table_options = table_options
@@ -33,6 +34,9 @@ class Options:
 
     def set_show_table_base_column(self, xtotal):
         self.table_options['stub']['xtotal'] = xtotal
+
+    def set_annotations(self, annotations):
+        self.table_options['annotations'] = annotations
 
     def set_sig_test_levels(self,sig_test_level):
         if type(sig_test_level) == list:
