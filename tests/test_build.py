@@ -221,19 +221,39 @@ def test_build_options(token, api_url, use_ssl):
     build.options.set_answer_format('base', {"font_color":"F15A30", "bold":True,'text_wrap': True})
     build.options.set_question_format('percentage', {"bold":True})
     build.options.set_format('base', {"bold":True})
+    build.options.set_font("Comic Sans")
 
     sheet = build.add_sheet(banner=['gender', 'locality'])
-    sheet2 = build.add_sheet(banner=['gender', 'ethnicity'])
+    sheet2 = build.add_sheet(banner=['@', 'gender', 'ethnicity'])
     sheet2.options.set_format('stats', {"font_color":"98B4DF"})
     sheet2.options.set_stats(stats=['mean', 'stddev'])
 
     sheet.add_table(stub={'x':'q1'})
     sheet.add_table(stub={'x':'q2b'})
 
-    sheet2.add_table(stub={'x':'q1'})
+    sheet2.add_table(stub={'x':'q1' })
     sheet2.add_table(stub={'x':'q2b'})
 
     build.save_excel('test_build_options.xlsx')
     wb = openpyxl.load_workbook('test_build_options.xlsx')
     os.remove('test_build_options.xlsx')
 
+def test_add_change_base_label(token, api_url, use_ssl):
+    ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
+    ds.use_spss('tests/fixtures/Example Data (A).sav')
+
+    build = tally.Build(name='client A', default_dataset=ds, table_of_contents=True)
+
+    build.options.set_hide_gridlines(2)
+    build.options.set_base_position('outside')
+    sheet = build.add_sheet(banner=['gender', 'locality'])
+    build.options.set_weight('weight_a')
+
+    sheet.options.set_base_labels('All GB', 'Unweighted base (All GB)')
+
+    sheet.add_table(stub={'x':'q2b', 'xtotal':True, 'base':'both'})
+    sheet.add_table(stub={'x':'q1', 'xtotal':True}, options={'base':'hide'})
+
+    build.save_excel('test_add_change_base_label.xlsx')
+    wb = openpyxl.load_workbook('test_add_change_base_label.xlsx')
+    os.remove('test_add_change_base_label.xlsx')
