@@ -30,7 +30,8 @@ class Sheet:
     def add_table(self, stub, options={}, dataset=None):
         if self.default_dataset and dataset is None:
             dataset = self.default_dataset
-        merged_table_options = self.options.merge_dict(self.options.table_options, copy.deepcopy(self.parent.options.table_options))
+        merged_local_options = self.options.merge_dict(options, copy.deepcopy(self.options.table_options))
+        merged_table_options = self.options.merge_dict(copy.deepcopy(merged_local_options), copy.deepcopy(self.parent.options.table_options))
         crosstab = {**{**merged_table_options['stub'], **stub}, **{'y':self.banner, 'add_format_column':True}}
         df = dataset.crosstab(
             crosstabs=[crosstab]
@@ -56,12 +57,18 @@ class Sheet:
             df = self.apply_base_options(df, options['base'])
         if 'base_label' in options:
             df = df.rename(index={'Base':options['base_label']}, level=1)
+        if 'unweighted_base_label' in options:
+            df = df.rename(index={'Unweighted base':options['unweighted_base_label']}, level=1)
         if 'format' in options:
             df = self.apply_table_format_options(df, options['format'])
         if 'row_format' in options:
             df = self.set_row_format(df, options['row_format'])
         if 'banner_border' in options:
             df = self.add_banner_border(df)
+        if 'font' in options:
+            for i, col in enumerate(df.columns):
+                self._set_column_format(df, i, {"font_name":options['font']})
+                self.options.set_question_format('base', {"font_name":options['font']})
         return df
 
     def apply_table_format_options(self, df, options):

@@ -89,21 +89,23 @@ class Build:
 
                 wb_sheet = wb.create_sheet('Contents', 0)
                 wb_sheet.cell(row=offset_y, column=2, value='Contents')
+                wb_sheet.cell(row=offset_y, column=2).font = Font(name=self.options.global_options['font'])
                 wb_sheet.column_dimensions['B'].width = 20
                 wb_sheet.column_dimensions['C'].width = 70
 
                 if self.name is not None:
                     title = wb_sheet.cell(7, 2, value=self.name)
-                    title.font = Font(size="20")
+                    title.font = Font(size="20", name=self.options.global_options['font'])
                 if self.subtitle is not None:
                     subtitle = wb_sheet.cell(8, 2, value=self.subtitle)
-                    subtitle.font = Font(size="14")
+                    subtitle.font = Font(size="14", name=self.options.global_options['font'])
 
                 for index, sheet in enumerate(self.sheets):
                     wb_sheet.cell(row=index+1+offset_y, column=3, value=sheet.get_name())
+                    wb_sheet.cell(row=index+1+offset_y, column=3).font = Font(name=self.options.global_options['font'])
                     link_value = '=HYPERLINK("#{}!A1", "Table {}")'.format(wb.sheetnames[index+1], index+1)
                     cell = wb_sheet.cell(row=index+1+offset_y, column=2, value=link_value)
-                    cell.font = Font(color="2A64C5", underline="single")
+                    cell.font = Font(color="2A64C5", underline="single", name=self.options.global_options['font'])
 
                 if self.logo is not None:
                     img = Image(self.logo)
@@ -124,12 +126,24 @@ class Build:
                 for index, sh in enumerate(self.sheets):
                     top_offset = sh.options.formats['offsets']['top']
                     wb_sheet = wb.worksheets[index+1]
-                    wb_sheet['A3'].font = Font(bold=True, size=16)
+                    wb_sheet['A3'].font = Font(bold=True, size=16, name=self.options.global_options['font'])
+                    if wb_sheet.cell(top_offset+1, 2).value == 'Total':
+                        wb_sheet.merge_cells(
+                            start_row=top_offset+1, 
+                            end_row=top_offset+len(self.sheets[0].tables[0]['dataframe'].columns.names), 
+                            start_column=2, 
+                            end_column=2
+                        )
+
                     for index, header in enumerate(sh.tables[0]['dataframe'].columns.names):
                         wb_sheet.row_dimensions[top_offset+index+1].height=heights[header]
                         for col_range in range(1,100):
                             wb_sheet.cell(top_offset+index+1,col_range).alignment = Alignment(wrap_text=True, vertical='center', horizontal='center')
-           
+                            wb_sheet.cell(top_offset+index+1,col_range).font = Font(
+                                name=self.options.global_options['font'],
+                                bold=True
+                            )
+
 
 
 
@@ -145,11 +159,21 @@ class Build:
                         color_cell.fill = PatternFill(start_color=self.index_options['header_color'], end_color=self.index_options['body_color'], fill_type="solid")
 
                 top_offset = self.sheets[0].options.formats['offsets']['top']
+                if wb_sheet.cell(top_offset+1, 2).value == 'Total':
+                    wb_sheet.merge_cells(
+                        start_row=top_offset+1, 
+                        end_row=top_offset+len(self.sheets[0].tables[0]['dataframe'].columns.names), 
+                        start_column=2, 
+                        end_column=2
+                    )
                 for index, header in enumerate(self.sheets[0].tables[0]['dataframe'].columns.names):
                     wb_sheet.row_dimensions[top_offset+index+1].height=heights[header]
                     for col_range in range(1,100):
                         wb_sheet.cell(top_offset+index+1,col_range).alignment = Alignment(wrap_text=True, vertical='center', horizontal='center')
- 
+                        wb_sheet.cell(top_offset+index+1,col_range).font = Font(
+                            name=self.options.global_options['font'],
+                            bold=True
+                        )
 
             wb.save(filename)
         except Exception as e:

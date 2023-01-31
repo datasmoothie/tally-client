@@ -19,6 +19,10 @@ class Options:
         else:
             self.table_options = table_options
 
+        self.global_options = {
+            "font" : "Calibri"
+        }
+
         self.formats = formats
         if formats is None:
             self.formats = {}
@@ -28,6 +32,15 @@ class Options:
         if position == 'outside':
             self.set_question_format('base', {'font_color':'ffffff', 'bg_color':'ffffff', 'font_size':1})
         self.table_options['base'] = position
+
+    def set_base_labels(self, label, unweighted_label="Unweighted base"):
+        self.table_options['base_label'] = label
+        self.table_options['unweighted_base_label'] = unweighted_label
+
+    def set_font(self, font_name):
+        self.table_options['font'] = font_name
+        self.global_options['font'] = font_name
+        self.set_question_format('percentage', {'font_name':font_name})
 
     def set_language_key(self, text_key):
         self.table_options['stub']['text_key'] = text_key
