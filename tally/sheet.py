@@ -65,10 +65,12 @@ class Sheet:
             df = self.set_row_format(df, options['row_format'])
         if 'banner_border' in options:
             df = self.add_banner_border(df)
-        if 'font' in options:
+        if 'font_name' in options:
             for i, col in enumerate(df.columns):
-                self._set_column_format(df, i, {"font_name":options['font']})
-                self.options.set_question_format('base', {"font_name":options['font']})
+                self._set_column_format(df, i, {"font_name":options['font_name']})
+        if 'font_size' in options:
+            for i, col in enumerate(df.columns):
+                self._set_column_format(df, i, {"font_size":options['font_size']})
         return df
 
     def apply_table_format_options(self, df, options):

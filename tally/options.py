@@ -20,7 +20,8 @@ class Options:
             self.table_options = table_options
 
         self.global_options = {
-            "font" : "Calibri"
+            "font_name": "Calibri",
+            "font_size": "11"
         }
 
         self.formats = formats
@@ -37,10 +38,12 @@ class Options:
         self.table_options['base_label'] = label
         self.table_options['unweighted_base_label'] = unweighted_label
 
-    def set_font(self, font_name):
-        self.table_options['font'] = font_name
-        self.global_options['font'] = font_name
-        self.set_question_format('percentage', {'font_name':font_name})
+    def set_font(self, name, size=11):
+        self.table_options['font_name'] = name
+        self.global_options['font_name'] = name
+        self.table_options['font_size'] = size
+        self.global_options['font_size'] = size
+        self.set_question_format('percentage', {'font_name':name, 'font_size':size})
 
     def set_language_key(self, text_key):
         self.table_options['stub']['text_key'] = text_key
@@ -94,6 +97,9 @@ class Options:
     @verify_no_tables
     def set_banner_border(self, border):
         self.table_options['banner_border'] = border
+
+    def set_top_offset(self, offset_row):
+        self.formats['offsets']['top'] = offset_row
 
     def freeze_panes(self, row=10, column=1):
         freeze = {

@@ -219,9 +219,11 @@ def test_build_options(token, api_url, use_ssl):
     build.options.freeze_panes(9,1)
     build.options.set_base_position('outside')
     build.options.set_answer_format('base', {"font_color":"F15A30", "bold":True,'text_wrap': True})
-    build.options.set_question_format('percentage', {"bold":True})
     build.options.set_format('base', {"bold":True})
-    build.options.set_font("Comic Sans")
+    build.options.set_font("Comic Sans", 10)
+    build.options.set_top_offset(3)
+    build.options.freeze_panes(9,1)
+
 
     sheet = build.add_sheet(banner=['gender', 'locality'])
     sheet2 = build.add_sheet(banner=['@', 'gender', 'ethnicity'])
@@ -236,7 +238,7 @@ def test_build_options(token, api_url, use_ssl):
 
     build.save_excel('test_build_options.xlsx')
     wb = openpyxl.load_workbook('test_build_options.xlsx')
-    os.remove('test_build_options.xlsx')
+    #os.remove('test_build_options.xlsx')
 
 def test_add_change_base_label(token, api_url, use_ssl):
     ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
