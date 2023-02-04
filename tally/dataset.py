@@ -118,6 +118,14 @@ class DataSet:
 
     @add_data
     def write_spss(self, file_path, data_params, **kwargs):
+        """
+        Writes the dataset to an SPSS (sav) file.
+
+        Parameters
+        ----------
+            file_path: string
+                Path to the sav file to write.
+        """
         payload = {}
         files, payload = self.prepare_post_params(data_params, {})
         response = self.tally.post_request('tally', 'convert_data_to_sav', payload, files)
@@ -127,6 +135,16 @@ class DataSet:
         return response
 
     def write_quantipy(self, file_path_json, file_path_csv):
+        """
+        Write the case and meta data as Quantipy compatible json and csv files. 
+
+        Parameters
+        ----------
+            file_path_json: string
+                Path to the json meta data file to create.
+            file_path_csv: string
+                Path to the csv data file to create.
+        """
         json_file = open(file_path_json, "w")
         n = json_file.write(self.qp_meta)
         json_file.close()
@@ -135,12 +153,30 @@ class DataSet:
         csv_file.close()
 
     def use_quantipy(self, meta_json, data_csv):
+        """
+        Load Quantipy meta and data files to this dataset.
+
+        Parameters
+        ----------
+            meta_json: string
+                Path to the json file we want to use as our meta data.
+            data_csv: string
+                Path to the csv file we want to use as our data file.
+        """
         with open(meta_json) as json_file:
             self.qp_meta = json.dumps(json.load(json_file))
         self.qp_data = pd.read_csv(data_csv).to_csv()
         self.dataset_type = 'quantipy'
 
     def use_csv(self, csv_file):
+        """
+        Load CSV file into the dataset as the file to send with all requests.
+
+        Parameters
+        ----------
+            csv_file: string
+                Path to the CSV file we want to use as our data.
+        """        
         csv = pd.read_csv(csv_file).to_csv()
         payload = {'csv': csv}
         response = self.tally.post_request('tally', 'convert_data_to_csv_json', payload)
@@ -150,6 +186,14 @@ class DataSet:
         self.dataset_type = 'quantipy'
 
     def use_nebu(self, nebu_url):
+        """
+        Load remote Nebu/Enghouse file into the dataset as the file to send with all requests.
+
+        Parameters
+        ----------
+            nebu_url: string
+                Path to the Nebu data file we want to use as our data.
+        """       
         payload = {
             'datasource': {
                 'type' : 'Nebu',
@@ -163,6 +207,22 @@ class DataSet:
         self.dataset_type = 'quantipy'
 
     def use_confirmit(self, source_projectid, source_idp_url, source_client_id, source_client_secret, source_public_url):
+        """
+        Load remote Forsta/Confirmit data into the dataset as the data to send with all requests.
+
+        Parameters
+        ----------
+        source_projectid: string
+            Project id of the survey
+        source_idp_url: string
+            IPD Url of the survey
+        source_client_id: string
+            Your client id
+        source_client_secret: string
+            Client secret (don't commit this to a repository)
+        source_public_url: string
+                Public url to source
+        """               
         payload = {
             'datasource': {
                 'type': 'Confirmit',

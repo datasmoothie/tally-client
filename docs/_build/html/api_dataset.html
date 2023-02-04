@@ -1,0 +1,400 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>The DataSet class</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script src="_static/design-tabs.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="The Build class" href="api_build.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/datasmoothie-logo-h25_padding_2x.png" class="logo" alt="logo">
+      
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="get_started.html">
+   Quick start
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  The pipeline
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="1_load_data.html">
+   Load data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2_explore_data.html">
+   Explore data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="3_clean_data.html">
+   Clean data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="4_create_variables.html">
+   Create variables
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="5_weight_data.html">
+   Weight data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="6_create_crosstabs.html">
+   Create crosstabs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="7_build_excel_output.html">
+   Build Excel tables
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="terminology.html">
+   Terminology
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  API Reference
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="the_api.html">
+   The API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="api_build.html">
+   The Build class
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   The DataSet class
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right"><a href="https://github.com/datasmoothie/tally-client"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="bottom"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>The DataSet class</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section id="the-dataset-class">
+<h1>The DataSet class<a class="headerlink" href="#the-dataset-class" title="Permalink to this headline">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="tally.DataSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tally.</span></span><span class="sig-name descname"><span class="pre">DataSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tally.datasmoothie.com'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ssl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tally.DataSet" title="Permalink to this definition">#</a></dt>
+<dd><p>A class that wraps a dataset and has all the information needed to send to the API in order to perform the various tasks.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>name: string</dt><dd><p>Name for the dataset</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="tally.DataSet.use_confirmit">
+<span class="sig-name descname"><span class="pre">use_confirmit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_projectid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_idp_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_client_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_client_secret</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_public_url</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tally.DataSet.use_confirmit" title="Permalink to this definition">#</a></dt>
+<dd><p>Load remote Forsta/Confirmit data into the dataset as the data to send with all requests.</p>
+<dl class="simple">
+<dt>source_projectid: string</dt><dd><p>Project id of the survey</p>
+</dd>
+<dt>source_idp_url: string</dt><dd><p>IPD Url of the survey</p>
+</dd>
+<dt>source_client_id: string</dt><dd><p>Your client id</p>
+</dd>
+<dt>source_client_secret: string</dt><dd><p>Client secret (don’t commit this to a repository)</p>
+</dd>
+<dt>source_public_url: string</dt><dd><p>Public url to source</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tally.DataSet.use_csv">
+<span class="sig-name descname"><span class="pre">use_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tally.DataSet.use_csv" title="Permalink to this definition">#</a></dt>
+<dd><p>Load CSV file into the dataset as the file to send with all requests.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>csv_file: string</dt><dd><p>Path to the CSV file we want to use as our data.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tally.DataSet.use_nebu">
+<span class="sig-name descname"><span class="pre">use_nebu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nebu_url</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tally.DataSet.use_nebu" title="Permalink to this definition">#</a></dt>
+<dd><p>Load remote Nebu/Enghouse file into the dataset as the file to send with all requests.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>nebu_url: string</dt><dd><p>Path to the Nebu data file we want to use as our data.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tally.DataSet.use_quantipy">
+<span class="sig-name descname"><span class="pre">use_quantipy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta_json</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_csv</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tally.DataSet.use_quantipy" title="Permalink to this definition">#</a></dt>
+<dd><p>Load Quantipy meta and data files to this dataset.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>meta_json: string</dt><dd><p>Path to the json file we want to use as our meta data.</p>
+</dd>
+<dt>data_csv: string</dt><dd><p>Path to the csv file we want to use as our data file.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tally.DataSet.use_spss">
+<span class="sig-name descname"><span class="pre">use_spss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tally.DataSet.use_spss" title="Permalink to this definition">#</a></dt>
+<dd><p>Load SPSS file into memory as the file to send with all requests.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>file_path: string</dt><dd><p>Path to the sav file we want to use as our data.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tally.DataSet.write_quantipy">
+<span class="sig-name descname"><span class="pre">write_quantipy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path_json</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path_csv</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tally.DataSet.write_quantipy" title="Permalink to this definition">#</a></dt>
+<dd><p>Write the case and meta data as Quantipy compatible json and csv files.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>file_path_json: string</dt><dd><p>Path to the json meta data file to create.</p>
+</dd>
+<dt>file_path_csv: string</dt><dd><p>Path to the csv data file to create.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tally.DataSet.write_spss">
+<span class="sig-name descname"><span class="pre">write_spss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_params</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tally.DataSet.write_spss" title="Permalink to this definition">#</a></dt>
+<dd><p>Writes the dataset to an SPSS (sav) file.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>file_path: string</dt><dd><p>Path to the sav file to write.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="api_build.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">The Build class</p>
+        </div>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Geir Freysson<br/>
+  
+      &copy; Copyright 2023, Geir Freysson.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

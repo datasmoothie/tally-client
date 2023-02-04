@@ -50,6 +50,15 @@ get_started
 terminology
 ```
 
+```{toctree}
+:caption: API Reference
+:hidden:
+
+the_api
+api_build
+api_dataset
+```
+
 Tally is a tool for survey and market research data processing, analysis, and publishing. It allows users to combine multiple survey data platforms, run data processing tasks such as cleaning, weighting, merging data and creating new variables. It also produces Excel data tables, Powerpoint files and interactive dashboards.
 
 Tally is composed of two parts:
@@ -63,49 +72,49 @@ Because Tally is based on an API, it supports R, JavaScript and any other progra
 :margin: 4 4 0 0
 :gutter: 4
 
-:::{grid-item-card} {octicon}`table` Quick start
+:::{grid-item-card} {octicon}`rocket` Quick start
 :link: get_started
 :link-type: doc
 
 Quickstart guide to get started using Tally.
 :::
 
-:::{grid-item-card} {octicon}`note` Load data
+:::{grid-item-card} {octicon}`upload` Load data
 :link: 1_load_data
 :link-type: doc
 
 Flexible and extensible content containers.
 :::
 
-:::{grid-item-card} {octicon}`chevron-down` Clean data
+:::{grid-item-card} {octicon}`paintbrush` Clean data
 :link: 3_clean_data
 :link-type: doc
 
 Hide content in expandable containers.
 :::
 
-:::{grid-item-card} {octicon}`duplicate` Tabs
+:::{grid-item-card} {octicon}`plus` Create variables
 :link: 4_create_variables
 :link-type: doc
 
 Synchronisable, tabbed content sets.
 :::
 
-:::{grid-item-card} {octicon}`plus-circle` Weight data
+:::{grid-item-card} {octicon}`verified` Weight data
 :link: 5_weight_data
 :link-type: doc
 
 Roles and directives for {bdg-primary}`badges` and other components.
 :::
 
-:::{grid-item-card} {octicon}`image` Create crosstabs
+:::{grid-item-card} {octicon}`table` Create crosstabs
 :link: 6_create_crosstabs
 :link-type: doc
 
 Change the default colors and other CSS.
 :::
 
-:::{grid-item-card} {octicon}`image` CSS Styling
+:::{grid-item-card} {octicon}`file` Build Excel tables
 :link: 7_build_excel_output
 :link-type: doc
 
