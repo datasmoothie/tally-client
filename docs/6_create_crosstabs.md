@@ -1,13 +1,29 @@
+---
+file_format: mystnb
+kernelspec:
+  name: python3
+---
 # Create crosstabs
 
 
 ## Introduction
 Tally's `crosstab` method supports a variety of options and can be used both in a Jupyter Notebook environment and to produce Excel tables. Here we will cover how the method works and what options it supports, and in the next section we will show how it can be used to generate Excel tables.
 
-hello
-
 ## Running a basic crosstab
 Tally's crosstab method is used to run crosstabs (see the [API reference on crosstab](https://tally.datasmoothie.com/#tag/Aggregations/operation/crosstab) for full details).
+
+```{code-cell}
+:tags: [remove-cell]
+import tally
+import os
+dataset = tally.DataSet(api_key=os.environ.get('tally_api_key'))
+dataset.use_spss('./data/Example Data (A).sav')
+```
+
+```{code-cell}
+dataset.crosstab( x='q2b', y='gender')
+```
+
 
 ```
 >>> dataset.crosstab( x='q2b', y='gender')

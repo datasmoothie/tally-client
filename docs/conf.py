@@ -21,7 +21,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 napoleon_numpy_docstring = True
 
-jupyter_execute_notebooks = "off"
+jupyter_execute_notebooks = "auto"
 
 
 # -- Options for HTML output -------------------------------------------------
