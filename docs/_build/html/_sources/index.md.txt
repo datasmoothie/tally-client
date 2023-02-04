@@ -22,7 +22,7 @@ sd_hide_title: true
 Use Python to integrate multiple survey data platforms, perform data processing tasks, and build Excel tables, Powerpoint presentations and dashboards.
 
 
-```{button-ref} get_started
+```{button-ref} Quick_Start
 :ref-type: doc
 :color: primary
 :class: sd-rounded-pill float-left
@@ -33,13 +33,14 @@ Use Python to integrate multiple survey data platforms, perform data processing 
 ```{toctree}
 :hidden:
 
-get_started
+Quick_Start
 ```
 
 ```{toctree}
 :caption: The pipeline
 :hidden:
 
+pipeline_intro
 1_load_data
 2_explore_data
 3_clean_data
@@ -47,7 +48,6 @@ get_started
 5_weight_data
 6_create_crosstabs
 7_build_excel_output
-terminology
 ```
 
 ```{toctree}
@@ -59,6 +59,12 @@ api_build
 api_dataset
 ```
 
+```{toctree}
+:hidden:
+
+terminology
+```
+
 Tally is a tool for survey and market research data processing, analysis, and publishing. It allows users to combine multiple survey data platforms, run data processing tasks such as cleaning, weighting, merging data and creating new variables. It also produces Excel data tables, Powerpoint files and interactive dashboards.
 
 Tally is composed of two parts:
@@ -67,6 +73,9 @@ Tally is composed of two parts:
 - A Python client library for the API
 
 Because Tally is based on an API, it supports R, JavaScript and any other programming language. It can also be plugged into a data warehouse pipeline, where it can both be used as an ETL layer and an OLAP layer for survey data.
+
+Creating a survey data pipeline
+---
 
 ::::{grid} 1 2 2 3
 :margin: 4 4 0 0
@@ -79,18 +88,18 @@ Because Tally is based on an API, it supports R, JavaScript and any other progra
 Quickstart guide to get started using Tally.
 :::
 
-:::{grid-item-card} {octicon}`upload` Load data
+:::{grid-item-card} {octicon}`upload` Load/extract data
 :link: 1_load_data
 :link-type: doc
 
-Flexible and extensible content containers.
+Load an SPSS file or connect to survey data platform.
 :::
 
 :::{grid-item-card} {octicon}`paintbrush` Clean data
 :link: 3_clean_data
 :link-type: doc
 
-Hide content in expandable containers.
+Clean data with advanced filtering and recoding.
 :::
 
 :::{grid-item-card} {octicon}`plus` Create variables
@@ -124,3 +133,11 @@ Change the default colors and other CSS.
 
 
 ::::
+
+Reference
+---
+
+- [API Reference](the_api)
+- [Building outputs](api_build)
+- [Data processing with the DataSet class](api_dataset)
+- [Terminology](terminology)

@@ -1,4 +1,4 @@
-The DataSet class
+DataSet class
 -----------------
 
 

@@ -13,12 +13,15 @@ author = 'Geir Freysson'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ['sphinx.ext.autodoc', 'myst_parser', 'sphinx_design']
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.autosummary', 'sphinx.ext.napoleon', 'sphinx.ext.autosectionlabel', 'sphinx_design', 'myst_nb']
 myst_enable_extensions = ["colon_fence"]
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
+napoleon_numpy_docstring = True
+
+jupyter_execute_notebooks = "off"
 
 
 # -- Options for HTML output -------------------------------------------------

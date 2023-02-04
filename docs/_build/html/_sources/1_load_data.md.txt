@@ -1,4 +1,4 @@
-# Load data
+# Load/extract data
 The first step is always loading your data into Tally. This converts the data from whatever format your data provider uses to a uniform, open source data format (built on the open source Quantipy).
 
 In the following examples, we assume an instance of Tally has been created by using your API key.

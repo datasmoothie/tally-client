@@ -21,6 +21,7 @@
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
     
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -85,7 +86,7 @@
     <div class="bd-toc-item active">
         <ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="get_started.html">
+  <a class="reference internal" href="Quick_Start.html">
    Quick start
   </a>
  </li>
@@ -97,8 +98,13 @@
 </p>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
+  <a class="reference internal" href="pipeline_intro.html">
+   Building a survey data pipeline
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="1_load_data.html">
-   Load data
+   Load/extract data
   </a>
  </li>
  <li class="toctree-l1">
@@ -131,11 +137,6 @@
    Build Excel tables
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="terminology.html">
-   Terminology
-  </a>
- </li>
 </ul>
 <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
@@ -150,12 +151,19 @@
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="api_build.html">
-   The Build class
+   Building outputs
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="api_dataset.html">
-   The DataSet class
+   DataSet class
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="terminology.html">
+   Terminology
   </a>
  </li>
 </ul>
@@ -249,15 +257,74 @@ title="Source repository"
 <h1 id="index">Index</h1>
 
 <div class="genindex-jumpbox">
- <a href="#D"><strong>D</strong></a>
+ <a href="#_"><strong>_</strong></a>
+ | <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#S"><strong>S</strong></a>
  | <a href="#U"><strong>U</strong></a>
  | <a href="#W"><strong>W</strong></a>
  
 </div>
+<h2 id="_">_</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/tally.build.Build.html#tally.build.Build.__init__">__init__() (tally.build.Build method)</a>
+
+      <ul>
+        <li><a href="generated/tally.build.Sheet.html#tally.build.Sheet.__init__">(tally.build.Sheet method)</a>
+</li>
+        <li><a href="generated/tally.dataset.DataSet.html#tally.dataset.DataSet.__init__">(tally.dataset.DataSet method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/tally.build.Build.add_sheet.html#tally.build.Build.add_sheet">add_sheet() (tally.build.Build method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/tally.build.Sheet.add_table.html#tally.build.Sheet.add_table">add_table() (tally.build.Sheet method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/tally.build.Build.html#tally.build.Build">Build (class in tally.build)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/tally.dataset.DataSet.crosstab.html#tally.dataset.DataSet.crosstab">crosstab() (tally.dataset.DataSet method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api_dataset.html#tally.DataSet">DataSet (class in tally)</a>
+
+      <ul>
+        <li><a href="generated/tally.dataset.DataSet.html#tally.dataset.DataSet">(class in tally.dataset)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/tally.build.Sheet.html#tally.build.Sheet">Sheet (class in tally.build)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -269,13 +336,15 @@ title="Source repository"
 </li>
       <li><a href="api_dataset.html#tally.DataSet.use_csv">use_csv() (tally.DataSet method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api_dataset.html#tally.DataSet.use_nebu">use_nebu() (tally.DataSet method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api_dataset.html#tally.DataSet.use_quantipy">use_quantipy() (tally.DataSet method)</a>
 </li>
       <li><a href="api_dataset.html#tally.DataSet.use_spss">use_spss() (tally.DataSet method)</a>
+</li>
+      <li><a href="generated/tally.dataset.DataSet.use_unicom.html#tally.dataset.DataSet.use_unicom">use_unicom() (tally.dataset.DataSet method)</a>
 </li>
   </ul></td>
 </tr></table>

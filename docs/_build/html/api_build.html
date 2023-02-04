@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>The Build class</title>
+    <title>Building outputs</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -22,6 +22,7 @@
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
     
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -35,7 +36,7 @@
     <script src="_static/design-tabs.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="The Dataset class" href="api_dataset.html" />
+    <link rel="next" title="tally.build.Build" href="generated/tally.build.Build.html" />
     <link rel="prev" title="The API" href="the_api.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -100,8 +101,13 @@
 </p>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
+  <a class="reference internal" href="pipeline_intro.html">
+   Building a survey data pipeline
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="1_load_data.html">
-   Load data
+   Load/extract data
   </a>
  </li>
  <li class="toctree-l1">
@@ -134,11 +140,6 @@
    Build Excel tables
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="terminology.html">
-   Terminology
-  </a>
- </li>
 </ul>
 <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
@@ -153,12 +154,19 @@
  </li>
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   The Build class
+   Building outputs
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="api_dataset.html">
-   The Dataset class
+   DataSet class
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="terminology.html">
+   Terminology
   </a>
  </li>
 </ul>
@@ -224,23 +232,80 @@ title="Source repository"
   </span>
 
 </a>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
 
     </div>
 </div>
 
 <!-- Table of contents -->
 <div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   Building outputs
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#build">
+   Build
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#sheet">
+   Sheet
+  </a>
+ </li>
+</ul>
+
+    </nav>
 </div>
     </div>
     <div class="article row">
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>The Build class</h1>
+                <h1>Building outputs</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
                         
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   Building outputs
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#build">
+   Build
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#sheet">
+   Sheet
+  </a>
+ </li>
+</ul>
+
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -248,9 +313,45 @@ title="Source repository"
                 
               <div>
                 
-  <section id="the-build-class">
-<h1>The Build class<a class="headerlink" href="#the-build-class" title="Permalink to this headline">#</a></h1>
+  <section id="building-outputs">
+<h1>Building outputs<a class="headerlink" href="#building-outputs" title="Permalink to this headline">#</a></h1>
+<p>Tally currently supports Excel tables as outputs for client delivery, with Powerpoint documents and dashboard on their way.
+Refer to the section <a class="reference internal" href="7_build_excel_output.html#build-excel-tables"><span class="std std-ref">Build Excel tables</span></a> on how to creat builds.</p>
+</section>
+<section id="build">
+<h1>Build<a class="headerlink" href="#build" title="Permalink to this headline">#</a></h1>
 <p>The Build class represents an output to be built and represented to clients. Currently, only Excel files have been implemented but more build types are on the way.</p>
+<table class="autosummary longtable table autosummary">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/tally.build.Build.html#tally.build.Build" title="tally.build.Build"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Build</span></code></a>([name, subtitle, default_dataset, ...])</p></td>
+<td><p>Represents crosstabs and settings to build a deliverable, such as Excel tables.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/tally.build.Build.add_sheet.html#tally.build.Build.add_sheet" title="tally.build.Build.add_sheet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Build.add_sheet</span></code></a>([name, banner])</p></td>
+<td><p>Add sheet to a build</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="sheet">
+<h1>Sheet<a class="headerlink" href="#sheet" title="Permalink to this headline">#</a></h1>
+<table class="autosummary longtable table autosummary">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/tally.build.Sheet.html#tally.build.Sheet" title="tally.build.Sheet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sheet</span></code></a>([banner, default_dataset, name, parent])</p></td>
+<td><p>Represents a sheet in an Excel document.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/tally.build.Sheet.add_table.html#tally.build.Sheet.add_table" title="tally.build.Sheet.add_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sheet.add_table</span></code></a>(stub[, options, dataset])</p></td>
+<td><p>Add a table to the sheet</p></td>
+</tr>
+</tbody>
+</table>
 </section>
 
 
@@ -268,10 +369,10 @@ title="Source repository"
             <p class="prev-next-title">The API</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="api_dataset.html" title="next page">
+    <a class='right-next' id="next-link" href="generated/tally.build.Build.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">The Dataset class</p>
+        <p class="prev-next-title">tally.build.Build</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
