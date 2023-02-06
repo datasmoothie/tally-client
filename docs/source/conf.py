@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'Tally SDK'
+project = 'Tally Python SDK'
 copyright = '2023, Datasmoothie'
 author = 'Datasmoothie'
 
@@ -50,7 +50,7 @@ html_theme_options = {
     "use_download_button": False,
     "use_fullscreen_button": False
   }
-html_title = "Tally Python SDK documentation"
+html_title = ""
 html_logo = "_static/assets/images/datasmoothie-logo.svg"
 html_static_path = ['_static']
 html_css_files = ["assets/css/custom.css"]
