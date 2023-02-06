@@ -7,7 +7,7 @@ Survey data is weighted to adjust for any biases introduced during the sampling 
 
 Tally implements the RIM algorithm (random iterative weighting), also known as RAKE. RIM is an iterative algorithm that involves generating a set of random weights for the survey data, and then using these weights to estimate population values. The estimated values are then compared to known population values, konwn as targets, and the weights are adjusted accordingly. This process is repeated until the estimated values converge with the known population values. 
 
-![Multi-response question](/assets/images/documentation/diagrams/RAKE-diagram.png)
+![Rake diagram](_static/assets/images/documentation/diagrams/RAKE-diagram.png)
 
 ## Create weight scheme with targets
 

@@ -36,8 +36,6 @@
     <script src="../_static/design-tabs.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="tally.build.Sheet.add_table" href="tally.build.Sheet.add_table.html" />
-    <link rel="prev" title="tally.build.Build.add_sheet" href="tally.build.Build.add_sheet.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -89,7 +87,7 @@
     <div class="bd-toc-item active">
         <ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="../get_started.html">
+  <a class="reference internal" href="../Quick_Start.html">
    Quick start
   </a>
  </li>
@@ -146,7 +144,7 @@
   API Reference
  </span>
 </p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="../the_api.html">
    The API
@@ -258,72 +256,6 @@ title="Source repository"
                 
   <section id="tally-build-sheet">
 <h1>tally.build.Sheet<a class="headerlink" href="#tally-build-sheet" title="Permalink to this headline">#</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="tally.build.Sheet">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tally.build.</span></span><span class="sig-name descname"><span class="pre">Sheet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">banner</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'&#64;'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_dataset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tally.build.Sheet" title="Permalink to this definition">#</a></dt>
-<dd><p>Represents a sheet in an Excel document.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>string</em>) – Name for the sheet. Will appear in table of contents.</p></li>
-<li><p><strong>banner</strong> (<em>list</em>) – Variables to display across the top of the sheet.</p></li>
-<li><p><strong>default_dataset</strong> (<a class="reference internal" href="../api_dataset.html#tally.DataSet" title="tally.DataSet"><em>tally.DataSet</em></a>) – The dataset to use for the data. The default is the build dataset, but sheets can have data from other datasets.</p></li>
-<li><p><strong>parent</strong> (<em>tally.Build</em>) – The build object that owns the sheet.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="tally.build.Sheet.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">banner</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'&#64;'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_dataset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tally.build.Sheet.__init__" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<p class="rubric">Methods</p>
-<table class="autosummary longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tally.build.Sheet.__init__" title="tally.build.Sheet.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([banner, default_dataset, name, parent])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_banner_border</span></code>(df)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="tally.build.Sheet.add_table.html#tally.build.Sheet.add_table" title="tally.build.Sheet.add_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_table</span></code></a>(stub[, options, dataset])</p></td>
-<td><p>Add a table to the sheet</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply_base_options</span></code>(df, option)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply_table_format_options</span></code>(df, options)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply_table_options</span></code>(df, options)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">build_dataframes</span></code>([build_options])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_name</span></code>()</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">paint_dataframes</span></code>()</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_format_for_type</span></code>(df, type, format)</p></td>
-<td><p>Method to add/alter format json per cell or per question type.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_row_format</span></code>(df, format)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">table_count</span></code>()</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </section>
 
 
@@ -334,20 +266,6 @@ title="Source repository"
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="tally.build.Build.add_sheet.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">tally.build.Build.add_sheet</p>
-        </div>
-    </a>
-    <a class='right-next' id="next-link" href="tally.build.Sheet.add_table.html" title="next page">
-    <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">tally.build.Sheet.add_table</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
 </div>
             </footer>
         </div>
@@ -355,9 +273,9 @@ title="Source repository"
     <div class="footer-content row">
         <footer class="col footer"><p>
   
-    By Geir Freysson<br/>
+    By Datasmoothie<br/>
   
-      &copy; Copyright 2023, Geir Freysson.<br/>
+      &copy; Copyright 2023, Datasmoothie.<br/>
 </p>
         </footer>
     </div>

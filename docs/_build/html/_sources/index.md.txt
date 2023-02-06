@@ -140,4 +140,3 @@ Reference
 - [API Reference](the_api)
 - [Building outputs](api_build)
 - [Data processing with the DataSet class](api_dataset)
-- [Terminology](terminology)

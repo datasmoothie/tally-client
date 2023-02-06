@@ -22,18 +22,18 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "import tally"
+    "import tally\n",
+    "import os"
    ]
   },
   {
+   "attachments": {},
    "cell_type": "markdown",
    "metadata": {},
    "source": [
     "## Working with different data sources\n",
     "\n",
-    "Tally works with SPSS, CSV files, the Confirmit API and Unicom/Dimensions files (mdd/ddf). Here we demonstrate both using CSV and SPSS.\n",
-    "\n",
-    "You need to get a Tally API key to run the example. Get in touch at info@datasmoothie.com if you need one. "
+    "Tally works with SPSS, CSV files, the Confirmit API and Unicom/Dimensions files (mdd/ddf). Here we demonstrate both using CSV and SPSS. "
    ]
   },
   {
@@ -42,13 +42,13 @@
    "metadata": {},
    "source": [
     ":::{note}\n",
-    "Here, we store the tally key in an environment variable, get in touch to get your own key\n",
+    "You need a Tally API key to proceed, get in touch to get yours. Here, we store the tally key in an environment variable.\n",
     ":::"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 90,
+   "execution_count": 2,
    "metadata": {},
    "outputs": [],
    "source": [

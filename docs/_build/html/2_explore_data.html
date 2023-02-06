@@ -89,7 +89,7 @@
     <div class="bd-toc-item active">
         <ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="get_started.html">
+  <a class="reference internal" href="Quick_Start.html">
    Quick start
   </a>
  </li>
@@ -329,7 +329,20 @@ title="Source repository"
 <section id="variables-listing-variables">
 <h2>variables - Listing variables<a class="headerlink" href="#variables-listing-variables" title="Permalink to this headline">#</a></h2>
 <p>Use the <a class="reference external" href="https://tally.datasmoothie.com/#tag/Data-Processing/operation/variables">variables</a> method to get a list of variables. It returns a dictionary with the keys keys <code class="docutils literal notranslate"><span class="pre">single</span></code>, <code class="docutils literal notranslate"><span class="pre">delimited</span> <span class="pre">set</span></code>, <code class="docutils literal notranslate"><span class="pre">array</span></code>, <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">float</span></code>, <code class="docutils literal notranslate"><span class="pre">string</span></code>, <code class="docutils literal notranslate"><span class="pre">date</span></code>. These all have a list of strings that are the names of variables.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dataset</span><span class="o">.</span><span class="n">variables</span><span class="p">()</span>
+<div class="cell tag_scroll-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dataset</span><span class="o">.</span><span class="n">variables</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;hello&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>hello
+</pre></div>
+</div>
+</div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span>
 <span class="go">{&#39;single&#39;: </span>
 <span class="go">    [&#39;gender&#39;, </span>
 <span class="go">     &#39;locality&#39;, </span>
@@ -362,8 +375,7 @@ title="Source repository"
 </pre></div>
 </div>
 <div style="overflow-x:scroll;">
-<table border="1" class="dataframe">  <thead>    <tr style="text-align: right;">      <th></th>      <th>record_number</th>      <th>unique_id</th>      <th>age</th>      <th>birth_day</th>      <th>birth_month</th>      <th>birth_year</th>      <th>gender</th>      <th>locality</th>      <th>ethnicity</th>      <th>religion</th>      <th>q1</th>      <th>q2__1</th>    </tr>  </thead>  <tbody>    <tr>      <th>0</th>      <td>2.0</td>      <td>402891.0</td>      <td>22.0</td>      <td>25.0</td>      <td>3.0</td>      <td>1993.0</td>      <td>1.0</td>      <td>1.0</td>      <td>1.0</td>      <td>2.0</td>      <td>4.0</td>      <td>1.0</td>    </tr>    <tr>      <th>1</th>      <td>3.0</td>      <td>27541022.0</td>      <td>22.0</td>      <td>27.0</td>      <td>11.0</td>      <td>1993.0</td>      <td>2.0</td>      <td>3.0</td>      <td>1.0</td>      <td>NaN</td>      <td>4.0</td>      <td>0.0</td>    </tr>    <tr>      <th>2</th>      <td>4.0</td>      <td>335506.0</td>      <td>28.0</td>      <td>3.0</td>      <td>11.0</td>      <td>1987.0</td>      <td>1.0</td>      <td>2.0</td>      <td>1.0</td>      <td>3.0</td>      <td>7.0</td>      <td>NaN</td>    </tr>    <tr>      <th>3</th>      <td>5.0</td>      <td>22885610.0</td>      <td>31.0</td>      <td>11.0</td>      <td>9.0</td>      <td>1984.0</td>      <td>1.0</td>      <td>2.0</td>      <td>1.0</td>      <td>NaN</td>      <td>5.0</td>      <td>NaN</td>    </tr>    <tr>      <th>4</th>      <td>6.0</td>      <td>229122.0</td>      <td>38.0</td>      <td>24.0</td>      <td>4.0</td>      <td>1977.0</td>      <td>1.0</td>      <td>1.0</td>      <td>1.0</td>      <td>NaN</td>      <td>2.0</td>      <td>NaN</td>    </tr>  </tbody></table><div>'
-</section>
+<table border="1" class="dataframe">  <thead>    <tr style="text-align: right;">      <th></th>      <th>record_number</th>      <th>unique_id</th>      <th>age</th>      <th>birth_day</th>      <th>birth_month</th>      <th>birth_year</th>      <th>gender</th>      <th>locality</th>      <th>ethnicity</th>      <th>religion</th>      <th>q1</th>      <th>q2__1</th>    </tr>  </thead>  <tbody>    <tr>      <th>0</th>      <td>2.0</td>      <td>402891.0</td>      <td>22.0</td>      <td>25.0</td>      <td>3.0</td>      <td>1993.0</td>      <td>1.0</td>      <td>1.0</td>      <td>1.0</td>      <td>2.0</td>      <td>4.0</td>      <td>1.0</td>    </tr>    <tr>      <th>1</th>      <td>3.0</td>      <td>27541022.0</td>      <td>22.0</td>      <td>27.0</td>      <td>11.0</td>      <td>1993.0</td>      <td>2.0</td>      <td>3.0</td>      <td>1.0</td>      <td>NaN</td>      <td>4.0</td>      <td>0.0</td>    </tr>    <tr>      <th>2</th>      <td>4.0</td>      <td>335506.0</td>      <td>28.0</td>      <td>3.0</td>      <td>11.0</td>      <td>1987.0</td>      <td>1.0</td>      <td>2.0</td>      <td>1.0</td>      <td>3.0</td>      <td>7.0</td>      <td>NaN</td>    </tr>    <tr>      <th>3</th>      <td>5.0</td>      <td>22885610.0</td>      <td>31.0</td>      <td>11.0</td>      <td>9.0</td>      <td>1984.0</td>      <td>1.0</td>      <td>2.0</td>      <td>1.0</td>      <td>NaN</td>      <td>5.0</td>      <td>NaN</td>    </tr>    <tr>      <th>4</th>      <td>6.0</td>      <td>229122.0</td>      <td>38.0</td>      <td>24.0</td>      <td>4.0</td>      <td>1977.0</td>      <td>1.0</td>      <td>1.0</td>      <td>1.0</td>      <td>NaN</td>      <td>2.0</td>      <td>NaN</td>    </tr>  </tbody></table><div>'</section>
 </section>
 
 
@@ -395,9 +407,9 @@ title="Source repository"
     <div class="footer-content row">
         <footer class="col footer"><p>
   
-    By Geir Freysson<br/>
+    By Datasmoothie<br/>
   
-      &copy; Copyright 2023, Geir Freysson.<br/>
+      &copy; Copyright 2023, Datasmoothie.<br/>
 </p>
         </footer>
     </div>

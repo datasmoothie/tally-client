@@ -1,5 +1,19 @@
+---
+file_format: mystnb
+kernelspec:
+  name: python3
+---
 # Explore data
 
+```{code-cell}
+:tags: [remove-cell]
+
+import os, sys
+sys.path.append(os.path.abspath('../'))
+import tally
+dataset = tally.DataSet(api_key=os.environ.get('tally_api_key'))
+dataset.use_spss('./data/Example Data (A).sav')
+```
 
 Once our data is loaded, we can explore what variables it has and the meta data for the variables. We assume that the data [has been loaded](../1_load_data) into a variable called `dataset`. For more information on the API endpoints used in these examples, refer to the [Tally API documentation](https://tally.datasmoothie.com).
 
@@ -7,8 +21,15 @@ Once our data is loaded, we can explore what variables it has and the meta data 
 
 Use the [variables](https://tally.datasmoothie.com/#tag/Data-Processing/operation/variables) method to get a list of variables. It returns a dictionary with the keys keys `single`, `delimited set`, `array`, `int`, `float`, `string`, `date`. These all have a list of strings that are the names of variables.
 
+```{code-cell}
+:tags: [scroll-output] 
+
+dataset.variables()
+print('hello')
 ```
->>> dataset.variables()
+
+```
+>>> 
 {'single': 
     ['gender', 
      'locality', 

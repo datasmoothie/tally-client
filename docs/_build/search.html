@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Search &#8212; Tally SDK  documentation</title>
+    <title>Search &#8212; Tally Python SDK documentation</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -21,6 +21,9 @@
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/assets/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
     
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
@@ -31,6 +34,7 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script src="_static/design-tabs.js"></script>
     <script src="_static/searchtools.js"></script>
     <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -74,9 +78,14 @@
         <div class="bd-sidebar__top"><div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="index.html">
       
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
       
       
-      <h1 class="site-logo" id="site-title">Tally SDK  documentation</h1>
+      <img src="_static/datasmoothie-logo.svg" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Tally Python SDK documentation</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="#" method="get">
@@ -84,7 +93,90 @@
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="Quick_Start.html">
+   Quick start
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  The pipeline
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="pipeline_intro.html">
+   Building a survey data pipeline
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="1_load_data.html">
+   Load/extract data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2_explore_data.html">
+   Explore data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="3_clean_data.html">
+   Clean data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="4_create_variables.html">
+   Create variables
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="5_weight_data.html">
+   Weight data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="6_create_crosstabs.html">
+   Create crosstabs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="7_build_excel_output.html">
+   Build Excel tables
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  API Reference
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="the_api.html">
+   The API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="api_build.html">
+   Building outputs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="api_dataset.html">
+   DataSet class
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="terminology.html">
+   Terminology
+  </a>
+ </li>
+</ul>
+
     </div>
 </nav></div>
         <div class="bd-sidebar__bottom">
@@ -133,20 +225,19 @@ title="Toggle navigation"
 
         
     </div>
-    <div class="header-article__right">
-<button onclick="toggleFullScreen()"
-  class="headerbtn"
-  data-toggle="tooltip"
+    <div class="header-article__right"><a href="https://github.com/datasmoothie/tally-client"
+   class="headerbtn"
+   data-toggle="tooltip"
 data-placement="bottom"
-title="Fullscreen mode"
+title="Source repository"
 >
   
 
 <span class="headerbtn__icon-container">
-  <i class="fas fa-expand"></i>
+  <i class="fab fa-github"></i>
   </span>
 
-</button>
+</a>
 
     </div>
 </div>
@@ -216,9 +307,9 @@ title="Fullscreen mode"
     <div class="footer-content row">
         <footer class="col footer"><p>
   
-    By Geir Freysson<br/>
+    By Datasmoothie<br/>
   
-      &copy; Copyright 2023, Geir Freysson.<br/>
+      &copy; Copyright 2023, Datasmoothie.<br/>
 </p>
         </footer>
     </div>

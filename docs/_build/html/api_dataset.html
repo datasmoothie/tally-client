@@ -37,7 +37,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Terminology" href="terminology.html" />
-    <link rel="prev" title="tally.build.Sheet.add_table" href="generated/tally.build.Sheet.add_table.html" />
+    <link rel="prev" title="Building outputs" href="api_build.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -89,7 +89,7 @@
     <div class="bd-toc-item active">
         <ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="get_started.html">
+  <a class="reference internal" href="Quick_Start.html">
    Quick start
   </a>
  </li>
@@ -258,106 +258,6 @@ title="Source repository"
                 
   <section id="dataset-class">
 <h1>DataSet class<a class="headerlink" href="#dataset-class" title="Permalink to this headline">#</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="tally.DataSet">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tally.</span></span><span class="sig-name descname"><span class="pre">DataSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tally.datasmoothie.com'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ssl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tally.DataSet" title="Permalink to this definition">#</a></dt>
-<dd><p>A class that wraps a dataset and has all the information needed to send to the API in order to perform the various tasks.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>string</em>) – Name for the dataset</p>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="tally.DataSet.use_confirmit">
-<span class="sig-name descname"><span class="pre">use_confirmit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_projectid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_idp_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_client_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_client_secret</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_public_url</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tally.DataSet.use_confirmit" title="Permalink to this definition">#</a></dt>
-<dd><p>Load remote Forsta/Confirmit data into the dataset as the data to send with all requests.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>source_projectid</strong> (<em>string</em>) – Project id of the survey</p></li>
-<li><p><strong>source_idp_url</strong> (<em>string</em>) – IPD Url of the survey</p></li>
-<li><p><strong>source_client_id</strong> (<em>string</em>) – Your client id</p></li>
-<li><p><strong>source_client_secret</strong> (<em>string</em>) – Client secret (don’t commit this to a repository)</p></li>
-<li><p><strong>source_public_url</strong> (<em>string</em>) – Public url to source</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="tally.DataSet.use_csv">
-<span class="sig-name descname"><span class="pre">use_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tally.DataSet.use_csv" title="Permalink to this definition">#</a></dt>
-<dd><p>Load CSV file into the dataset as the file to send with all requests.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>csv_file</strong> (<em>string</em>) – Path to the CSV file we want to use as our data.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="tally.DataSet.use_nebu">
-<span class="sig-name descname"><span class="pre">use_nebu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nebu_url</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tally.DataSet.use_nebu" title="Permalink to this definition">#</a></dt>
-<dd><p>Load remote Nebu/Enghouse file into the dataset as the file to send with all requests.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>nebu_url</strong> (<em>string</em>) – Path to the Nebu data file we want to use as our data.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="tally.DataSet.use_quantipy">
-<span class="sig-name descname"><span class="pre">use_quantipy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta_json</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_csv</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tally.DataSet.use_quantipy" title="Permalink to this definition">#</a></dt>
-<dd><p>Load Quantipy meta and data files to this dataset.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>meta_json</strong> (<em>string</em>) – Path to the json file we want to use as our meta data.</p></li>
-<li><p><strong>data_csv</strong> (<em>string</em>) – Path to the csv file we want to use as our data file.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="tally.DataSet.use_spss">
-<span class="sig-name descname"><span class="pre">use_spss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tally.DataSet.use_spss" title="Permalink to this definition">#</a></dt>
-<dd><p>Load SPSS file into memory as the file to send with all requests.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>file_path</strong> (<em>string</em>) – Path to the sav file we want to use as our data.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="tally.DataSet.write_quantipy">
-<span class="sig-name descname"><span class="pre">write_quantipy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path_json</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path_csv</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tally.DataSet.write_quantipy" title="Permalink to this definition">#</a></dt>
-<dd><p>Write the case and meta data as Quantipy compatible json and csv files.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>file_path_json</strong> (<em>string</em>) – Path to the json meta data file to create.</p></li>
-<li><p><strong>file_path_csv</strong> (<em>string</em>) – Path to the csv data file to create.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="tally.DataSet.write_spss">
-<span class="sig-name descname"><span class="pre">write_spss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_params</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tally.DataSet.write_spss" title="Permalink to this definition">#</a></dt>
-<dd><p>Writes the dataset to an SPSS (sav) file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>file_path</strong> (<em>string</em>) – Path to the sav file to write.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 </section>
 
 
@@ -368,11 +268,11 @@ title="Source repository"
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="generated/tally.build.Sheet.add_table.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="api_build.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">tally.build.Sheet.add_table</p>
+            <p class="prev-next-title">Building outputs</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="terminology.html" title="next page">
@@ -389,9 +289,9 @@ title="Source repository"
     <div class="footer-content row">
         <footer class="col footer"><p>
   
-    By Geir Freysson<br/>
+    By Datasmoothie<br/>
   
-      &copy; Copyright 2023, Geir Freysson.<br/>
+      &copy; Copyright 2023, Datasmoothie.<br/>
 </p>
         </footer>
     </div>

@@ -89,7 +89,7 @@
     <div class="bd-toc-item active">
         <ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="get_started.html">
+  <a class="reference internal" href="Quick_Start.html">
    Quick start
   </a>
  </li>
@@ -338,11 +338,17 @@ title="Source repository"
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">#</a></h2>
 <p>Tally’s <code class="docutils literal notranslate"><span class="pre">crosstab</span></code> method supports a variety of options and can be used both in a Jupyter Notebook environment and to produce Excel tables. Here we will cover how the method works and what options it supports, and in the next section we will show how it can be used to generate Excel tables.</p>
-<p>hello</p>
 </section>
 <section id="running-a-basic-crosstab">
 <h2>Running a basic crosstab<a class="headerlink" href="#running-a-basic-crosstab" title="Permalink to this headline">#</a></h2>
 <p>Tally’s crosstab method is used to run crosstabs (see the <a class="reference external" href="https://tally.datasmoothie.com/#tag/Aggregations/operation/crosstab">API reference on crosstab</a> for full details).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dataset</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;q2b&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;gender&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dataset</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;q2b&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;gender&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -377,8 +383,7 @@ title="Source repository"
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dataset</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;q14r06c03&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;locality&#39;</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;gender&#39;</span><span class="p">:[</span><span class="mi">1</span><span class="p">]})</span>
 </pre></div>
 </div>
-<table border="1" class="dataframe">  <thead>    <tr>      <th></th>      <th>Question</th>      <th colspan="5" halign="left">How would you describe the areas in which you live?</th>    </tr>    <tr>      <th></th>      <th>Values</th>      <th>CBD (central business district)</th>      <th>Urban</th>      <th>Suburban</th>      <th>Rural</th>      <th>Remote</th>    </tr>    <tr>      <th>Question</th>      <th>Values</th>      <th></th>      <th></th>      <th></th>      <th></th>      <th></th>    </tr>  </thead>  <tbody>    <tr>      <th rowspan="6" valign="top">Store 3 - The wait time when checking out was acceptable.</th>      <th>Base</th>      <td>768.0</td>      <td>529.0</td>      <td>285.0</td>      <td>166.0</td>      <td>168.0</td>    </tr>    <tr>      <th>Strongly disagree</th>      <td>194.0</td>      <td>130.0</td>      <td>72.0</td>      <td>50.0</td>      <td>47.0</td>    </tr>    <tr>      <th>Disagree</th>      <td>208.0</td>      <td>127.0</td>      <td>66.0</td>      <td>35.0</td>      <td>48.0</td>    </tr>    <tr>      <th>Neither agree nor disagree</th>      <td>175.0</td>      <td>126.0</td>      <td>65.0</td>      <td>38.0</td>      <td>34.0</td>    </tr>    <tr>      <th>Agree</th>      <td>191.0</td>      <td>146.0</td>      <td>82.0</td>      <td>43.0</td>      <td>39.0</td>    </tr>    <tr>      <th>Strongly agree</th>      <td>0.0</td>      <td>0.0</td>      <td>0.0</td>      <td>0.0</td>      <td>0.0</td>    </tr>  </tbody></table>
-</section>
+<table border="1" class="dataframe">  <thead>    <tr>      <th></th>      <th>Question</th>      <th colspan="5" halign="left">How would you describe the areas in which you live?</th>    </tr>    <tr>      <th></th>      <th>Values</th>      <th>CBD (central business district)</th>      <th>Urban</th>      <th>Suburban</th>      <th>Rural</th>      <th>Remote</th>    </tr>    <tr>      <th>Question</th>      <th>Values</th>      <th></th>      <th></th>      <th></th>      <th></th>      <th></th>    </tr>  </thead>  <tbody>    <tr>      <th rowspan="6" valign="top">Store 3 - The wait time when checking out was acceptable.</th>      <th>Base</th>      <td>768.0</td>      <td>529.0</td>      <td>285.0</td>      <td>166.0</td>      <td>168.0</td>    </tr>    <tr>      <th>Strongly disagree</th>      <td>194.0</td>      <td>130.0</td>      <td>72.0</td>      <td>50.0</td>      <td>47.0</td>    </tr>    <tr>      <th>Disagree</th>      <td>208.0</td>      <td>127.0</td>      <td>66.0</td>      <td>35.0</td>      <td>48.0</td>    </tr>    <tr>      <th>Neither agree nor disagree</th>      <td>175.0</td>      <td>126.0</td>      <td>65.0</td>      <td>38.0</td>      <td>34.0</td>    </tr>    <tr>      <th>Agree</th>      <td>191.0</td>      <td>146.0</td>      <td>82.0</td>      <td>43.0</td>      <td>39.0</td>    </tr>    <tr>      <th>Strongly agree</th>      <td>0.0</td>      <td>0.0</td>      <td>0.0</td>      <td>0.0</td>      <td>0.0</td>    </tr>  </tbody></table></section>
 </section>
 
 
@@ -410,9 +415,9 @@ title="Source repository"
     <div class="footer-content row">
         <footer class="col footer"><p>
   
-    By Geir Freysson<br/>
+    By Datasmoothie<br/>
   
-      &copy; Copyright 2023, Geir Freysson.<br/>
+      &copy; Copyright 2023, Datasmoothie.<br/>
 </p>
         </footer>
     </div>
