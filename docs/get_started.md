@@ -1,7 +1,17 @@
-# Quick start
+# DOCS Readme
 
 
 ## Get your API key 
-You bruv
+The docs are built with
 
-helo
+```
+cd docs
+sphinx-build source _build 
+```
+
+And during development, it's good to use:
+
+```
+cd docs
+sphinx-autobuild source _build
+```
