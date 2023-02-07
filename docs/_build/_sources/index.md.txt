@@ -133,6 +133,13 @@ Build Excel outputs with fine grained control over outputs.
 
 ::::
 
+Building Excel tables
+---------------------
+The Tally Python SDK makes it easy to build Excel outputs with full, fine-grained control over looks and contents. To read more about building Excel tables, refer to [the section about building outputs](7_build_excel_output.md) and the API reference on the [Build, Sheet and Options](api_build.md) objects.
+
+![Tally supports building large Excel data files and granular control](_static/assets/images/documentation/screenshots/excel-tables-with-toc.png)
+
+
 Reference
 ---
 
