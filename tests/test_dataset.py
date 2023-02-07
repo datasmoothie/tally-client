@@ -3,6 +3,7 @@ import os
 import tally
 import pytest
 import json
+import urllib
 
 
 def test_qp_crosstab(token, api_url, use_ssl):
