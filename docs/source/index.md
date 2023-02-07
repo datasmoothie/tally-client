@@ -4,7 +4,6 @@ sd_hide_title: true
 # Tally SDK documentation
 
 
-
 ::::{grid} 2
 :reverse:
 
@@ -106,28 +105,28 @@ Clean data with advanced filtering and recoding.
 :link: 4_create_variables
 :link-type: doc
 
-Synchronisable, tabbed content sets.
+Create new variables by deriving logic from other variables.
 :::
 
 :::{grid-item-card} {octicon}`verified` Weight data
 :link: 5_weight_data
 :link-type: doc
 
-Roles and directives for {bdg-primary}`badges` and other components.
+Weight data with the RIM/RAKE algorithm.
 :::
 
 :::{grid-item-card} {octicon}`table` Create crosstabs
 :link: 6_create_crosstabs
 :link-type: doc
 
-Change the default colors and other CSS.
+Explore your results, significance tests, and descriptive statistics.
 :::
 
 :::{grid-item-card} {octicon}`file` Build Excel tables
 :link: 7_build_excel_output
 :link-type: doc
 
-Change the default colors and other CSS.
+Build Excel outputs with fine grained control over outputs.
 :::
 
 
