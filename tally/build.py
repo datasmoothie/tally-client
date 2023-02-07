@@ -10,8 +10,9 @@ from .options import Options
 from .sheet import Sheet
 
 class Build:
-    """
-    A class that gathers together crosstabs a user wants to use to build Excel, Powerpoint or Datasmoothie dashboards output. 
+    """ Represents crosstabs and settings to build a deliverable, such as Excel tables.
+
+
 
     Parameters
     ----------
@@ -39,6 +40,23 @@ class Build:
         )
 
     def add_sheet(self, name=None, banner='@'):
+        """ Add sheet to a build
+
+        The sheet can then be used both to change settings via its options and to store a list of tables.
+
+        Parameters
+        ----------
+
+        name: string
+            Name of the sheet. Appears in the table of contents.
+        banner: list of strings
+            List of variables to display across the top of the sheet.
+
+
+        Example
+        -------
+            build.add_sheet(name='Q1 - gender, location', banner=['gender', 'location'])
+        """
         if name is None:
             name = "Table {}".format(str(len(self.sheets)+1))
         sheet = Sheet(

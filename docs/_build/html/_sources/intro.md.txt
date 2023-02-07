@@ -1,0 +1,105 @@
+---
+title: Tally SDK documentation
+---
+
+
+
+::::{grid} 2
+:reverse:
+
+:::{grid-item}
+:columns: 4
+:class: sd
+
+<img src="https://www.datasmoothie.com/static/assets/img/Tally-robot-illustration.svg" />
+
+:::
+
+:::{grid-item}
+:columns: 8
+:class: sd-fs-3
+Use Python to integrate multiple survey data platforms, perform data processing tasks, and build Excel tables, Powerpoint presentations and dashboards.
+
+
+```{button-ref} start/your-first-book
+:ref-type: doc
+:color: primary
+:class: sd-rounded-pill float-left
+
+:::
+::::
+
+```{toctree}
+:hidden:
+
+get_started
+```
+
+```{toctree}
+:caption: Components
+:hidden:
+
+grids
+cards
+dropdowns
+tabs
+badges_buttons
+additional
+```
+
+Tally is a tool for survey and market research data processing, analysis, and publishing. It allows users to combine multiple survey data platforms, run data processing tasks such as cleaning, weighting, merging data and creating new variables. It also produces Excel data tables, Powerpoint files and interactive dashboards.
+
+Tally is composed of two parts:
+
+- A RESTful API
+- A Python client library for the API
+
+Because Tally is based on an API, it supports R, JavaScript and any other programming language. It can also be plugged into a data warehouse pipeline, where it can both be used as an ETL layer and an OLAP layer for survey data.
+
+::::{grid} 1 2 2 3
+:margin: 4 4 0 0
+:gutter: 4
+
+:::{grid-item-card} {octicon}`table` Get started
+:link: grids
+:link-type: doc
+
+Screen size adaptable grid layouts.
+:::
+
+:::{grid-item-card} {octicon}`note` Cards
+:link: cards
+:link-type: doc
+
+Flexible and extensible content containers.
+:::
+
+:::{grid-item-card} {octicon}`chevron-down` Dropdowns
+:link: dropdowns
+:link-type: doc
+
+Hide content in expandable containers.
+:::
+
+:::{grid-item-card} {octicon}`duplicate` Tabs
+:link: tabs
+:link-type: doc
+
+Synchronisable, tabbed content sets.
+:::
+
+:::{grid-item-card} {octicon}`plus-circle` Badges, Buttons & Icons
+:link: badges_buttons
+:link-type: doc
+
+Roles and directives for {bdg-primary}`badges` and other components.
+:::
+
+:::{grid-item-card} {octicon}`image` CSS Styling
+:link: css_variables
+:link-type: doc
+
+Change the default colors and other CSS.
+:::
+
+::::

@@ -4,6 +4,22 @@ import pandas as pd
 import copy
 
 class Sheet:
+    """ Represents a sheet in an Excel document.
+
+
+
+    Parameters
+    ----------
+      name: string
+        Name for the sheet. Will appear in table of contents.
+      banner: list
+        Variables to display across the top of the sheet.
+      default_dataset: tally.DataSet
+        The dataset to use for the data. The default is the build dataset, but sheets can have data from other datasets.
+      parent : tally.Build
+        The build object that owns the sheet.
+    """
+
     def __init__(self, banner='@', default_dataset=None, name=None, parent=None):
         self.banner = banner
         self.tables = []
@@ -28,6 +44,17 @@ class Sheet:
                 return ""
 
     def add_table(self, stub, options={}, dataset=None):
+        """ Add a table to the sheet
+
+        Parameters
+        ----------
+        stub: dict
+            Dictionary with information about what the table should contain. Options are
+            x - the stub variable
+            y - the banner variable
+        options: dict
+        dataset: tally.DataSet
+        """
         if self.default_dataset and dataset is None:
             dataset = self.default_dataset
         merged_local_options = self.options.merge_dict(options, copy.deepcopy(self.options.table_options))
