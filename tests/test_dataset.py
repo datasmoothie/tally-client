@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import tally
 import pytest
+import json
 
 
 def test_qp_crosstab(token, api_url, use_ssl):
