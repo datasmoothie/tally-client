@@ -25,9 +25,12 @@ Support for online data sources includes:
 - Enghouse
 - Alchemer
 
-We are also working on adding integrations for Qualtrics, Forsta/Decipher, and others.
-
 In the following examples, we assume the `tally` instance has been created by [loading your API key](../get_started).
+
+:::{note}
+If your platform is not listed here, we can add it! We are constantly adding new platforms and the next ones on our list are Qualtrics and Decipher.
+:::
+
 
 ## File based data
 

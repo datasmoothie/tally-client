@@ -15,7 +15,7 @@ dataset = tally.DataSet(api_key=os.environ.get('tally_api_key'))
 dataset.use_spss('./data/Example Data (A).sav')
 ```
  
-Once our data is loaded, we can explore what variables it has and the meta data for the variables. We assume that the data [has been loaded](../1_load_data) into a variable called `dataset`. For more information on the API endpoints used in these examples, refer to the [Tally API documentation](https://tally.datasmoothie.com).
+Once our data is loaded, we can explore what variables it has and the meta data for the variables. We assume that the data [has been loaded](../1_load_data) into a variable called `dataset`. For more information on the API endpoints used in these examples, refer to the [Python SDK API reference](the_api).
 
 ## `variables` - listing available variables by type 
 
