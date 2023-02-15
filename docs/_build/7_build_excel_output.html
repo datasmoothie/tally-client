@@ -261,19 +261,21 @@ title="Source repository"
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#adding-sheets-and-tables">
-   Adding sheets and tables
+  <a class="reference internal nav-link" href="#adding-sheets-tables-and-saving-the-excel-file">
+   Adding sheets, tables and saving the Excel file
   </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#creating-the-excel-document">
-   Creating the Excel document
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#adding-multiple-sheets">
-   Adding multiple sheets
-  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#adding-multiple-sheets">
+     Adding multiple sheets
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#creating-the-excel-document">
+     Creating the Excel document
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#setting-build-options-on-a-build-sheet-and-table-level">
@@ -312,7 +314,34 @@ title="Source repository"
      Descriptive statistics
     </a>
    </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#annotations">
+     Annotations
+    </a>
+   </li>
   </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#controlling-visuals">
+   Controlling visuals
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#the-format-dictionary">
+     The format dictionary
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#adding-a-header-title-to-a-table">
+     Adding a header/title to a table
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#formatting-options">
+   Formatting options
+  </a>
  </li>
 </ul>
 
@@ -339,19 +368,21 @@ title="Source repository"
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#adding-sheets-and-tables">
-   Adding sheets and tables
+  <a class="reference internal nav-link" href="#adding-sheets-tables-and-saving-the-excel-file">
+   Adding sheets, tables and saving the Excel file
   </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#creating-the-excel-document">
-   Creating the Excel document
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#adding-multiple-sheets">
-   Adding multiple sheets
-  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#adding-multiple-sheets">
+     Adding multiple sheets
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#creating-the-excel-document">
+     Creating the Excel document
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#setting-build-options-on-a-build-sheet-and-table-level">
@@ -390,7 +421,34 @@ title="Source repository"
      Descriptive statistics
     </a>
    </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#annotations">
+     Annotations
+    </a>
+   </li>
   </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#controlling-visuals">
+   Controlling visuals
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#the-format-dictionary">
+     The format dictionary
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#adding-a-header-title-to-a-table">
+     Adding a header/title to a table
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#formatting-options">
+   Formatting options
+  </a>
  </li>
 </ul>
 
@@ -421,8 +479,8 @@ title="Source repository"
 </pre></div>
 </div>
 </section>
-<section id="adding-sheets-and-tables">
-<h2>Adding sheets and tables<a class="headerlink" href="#adding-sheets-and-tables" title="Permalink to this headline">#</a></h2>
+<section id="adding-sheets-tables-and-saving-the-excel-file">
+<h2>Adding sheets, tables and saving the Excel file<a class="headerlink" href="#adding-sheets-tables-and-saving-the-excel-file" title="Permalink to this headline">#</a></h2>
 <p>Once we have created the <code class="docutils literal notranslate"><span class="pre">build</span></code>, we can add sheets and tables. Every sheet must belong to a build and every table must belong to a sheet.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sheet</span> <span class="o">=</span> <span class="n">build</span><span class="o">.</span><span class="n">add_sheet</span><span class="p">(</span><span class="n">banner</span><span class="o">=</span><span class="s1">&#39;Wave&#39;</span><span class="p">)</span>
 <span class="n">sheet</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Waves&#39;</span>
@@ -432,17 +490,8 @@ title="Source repository"
 <span class="n">sheet</span><span class="o">.</span><span class="n">add_table</span><span class="p">(</span><span class="n">stub</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span><span class="s2">&quot;q3&quot;</span><span class="p">})</span>
 </pre></div>
 </div>
-</section>
-<section id="creating-the-excel-document">
-<h2>Creating the Excel document<a class="headerlink" href="#creating-the-excel-document" title="Permalink to this headline">#</a></h2>
-<p>Once we’ve added our sheets and tables to the build, we can create the Excel document.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">build</span><span class="o">.</span><span class="n">save_excel</span><span class="p">(</span><span class="s1">&#39;client_results.xlsx&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>A new file will get saved in the location your python script is located, called client_results.xlsx.</p>
-</section>
 <section id="adding-multiple-sheets">
-<h2>Adding multiple sheets<a class="headerlink" href="#adding-multiple-sheets" title="Permalink to this headline">#</a></h2>
+<h3>Adding multiple sheets<a class="headerlink" href="#adding-multiple-sheets" title="Permalink to this headline">#</a></h3>
 <p>We can use a <code class="docutils literal notranslate"><span class="pre">for</span></code> loop to add multiple sheets to our build.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">stub</span> <span class="ow">in</span> <span class="n">stub_vars</span><span class="p">:</span>
     <span class="n">sheet</span> <span class="o">=</span> <span class="n">build</span><span class="o">.</span><span class="n">add_sheet</span><span class="p">(</span><span class="n">banner</span><span class="o">=</span><span class="n">banner_vars</span><span class="p">)</span>
@@ -451,6 +500,15 @@ title="Source repository"
 
 </pre></div>
 </div>
+</section>
+<section id="creating-the-excel-document">
+<h3>Creating the Excel document<a class="headerlink" href="#creating-the-excel-document" title="Permalink to this headline">#</a></h3>
+<p>Once we’ve added our sheets and tables to the build, we can create the Excel document.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">build</span><span class="o">.</span><span class="n">save_excel</span><span class="p">(</span><span class="s1">&#39;client_results.xlsx&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A new file will get saved in the location your python script is located, called client_results.xlsx.</p>
+</section>
 </section>
 <section id="setting-build-options-on-a-build-sheet-and-table-level">
 <h2>Setting build options on a build, sheet, and table level<a class="headerlink" href="#setting-build-options-on-a-build-sheet-and-table-level" title="Permalink to this headline">#</a></h2>
@@ -535,6 +593,250 @@ title="Source repository"
 <li><p>upper_q: Upper quartile’</p></li>
 </ul>
 </section>
+<section id="annotations">
+<h3>Annotations<a class="headerlink" href="#annotations" title="Permalink to this headline">#</a></h3>
+<p>Tables can include annotations that show</p>
+<ul class="simple">
+<li><p>what variable was used as a weight</p></li>
+<li><p>how the base was selected (e.g. Location: London)</p></li>
+<li><p>the alpha parameter in the significance testing</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">build</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">set_annotations</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">sheet</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">set_annotations</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="controlling-visuals">
+<h2>Controlling visuals<a class="headerlink" href="#controlling-visuals" title="Permalink to this headline">#</a></h2>
+<p>Users can set formatting for result types in a table (percentages, counts, stats) and these can be set on the entire table or on a column-by-column basis. The following are the most common commands.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">set_format</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">set_answer_format</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">set_column_format_for_type</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">set_base_labels</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">set_banner_border</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">set_base_position</span></code></p></li>
+</ul>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># make all descriptive statistics appear in a certain colour</span>
+<span class="n">sheet</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">set_format</span><span class="p">(</span><span class="s1">&#39;stats&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;font_color&quot;</span><span class="p">:</span><span class="s2">&quot;98B4DF&quot;</span><span class="p">})</span>
+<span class="c1"># set the format for all base rows, making them bold, with a border and in a color</span>
+<span class="n">build</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">set_format</span><span class="p">(</span><span class="s1">&#39;base&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;bold&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;border&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;border_color&#39;</span><span class="p">:</span><span class="s1">&#39;efefef&#39;</span><span class="p">})</span>
+<span class="c1"># Make the base in column 1 always be bold</span>
+<span class="n">sheet</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">set_column_format_for_type</span><span class="p">(</span><span class="s1">&#39;base&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;bold&quot;</span><span class="p">:</span><span class="kc">True</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>For more information about each function, see <a class="reference internal" href="api_build.html"><span class="doc std std-doc">the section about the Build API</span></a>.</p>
+<section id="the-format-dictionary">
+<h3>The format dictionary<a class="headerlink" href="#the-format-dictionary" title="Permalink to this headline">#</a></h3>
+<p>Formats are controlled by contstructing a format dictionary. This is a dictionary with keys that indicate what format should be changed and values that indicate how the formats should be set. For example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;bold&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;font_color&#39;</span><span class="p">:</span><span class="n">efefef</span><span class="p">,</span> <span class="s1">&#39;align&#39;</span><span class="p">:</span><span class="s1">&#39;left}</span>
+</pre></div>
+</div>
+<p>For a list of formatting options used to build the formatting dictionary, see the <a href="#formatting-options">formatting options list</a></p>
+</section>
+<section id="adding-a-header-title-to-a-table">
+<h3>Adding a header/title to a table<a class="headerlink" href="#adding-a-header-title-to-a-table" title="Permalink to this headline">#</a></h3>
+<p>Options can be set on a table level as well, and this can be used to add a header to the table.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sheet</span><span class="o">.</span><span class="n">add_table</span><span class="p">(</span>
+    <span class="n">stub</span><span class="o">=</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> 
+    <span class="n">options</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;title&#39;</span><span class="p">:{</span><span class="s1">&#39;text&#39;</span><span class="p">:</span><span class="s1">&#39;This is my title&#39;</span><span class="p">,</span> <span class="s1">&#39;format&#39;</span><span class="p">:{</span><span class="s1">&#39;bold&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;font_color&#39;</span><span class="p">:</span><span class="s1">&#39;#ebebeb&#39;</span><span class="p">}}</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+</pre></div>
+</div>
+<p>For the formatting options available for the header, see the <a href="#formatting-options">formatting options list</a>.</p>
+</section>
+</section>
+<section id="formatting-options">
+<h2>Formatting options<a class="headerlink" href="#formatting-options" title="Permalink to this headline">#</a></h2>
+<p>The look and format of every question, label and data table can be set to get the right look and feel.</p>
+<table border="0" class="table">
+<colgroup>
+<col width="15%">
+<col width="22%">
+<col width="27%">
+<col width="37%">
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Category</th>
+<th class="head">Description</th>
+<th class="head">Property</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Font</td>
+<td>Font type</td>
+<td><code class="docutils literal notranslate"><span class="pre">'font_name'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">"Arial"</span></code></td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td>Font size</td>
+<td><code class="docutils literal notranslate"><span class="pre">'font_size'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">12</span></code></td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Font color</td>
+<td><code class="docutils literal notranslate"><span class="pre">'font_color'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">#efefef</span></code></td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td>Bold</td>
+<td><code class="docutils literal notranslate"><span class="pre">'bold'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">True/False</span></code></td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Italic</td>
+<td><code class="docutils literal notranslate"><span class="pre">'italic'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">True/False</span></code></td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td>Underline</td>
+<td><code class="docutils literal notranslate"><span class="pre">'underline'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">True/False</span></code></td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Strikeout</td>
+<td><code class="docutils literal notranslate"><span class="pre">'font_strikeout'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">True/False</span></code></td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td>Super/Subscript</td>
+<td><code class="docutils literal notranslate"><span class="pre">'font_script'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">1 = Superscript, 2 = Subscript</span></code></td>
+</tr>
+<tr class="row-even"><td>Number</td>
+<td>Numeric format</td>
+<td><code class="docutils literal notranslate"><span class="pre">'num_format'</span></code></td>
+<td><a class="reference internal" href="#set_num_format" title="set_num_format"><code class="xref py py-func docutils literal notranslate"><span class="pre"><a href="https://xlsxwriter.readthedocs.io/format.html#set_num_format">See xlsxwriter docs</a></span></code></a></td>
+</tr>
+<tr class="row-odd"><td>Protection</td>
+<td>Lock cells</td>
+<td><code class="docutils literal notranslate"><span class="pre">'locked'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">True/False</span></code></td>
+</tr>
+<tr class="row-odd"><td>Alignment</td>
+<td>Horizontal align</td>
+<td><code class="docutils literal notranslate"><span class="pre">'align'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">left, 
+center,
+right,<br/>
+fill,
+justify,
+center_across,<br/>
+distributed</span></code></td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Vertical align</td>
+<td><code class="docutils literal notranslate"><span class="pre">'valign'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">
+top,
+vcenter,
+bottom,<br/>
+vjustify,
+vdistributed</span></code></td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td>Rotation</td>
+<td><code class="docutils literal notranslate"><span class="pre">'rotation'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">45</span></code> (degrees)</td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Text wrap</td>
+<td><code class="docutils literal notranslate"><span class="pre">'text_wrap'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">True/False</span></code></td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Justify last</td>
+<td><code class="docutils literal notranslate"><span class="pre">'text_justlast'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">True/False</span></code></td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td>Center across</td>
+<td><code class="docutils literal notranslate"><span class="pre">'center_across'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">True/False</span></code></td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Indentation</td>
+<td><code class="docutils literal notranslate"><span class="pre">'indent'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">1,2 </span></code>(indent level)</td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td>Shrink to fit</td>
+<td><code class="docutils literal notranslate"><span class="pre">'shrink'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">True/False</span></code></td>
+</tr>
+<tr class="row-even"><td>Pattern</td>
+<td>Cell pattern</td>
+<td><code class="docutils literal notranslate"><span class="pre">'pattern'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">0-18</span></code></td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td>Background color</td>
+<td><code class="docutils literal notranslate"><span class="pre">'bg_color'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">#efefef</span></code></td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Foreground color</td>
+<td><code class="docutils literal notranslate"><span class="pre">'fg_color'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">#efefef</span></code></td>
+</tr>
+<tr class="row-odd"><td>Border</td>
+<td>Cell border</td>
+<td><code class="docutils literal notranslate"><span class="pre">'border'</span></code></td>
+<td><a class="reference internal" href="https://xlsxwriter.readthedocs.io/format.html#set_border" title="set_border"><code class="xref py py-func docutils literal notranslate"><span class="pre">See xlsxwwriter docs</span></code></a></td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Bottom border</td>
+<td><code class="docutils literal notranslate"><span class="pre">'bottom'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">1,2,3</span></code> (see docs for set_border)</td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td>Top border</td>
+<td><code class="docutils literal notranslate"><span class="pre">'top'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">1,2,3, ...</span></code> (see docs for set_border)</td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Left border</td>
+<td><code class="docutils literal notranslate"><span class="pre">'left'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">1,2,3, ...</span></code> (see docs for set_border)</td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td>Right border</td>
+<td><code class="docutils literal notranslate"><span class="pre">'right'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">1,2,3, ...</span></code> (see docs for set_border)</td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Border color</td>
+<td><code class="docutils literal notranslate"><span class="pre">'border_color'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">#efefef</span></code></td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td>Bottom color</td>
+<td><code class="docutils literal notranslate"><span class="pre">'bottom_color'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">#efefef</span></code></td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Top color</td>
+<td><code class="docutils literal notranslate"><span class="pre">'top_color'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">#efefef</span></code></td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td>Left color</td>
+<td><code class="docutils literal notranslate"><span class="pre">'left_color'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">#efefef</span></code></td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Right color</td>
+<td><code class="docutils literal notranslate"><span class="pre">'right_color'</span></code></td>
+<td><code class="xref py py-func docutils literal notranslate"><span class="pre">#efefef</span></code></td>
+</tr>
+</tbody>
+</table>
 </section>
 </section>
 

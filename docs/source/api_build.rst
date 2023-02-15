@@ -29,6 +29,7 @@ Options
 ======
 
 .. autosummary::
+    :toctree: generated/
     :recursive:
 
     Options

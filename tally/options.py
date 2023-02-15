@@ -124,9 +124,7 @@ class Options:
         Parameters
         ==========
         hide: integer
-            0 Don’t hide gridlines.
-            1 Hide printed gridlines only.
-            2 Hide screen and printed gridlines.
+            0 Don't hide gridlines, 1 Hide printed gridlines only, 2 Hide screen and printed gridlines.
         """
         self._set_page_setup('hide_gridlines', {"option":hide})
 
@@ -220,6 +218,13 @@ class Options:
             raise ValueError("The colours must be a list of one or more colours")
 
     def set_format(self, name, new_format):
+        """Set format for a question type in the table
+
+        Parameters
+        ==========
+        name: string (counts, percentage, stats, base)
+        new_format: format dictionary, e.g. {'bold':True}
+        """
         if name in self.formats:
             self.formats[name] = {**self.formats[name], **new_format}
         else:
@@ -227,17 +232,39 @@ class Options:
 
     @verify_no_tables
     def set_answer_format(self, answer_type, format):
+        """ Set the format for an answer, e.g. Strongly agree, agree etc.
+
+        """
         new_format = {0: {"format": format}}
         old_format = self.table_options['format'][answer_type]
         self.table_options['format'][answer_type] = {**old_format, **new_format}
 
     def set_question_format(self, answer_type, format):
+        """Set the format rules for the question (line at the top of every table showing variable label)
+        
+        Parameters
+        ==========
+        answer_type : string (percentage, counts, stats, base)
+        format : format dict, e.g. {'bold':True}
+        """
         new_format = {"question": {"format": format}}
         old_format = self.table_options['format'][answer_type]
         self.table_options['format'][answer_type] = {**old_format, **new_format}
 
     @verify_no_tables
     def set_column_format_for_type(self, answer_type, column_index, format):
+        """Set column format for answer type.
+
+        Parameters
+        ==========
+         answer_type : string, percentage, counts, stats
+         column_index : int
+         format : format dict
+
+        Example
+        =======
+        set_column_format_for_type('counts', 1, {'bold':True})
+        """
         new_format = {column_index: {"format":format}}
         old_format = self.table_options['format'][answer_type]
         self.table_options['format'][answer_type] = {**old_format, **new_format}
@@ -255,11 +282,6 @@ class Options:
 
     def merge_dict(self, source, destination):
         """ Merge two dictionaries by having the destination override the source, recursively.
-        Example
-        =======
-        a = { 'first' : { 'all_rows' : { 'pass' : 'dog', 'number' : '1' } } }
-        b = { 'first' : { 'all_rows' : { 'fail' : 'cat', 'number' : '5' } } }
-        merge(b, a) == { 'first' : { 'all_rows' : { 'pass' : 'dog', 'fail' : 'cat', 'number' : '5' } } }
         """
         for key, value in source.items():
             if isinstance(value, dict):
