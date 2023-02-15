@@ -80,6 +80,21 @@ class Sheet:
 
 
     def apply_table_options(self, df, options):
+        if 'banner_border' in options:
+            df = self.add_banner_border(df)
+        if 'title' in options:
+            index = pd.MultiIndex.from_tuples([(' ',options['title']['text'])], names=['', ''])
+            data_dict = {i:'' for i in df.columns}
+            title_row = pd.DataFrame(data=data_dict, index=index)
+            if 'format' in options['title']:
+#                title_row['FORMAT'] = '{"type":"base", "cell_format":{"question":{"format":' + json.dumps(options['title']['format']) + '}}}'
+                default_format = {'bold': True, 'align':'left'}
+                cell_format = {**default_format, **options['title']['format']}
+                title_row['FORMAT'] = '{"type":"base", "cell_format":{"0":{"format":' + json.dumps(cell_format) + '}}}'
+
+            else:
+                title_row['FORMAT'] = '{"type":"counts", "cell_format":{}}'
+            df = pd.concat([title_row, df])
         if 'base' in options:
             df = self.apply_base_options(df, options['base'])
         if 'base_label' in options:
@@ -90,14 +105,13 @@ class Sheet:
             df = self.apply_table_format_options(df, options['format'])
         if 'row_format' in options:
             df = self.set_row_format(df, options['row_format'])
-        if 'banner_border' in options:
-            df = self.add_banner_border(df)
         if 'font_name' in options:
             for i, col in enumerate(df.columns):
                 self._set_column_format(df, i, {"font_name":options['font_name']})
         if 'font_size' in options:
             for i, col in enumerate(df.columns):
                 self._set_column_format(df, i, {"font_size":options['font_size']})
+
         return df
 
     def apply_table_format_options(self, df, options):
@@ -210,7 +224,7 @@ class Sheet:
 
         return df
 
-    def _append_row_to_dataframe(self, df, row_data=None, row_format={}):
+    def _append_row_to_dataframe(self, df, row_data=None, row_format={}, before=False):
         last_question = df.index.get_level_values(0)[-1]
         mi = pd.MultiIndex.from_tuples([(last_question, ' ')])
         if row_data is None:
@@ -218,7 +232,10 @@ class Sheet:
         else:
             row_df = pd.DataFrame(columns=df.columns, data=[row_data], index=mi)
         row_df.iloc[-1, -1] = '{{"type":"counts", "cell_format":{}}}'.format(row_format)
-        df = pd.concat([df, row_df])
+        if before:
+            df = pd.concat([row_df, df])
+        else:
+            df = pd.concat([df, row_df])
         return df
 
     def build_dataframes(self, build_options=None):
