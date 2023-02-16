@@ -85,7 +85,7 @@ class Sheet:
         if 'title' in options:
             index = pd.MultiIndex.from_tuples([(' ',options['title']['text'])], names=['', ''])
             data_dict = {i:'' for i in df.columns}
-            title_row = pd.DataFrame(data=data_dict, index=index)
+            title_row = pd.DataFrame(data=data_dict, index=index, columns=df.columns)
             if 'format' in options['title']:
 #                title_row['FORMAT'] = '{"type":"base", "cell_format":{"question":{"format":' + json.dumps(options['title']['format']) + '}}}'
                 default_format = {'bold': True, 'align':'left'}
