@@ -199,9 +199,7 @@ class Build:
 
             wb.save(filename)
         except Exception as e:
-            print('Warning: Something went wrong in prettifying the Excel. Make sure all colors are defined as ffffff rather than #ffffff.')
-            print(e)
-            pass
+            raise Exception('Error: Something went wrong in prettifying the Excel. Make sure all colors are defined as ffffff rather than #ffffff.')
 
     def table_count(self):
         table_counts = [i.table_count() for i in self.sheets]
