@@ -2,6 +2,8 @@ import pandas as pd
 import os
 import tally
 import pytest
+import json
+import urllib
 
 
 def test_qp_crosstab(token, api_url, use_ssl):
@@ -70,7 +72,7 @@ def test_joined_crosstab(token, api_url, use_ssl):
 
 def test_spss_crosstab(token, api_url, use_ssl):
     ds = tally.DataSet()
-    ds.add_credentials(api_key=token, host=api_url, ssl=use_ssl)
+    ds.add_credentials(api_key=token)
     
     ds.use_spss('tests/fixtures/Example Data (A).sav')
 
@@ -390,3 +392,19 @@ def test_save_spss(token, api_url, use_ssl):
     result = ds.write_spss('my_sav.sav')
     os.remove('my_sav.sav')
     assert result.status_code == 200
+
+def test_api_to_python_doc(token, api_url, use_ssl):
+    with urllib.request.urlopen("https://tally.datasmoothie.com/openapi/?format=openapi-json") as url:
+        data = json.load(url)
+    ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
+    meta_string = ds._endpoint_api_to_docstring(data, 'meta')
+    variable_string = ds._endpoint_api_to_docstring(data, 'variables')
+
+@pytest.mark.skip(reason="This test is only run to generate new methods")
+def test_meta_created_variables_function(token, api_url, use_ssl):
+    ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
+    ds.use_spss('tests/fixtures/Example Data (A).sav')
+    result = ds._generate_functions_from_api()
+    with open('functions.py', 'w') as f:
+        f.write(result)
+

@@ -28,7 +28,7 @@ class DataSet:
     qp_data = None
     tally = None
 
-    def __init__(self, api_key=None, host='tally.datasmoothie.com/', ssl=True):
+    def __init__(self, api_key=None, host='tally.datasmoothie.com', ssl=True):
         self.add_credentials(api_key=api_key, host=host, ssl=ssl)
 
     #@add_data
@@ -90,7 +90,44 @@ class DataSet:
     def _has_keys(self, response, required_keys):
         return all(elem in response.keys() for elem in required_keys)
 
-    def add_credentials(self, api_key=None, host='tally.datasmoothie.com/', ssl=True):
+    def _generate_functions_from_api(self):
+        with urllib.request.urlopen("https://tally.datasmoothie.com/openapi/?format=openapi-json") as url:
+            data = json.load(url)
+        endpoints = [i.replace('/tally/', '')[:-1] for i in data['paths'].keys()]
+        result = ""
+        for endpoint in endpoints:
+            available = dir(self)
+            if endpoint not in available:
+                result = result + self._endpoint_api_to_docstring(data, endpoint)
+
+        return result
+
+    def _endpoint_api_to_docstring(self, data, endpoint):
+        docstring = "    \"\"\""
+        path_info = data['paths']['/tally/{}/'.format(endpoint)]
+        parameter_docstring = ""
+        docstring = docstring + path_info['post']['description']
+        # check if there are parameters
+        if endpoint in data['components']['schemas'] and type(data['components']['schemas'][endpoint]['properties']['params']) == dict:
+            param_properties = data['components']['schemas'][endpoint]['properties']['params']['properties']
+            docstring = docstring + "\tParameters\n\t=====\n"
+            for key in param_properties:
+                docstring = docstring + """\t{} : {}\n \t\t{}\n""".format(key, param_properties[key]["type"], param_properties[key]["description"])
+        docstring = docstring + '\t\"\"\"'
+
+        function_string = """
+            def {}(self, **kwargs):
+            {}
+            return self._call_tally('{}', **kwargs)
+        """.format(endpoint, docstring, endpoint)
+        print(function_string)
+        return function_string
+
+
+    def add_credentials(self, api_key=None, host='tally.datasmoothie.com', ssl=True):
+        """
+        Add your API key and what server it is authorized to connect to. Useful for on-prem installations and development.          
+        """
         tally = Tally(api_key=api_key, host=host, ssl=ssl)
         self.tally = tally
 
@@ -118,6 +155,14 @@ class DataSet:
 
     @add_data
     def write_spss(self, file_path, data_params, **kwargs):
+        """
+        Writes the dataset to an SPSS (sav) file.
+
+        Parameters
+        ----------
+            file_path: string
+                Path to the sav file to write.
+        """
         payload = {}
         files, payload = self.prepare_post_params(data_params, {})
         response = self.tally.post_request('tally', 'convert_data_to_sav', payload, files)
@@ -127,6 +172,16 @@ class DataSet:
         return response
 
     def write_quantipy(self, file_path_json, file_path_csv):
+        """
+        Write the case and meta data as Quantipy compatible json and csv files. 
+
+        Parameters
+        ----------
+            file_path_json: string
+                Path to the json meta data file to create.
+            file_path_csv: string
+                Path to the csv data file to create.
+        """
         json_file = open(file_path_json, "w")
         n = json_file.write(self.qp_meta)
         json_file.close()
@@ -135,12 +190,30 @@ class DataSet:
         csv_file.close()
 
     def use_quantipy(self, meta_json, data_csv):
+        """
+        Load Quantipy meta and data files to this dataset.
+
+        Parameters
+        ----------
+            meta_json: string
+                Path to the json file we want to use as our meta data.
+            data_csv: string
+                Path to the csv file we want to use as our data file.
+        """
         with open(meta_json) as json_file:
             self.qp_meta = json.dumps(json.load(json_file))
         self.qp_data = pd.read_csv(data_csv).to_csv()
         self.dataset_type = 'quantipy'
 
     def use_csv(self, csv_file):
+        """
+        Load CSV file into the dataset as the file to send with all requests.
+
+        Parameters
+        ----------
+            csv_file: string
+                Path to the CSV file we want to use as our data.
+        """        
         csv = pd.read_csv(csv_file).to_csv()
         payload = {'csv': csv}
         response = self.tally.post_request('tally', 'convert_data_to_csv_json', payload)
@@ -150,6 +223,14 @@ class DataSet:
         self.dataset_type = 'quantipy'
 
     def use_nebu(self, nebu_url):
+        """
+        Load remote Nebu/Enghouse file into the dataset as the file to send with all requests.
+
+        Parameters
+        ----------
+            nebu_url: string
+                Path to the Nebu data file we want to use as our data.
+        """       
         payload = {
             'datasource': {
                 'type' : 'Nebu',
@@ -163,6 +244,22 @@ class DataSet:
         self.dataset_type = 'quantipy'
 
     def use_confirmit(self, source_projectid, source_idp_url, source_client_id, source_client_secret, source_public_url):
+        """
+        Load remote Forsta/Confirmit data into the dataset as the data to send with all requests.
+
+        Parameters
+        ----------
+        source_projectid: string
+            Project id of the survey
+        source_idp_url: string
+            IPD Url of the survey
+        source_client_id: string
+            Your client id
+        source_client_secret: string
+            Client secret (don't commit this to a repository)
+        source_public_url: string
+                Public url to source
+        """               
         payload = {
             'datasource': {
                 'type': 'Confirmit',
@@ -348,3 +445,375 @@ class DataSet:
         file.write(response.content)
         file.close()
         return response
+
+    def band(self, **kwargs):
+        """Group numeric data with band definitions treated as group text labels.
+
+        Parameters
+        =====
+        name : string
+            The column variable name keyed in _meta['columns'] that will be banded into summarized categories.
+        bands : array
+            The categorical bands to be used. Bands can be single numeric values or ranges.
+        new_name : (string, default None)
+            The created variable will be named '<name>_banded', unless a desired name is provided explicitly here.
+        label : (string, default None)
+            The created variable's text label will be identical to the originating one's passed in name, unless a desired label is provided explicitly here.
+        text_key : (string, default None)
+            Text key for text-based label information. Uses the DataSet.text_key information if not provided.
+        """
+        return self._call_tally('band', **kwargs)
+        
+    def compare(self, **kwargs):
+        """Compares types, codes, values, question labels of two datasets.
+
+        Parameters
+        =====
+        dataset : object
+            (quantipy.DataSet instance). Test if all variables in the provided dataset are also in self and compare their metadata definitions.
+        variables : str, array of str
+            Check only these variables
+        strict : (bool, default False)
+            If True lower/ upper cases and spaces are taken into account.
+        text_key : str, array of str
+            Text key for text-based label information. Uses the DataSet.text_key information if not provided.
+	    """
+        return self._call_tally('compare', **kwargs)
+        
+    def convert_data_to_csv_json(self, **kwargs):
+        """Converts data, either sent or from an external source to Quantipy CSV and JSON.
+
+        The data to convert can be from parquet, SPSS, or UNICOM Intelligence (fka Dimensions) or a pure CSV exported from Excel.
+
+        """
+        return self._call_tally('convert_data_to_csv_json', **kwargs)
+        
+    def convert_data_to_sav(self, **kwargs):
+        """Converts data, either sent or from an external source to an SPSS sav file.
+
+        The data to convert can be from Quantipy, or UNICOM Intelligence (fka Dimensions) or a pure CSV exported from Excel.
+
+        The sav files created do not support Quantipy's delimited set.
+
+            """
+        return self._call_tally('convert_data_to_sav', **kwargs)
+        
+    def copy(self, **kwargs):
+        """Copy meta and case data of the variable defintion given per name.
+
+        Parameters
+        =====
+        name : string
+            The column variable name.
+        suffix : string (default "rec")
+            The new variable name will be constructed by suffixing the original `name` with `_suffix`, e.g. `age_rec`
+        copy_data : boolean (default true)
+            The new variable assumes the data of the original variable.
+        slicer : dict
+            If the data is copied it is possible to filter the data with a complex logic.
+        copy_only : int or list of int, default None
+            If provided, the copied version of the variable will only contain (data and) meta for the specified codes.
+        copy_not : int or list of int, default None
+            If provided, the copied version of the variable will contain (data and) meta for the all codes, except of the indicated.
+        new_name : string
+            If provided, the returned object will contain this new name instead of `name_suffix`
+        """
+        return self._call_tally('copy', **kwargs)
+        
+    def derive(self, **kwargs):
+        """Create meta and recode case data by specifying derived category logics.
+
+    Derived variables have their answer codes derived from other variables. Derived variables can either be
+    multi-choice (called delimited set) or single-choice.
+
+    A derived variable can be created from one variable, for example when a likert scale question
+    has NETs added to it, or it can be created from multiple variables. When a derived variable is
+    created from multiple variables, the user has to define how these variables should be used to create the 
+    new one with by defining whether the new variable is an intersection or a union (logical expressions `and` or `or`).
+
+    The conditional map has a list/array of of either three or four elements of following structures:
+
+    #### 3 elements, type of logic not specified:
+    [code, label, logic dictionary], e.g.:
+
+    ``[1, "People who live in urban and sub-urban settings", {'locality': [1,2]}``
+
+    #### 4 elements, type of logic speficied:
+    [1, label, type of logic, logic_dictionary), e.g.:
+
+    ``[1, "Men in urban and suburban locations", 
+    'intersection', 
+    {'gender': [1] 'locality': [1,2]))]``
+
+    ``[2, "Women in urban and suburban locations", 'intersection', {'gender': [2] 'locality': [1,2]))``
+
+    The logic types are 'union' and 'intersection'. If no logic type is specified, 'union' is used.
+    `union` is equivalent to the logical expression `or` and `intersection` is equivalent to `and`.
+    
+
+
+        Parameters
+        =====
+        name : string
+            The column variable name.
+        label : string
+            Name of the variable to show meta data for
+        qtype : string
+            The structural type of the data the meta describes (``int``, ``float``, ``single`` or ``delimited set``)
+        cond_maps : array
+            List of logic dictionaries that define how each answer and code is derived.
+        cond_map : array (deprecated)
+            List of "tuples", see documentatio above.
+        """
+        return self._call_tally('derive', **kwargs)
+        
+    def extend_values(self, **kwargs):
+        """Add an answer/value and code to the list of answer/values/codes already in the meta data for the variable.
+
+        Attempting to add already existing value codes or providing already
+        present value texts will both raise invalid_arguments error!
+
+        """
+        return self._call_tally('extend_values', **kwargs)
+        
+    def feature_select(self, **kwargs):
+        """Shows the variables that score the highest with a given ML features select algorithm
+
+            	"""
+        return self._call_tally('feature_select', **kwargs)
+        
+    def filter(self, **kwargs):
+        """Filter the DataSet using a logical expression.
+
+        Parameters
+        =====
+        alias : string
+            Name of the filter
+        condition : object
+            An object that defines the filter logic
+        """
+        return self._call_tally('filter', **kwargs)
+        
+    def find(self, **kwargs):
+        """Find variables by searching their names for substrings.
+
+        Parameters
+        =====
+        str_tags : string or list of strings
+            The strings tags to look for in the variable names. If not provided, the modules’ default global list of substrings from VAR_SUFFIXES will be used.
+        suffixed : boolean (default false)
+            If true, only variable names that end with a given string dequence will qualitfy.
+        """
+        return self._call_tally('find', **kwargs)
+        
+    def get_variable_text(self, **kwargs):
+        """Return the variables text label information.
+
+	"""
+        return self._call_tally('get_variable_text', **kwargs)
+        
+    def hmerge(self, **kwargs):
+        """Merge Quantipy datasets together by appending rows.
+        This function merges two Quantipy datasets together,
+        updating variables that exist in the left dataset and
+        appending others.
+        New variables will be appended in the order indicated by the
+        'data file' set if found, otherwise they will be appended in
+        alphanumeric order. This merge happens vertically (row-wise).
+
+        Parameters
+        =====
+        dataset : object
+            (quantipy.DataSet instance). Test if all variables in the provided dataset are also in self and compare their metadata definitions.
+        on : str, default=None
+            The column to use to identify unique rows in both datasets.
+        left_on : str, default=None
+            The column to use to identify unique in the left dataset.
+        right_on : str, default=None
+            The column to use to identify unique in the right dataset.
+        row_id_name : str, default=None
+            The named column will be filled with the ids indicated for each dataset, as per left_id/right_id/row_ids. If meta for the named column doesn't already exist a new column definition will be added and assigned a reductive-appropriate type.
+        left_id : str, int, float, default=None
+            Where the row_id_name column is not already populated for the dataset_left, this value will be populated.
+        right_id : str, int, float, default=None
+            Where the row_id_name column is not already populated for the dataset_right, this value will be populated.
+        row_ids : array of (str, int, float), default=None
+            When datasets has been used, this list provides the row ids that will be populated in the row_id_name column for each of those datasets, respectively.
+        overwrite_text : bool, default=False
+            If True, text_keys in the left meta that also exist in right meta will be overwritten instead of ignored.
+        from_set : str, default=None
+            Use a set defined in the right meta to control which columns are merged from the right dataset.
+        uniquify_key : str, default=None
+            An int-like column name found in all the passed DataSet objects that will be protected from having duplicates. The original version of the column will be kept under its name prefixed with 'original'.
+        reset_index : bool, default=True
+            If True pandas.DataFrame.reindex() will be applied to the merged dataframe.
+        """
+        return self._call_tally('hmerge', **kwargs)
+        
+    def joined_crosstab(self, **kwargs):
+        """Does crosstab tabulation using the provided parameters, allowing for multiple
+        datasources to be sent along with the request to run multiple crosstabs in one result. 
+        Returns a json ecoded dataframe as a result. 
+	    """
+        return self._call_tally('joined_crosstab', **kwargs)
+        
+    def meta(self, **kwargs):
+        """Shows the meta-data for a variable
+
+        Parameters
+        =====
+        variable : string
+            Name of the variable to show meta data for
+        variables : array
+            Name of multiple variables to show meta data for
+        """
+        return self._call_tally('meta', **kwargs)
+        
+    def recode(self, **kwargs):
+        """Create a new or copied series from data, recoded using a mapper.
+
+        This function takes a mapper of {key: logic} entries and injects the
+        key into the target column where its paired logic is True. The logic
+        may be arbitrarily complex and may refer to any other variable or
+        variables in data. Where a pre-existing column has been used to
+        start the recode, the injected values can replace or be appended to
+        any data found there to begin with. The recoded data will always comply 
+        with the column type indicated for the target column according to the meta. 
+
+        #### Mapping example:
+            recode_mapper = {
+                1: {"$union":[{"$intersection": [{'locality': [3]}, {"gender":[1]}]},{"$intersection": [{'locality': [4]}, {"gender":[1]}]}]               },
+                2: {"$intersection":[{'locality': [2]}, {'gender':[2]}]},
+                3: {"$union":[{'locality': [1]}, {'gender':[1]}]},
+                4: {'locality': [4]},
+                5: {'locality': [5]},
+                6: {'locality': [6]}
+            }
+        Logical functions are strings preceded with the symbol $ and logic can be nested at an arbitrary depth.
+
+
+        Parameters
+        =====
+        target : string
+            The variable name of the target of the recode.
+        mapper : dict
+            A mapper of {key: logic} entries.
+        default : string
+            The column name to default to in cases where unattended lists are given in your logic, where an auto-transformation of {key: list} to {key: {default: list}} is provided. Note that lists in logical statements are themselves a form of shorthand and this will ultimately be interpreted as: {key: {default: has_any(list)}}. 
+        append : boolean
+            Should the new recoded data be appended to values already found in the series? If False, data from series (where found) will overwrite whatever was found for that item instead.
+        intersect : dict
+            If a logical statement is given here then it will be used as an implied intersection of all logical conditions given in the mapper. For example, we could limit our mapper to males.
+        initialize : str (default: None)
+            Name of variable to use to populate the variable before the recode
+        fillna : int
+            If provided, can be used to fill empty/nan values.
+        """
+        return self._call_tally('recode', **kwargs)
+        
+    def remove_values(self, **kwargs):
+        """Erase value codes safely from both meta and case data components.
+
+
+    	"""
+        return self._call_tally('remove_values', **kwargs)
+        
+    def set_value_texts(self, **kwargs):
+        """Rename or add value texts in the ‘values’ object.
+
+        This method works for array masks and column meta data.
+
+        """
+        return self._call_tally('set_value_texts', **kwargs)
+        
+    def set_variable_text(self, **kwargs):
+        """Change the variable text for a named variable.
+
+	"""
+        return self._call_tally('set_variable_text', **kwargs)
+        
+    def sum(self, **kwargs):
+        """Adds all values in each column and returns the sum for each column.
+        Parameters
+        =====
+        new_variable_name : string
+            Name for new variable that will contain the summarized amounts.
+        variables : array
+            The variables to sum. Only float or int types.
+        """
+        return self._call_tally('sum', **kwargs)
+        
+    def to_array(self, **kwargs):
+        """Create a new variable grid (array) variable from two or more `single` variables with the same labels.
+
+    	"""
+        return self._call_tally('to_array', **kwargs)
+        
+    def to_delimited_set(self, **kwargs):
+        """Create a new variable delimited set (multi choice) variable from two or more `single` variables.
+
+    	"""
+        return self._call_tally('to_delimited_set', **kwargs)
+        
+    def values(self, **kwargs):
+        """Get a list of value texts and codes for a categorical variable, as a dictionary. 
+        The method will return the codes in the data and the labels that apply to those codes
+        in the chosen language (or the default language if no language is chosen).
+
+
+        Parameters
+        =====
+        name : string
+            Name of variable to fetch values/codes for.
+        text_key : string (default None)
+            The language key that should be used when taking labels from the meta data.
+        include_variable_texts : boolean (default false)
+            Include labels for the variable name in the results.
+        """
+        return self._call_tally('values', **kwargs)
+        
+    def variables(self, **kwargs):
+        """
+        Shows list of variables.
+
+	    """
+        return self._call_tally('variables', **kwargs)
+        
+    def vmerge(self, **kwargs):
+        """
+        Merge Quantipy datasets together by appending rows.
+        This function merges two Quantipy datasets together, updating variables
+        that exist in the left dataset and appending others. New variables
+        will be appended in the order indicated by the 'data file' set if
+        found, otherwise they will be appended in alphanumeric order. This
+        merge happens vertically (row-wise).
+
+        Parameters
+        =====
+        dataset : object
+            (quantipy.DataSet instance). Test if all variables in the provided dataset are also in self and compare their metadata definitions.
+        on : str, default=None
+            The column to use to identify unique rows in both datasets.
+        left_on : str, default=None
+            The column to use to identify unique in the left dataset.
+        right_on : str, default=None
+            The column to use to identify unique in the right dataset.
+        row_id_name : str, default=None
+            The named column will be filled with the ids indicated for each dataset, as per left_id/right_id/row_ids. If meta for the named column doesn't already exist a new column definition will be added and assigned a reductive-appropriate type.
+        left_id : str, int, float, default=None
+            Where the row_id_name column is not already populated for the dataset_left, this value will be populated.
+        right_id : str, int, float, default=None
+            Where the row_id_name column is not already populated for the dataset_right, this value will be populated.
+        row_ids : array of (str, int, float), default=None
+            When datasets has been used, this list provides the row ids that will be populated in the row_id_name column for each of those datasets, respectively.
+        overwrite_text : bool, default=False
+            If True, text_keys in the left meta that also exist in right meta will be overwritten instead of ignored.
+        from_set : str, default=None
+            Use a set defined in the right meta to control which columns are merged from the right dataset.
+        uniquify_key : str, default=None
+            An int-like column name found in all the passed DataSet objects that will be protected from having duplicates. The original version of the column will be kept under its name prefixed with 'original'.
+        reset_index : bool, default=True
+            If True pandas.DataFrame.reindex() will be applied to the merged dataframe.
+        """
+        return self._call_tally('vmerge', **kwargs)
+        
