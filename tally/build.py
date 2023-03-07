@@ -10,8 +10,9 @@ from .options import Options
 from .sheet import Sheet
 
 class Build:
-    """
-    A class that gathers together crosstabs a user wants to use to build Excel, Powerpoint or Datasmoothie dashboards output. 
+    """ Represents crosstabs and settings to build a deliverable, such as Excel tables.
+
+
 
     Parameters
     ----------
@@ -39,6 +40,23 @@ class Build:
         )
 
     def add_sheet(self, name=None, banner='@'):
+        """ Add sheet to a build
+
+        The sheet can then be used both to change settings via its options and to store a list of tables.
+
+        Parameters
+        ----------
+
+        name: string
+            Name of the sheet. Appears in the table of contents.
+        banner: list of strings
+            List of variables to display across the top of the sheet.
+
+
+        Example
+        -------
+            build.add_sheet(name='Q1 - gender, location', banner=['gender', 'location'])
+        """
         if name is None:
             name = "Table {}".format(str(len(self.sheets)+1))
         sheet = Sheet(
@@ -73,6 +91,9 @@ class Build:
 
         # wrapped in try because openpyxl is brittle
         try:
+            font_name = self.options.global_options['font_name']
+            font_size = self.options.global_options['font_size']
+
             heights = {
                 'Question': 30,
                 'Values': 70,
@@ -81,7 +102,6 @@ class Build:
 
             wb = load_workbook(filename)
 
-            default_font = Font(name=self.font_name, size=self.font_size)
             
             # add table of contents
             if len(self.sheets)>1:
@@ -89,21 +109,23 @@ class Build:
 
                 wb_sheet = wb.create_sheet('Contents', 0)
                 wb_sheet.cell(row=offset_y, column=2, value='Contents')
+                wb_sheet.cell(row=offset_y, column=2).font = Font(name=font_name, size=font_size)
                 wb_sheet.column_dimensions['B'].width = 20
                 wb_sheet.column_dimensions['C'].width = 70
 
                 if self.name is not None:
                     title = wb_sheet.cell(7, 2, value=self.name)
-                    title.font = Font(size="20")
+                    title.font = Font(size="20", name=font_name)
                 if self.subtitle is not None:
                     subtitle = wb_sheet.cell(8, 2, value=self.subtitle)
-                    subtitle.font = Font(size="14")
+                    subtitle.font = Font(size="14", name=font_name)
 
                 for index, sheet in enumerate(self.sheets):
                     wb_sheet.cell(row=index+1+offset_y, column=3, value=sheet.get_name())
+                    wb_sheet.cell(row=index+1+offset_y, column=3).font = Font(name=font_name, size=font_size)
                     link_value = '=HYPERLINK("#{}!A1", "Table {}")'.format(wb.sheetnames[index+1], index+1)
                     cell = wb_sheet.cell(row=index+1+offset_y, column=2, value=link_value)
-                    cell.font = Font(color="2A64C5", underline="single")
+                    cell.font = Font(color="2A64C5", underline="single", name=font_name, size=font_size)
 
                 if self.logo is not None:
                     img = Image(self.logo)
@@ -124,12 +146,25 @@ class Build:
                 for index, sh in enumerate(self.sheets):
                     top_offset = sh.options.formats['offsets']['top']
                     wb_sheet = wb.worksheets[index+1]
-                    wb_sheet['A3'].font = Font(bold=True, size=16)
+                    wb_sheet['A3'].font = Font(bold=True, size=16, name=font_name)
+                    if wb_sheet.cell(top_offset+1, 2).value == 'Total':
+                        wb_sheet.merge_cells(
+                            start_row=top_offset+1, 
+                            end_row=top_offset+len(self.sheets[0].tables[0]['dataframe'].columns.names), 
+                            start_column=2, 
+                            end_column=2
+                        )
+
                     for index, header in enumerate(sh.tables[0]['dataframe'].columns.names):
                         wb_sheet.row_dimensions[top_offset+index+1].height=heights[header]
                         for col_range in range(1,100):
                             wb_sheet.cell(top_offset+index+1,col_range).alignment = Alignment(wrap_text=True, vertical='center', horizontal='center')
-           
+                            wb_sheet.cell(top_offset+index+1,col_range).font = Font(
+                                name=font_name,
+                                size=font_size,
+                                bold=True
+                            )
+
 
 
 
@@ -145,17 +180,26 @@ class Build:
                         color_cell.fill = PatternFill(start_color=self.index_options['header_color'], end_color=self.index_options['body_color'], fill_type="solid")
 
                 top_offset = self.sheets[0].options.formats['offsets']['top']
+                if wb_sheet.cell(top_offset+1, 2).value == 'Total':
+                    wb_sheet.merge_cells(
+                        start_row=top_offset+1, 
+                        end_row=top_offset+len(self.sheets[0].tables[0]['dataframe'].columns.names), 
+                        start_column=2, 
+                        end_column=2
+                    )
                 for index, header in enumerate(self.sheets[0].tables[0]['dataframe'].columns.names):
                     wb_sheet.row_dimensions[top_offset+index+1].height=heights[header]
                     for col_range in range(1,100):
                         wb_sheet.cell(top_offset+index+1,col_range).alignment = Alignment(wrap_text=True, vertical='center', horizontal='center')
- 
+                        wb_sheet.cell(top_offset+index+1,col_range).font = Font(
+                            name=font_name,
+                            size=font_size,
+                            bold=True
+                        )
 
             wb.save(filename)
         except Exception as e:
-            print('Warning: Something went wrong in prettifying the Excel. Make sure all colors are defined as ffffff rather than #ffffff.')
-            print(e)
-            pass
+            raise Exception('Error: Something went wrong in prettifying the Excel. Make sure all colors are defined as ffffff rather than #ffffff.')
 
     def table_count(self):
         table_counts = [i.table_count() for i in self.sheets]

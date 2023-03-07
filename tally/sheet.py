@@ -4,6 +4,22 @@ import pandas as pd
 import copy
 
 class Sheet:
+    """ Represents a sheet in an Excel document.
+
+
+
+    Parameters
+    ----------
+      name: string
+        Name for the sheet. Will appear in table of contents.
+      banner: list
+        Variables to display across the top of the sheet.
+      default_dataset: tally.DataSet
+        The dataset to use for the data. The default is the build dataset, but sheets can have data from other datasets.
+      parent : tally.Build
+        The build object that owns the sheet.
+    """
+
     def __init__(self, banner='@', default_dataset=None, name=None, parent=None):
         self.banner = banner
         self.tables = []
@@ -28,9 +44,21 @@ class Sheet:
                 return ""
 
     def add_table(self, stub, options={}, dataset=None):
+        """ Add a table to the sheet
+
+        Parameters
+        ----------
+        stub: dict
+            Dictionary with information about what the table should contain. Options are
+            x - the stub variable
+            y - the banner variable
+        options: dict
+        dataset: tally.DataSet
+        """
         if self.default_dataset and dataset is None:
             dataset = self.default_dataset
-        merged_table_options = self.options.merge_dict(self.options.table_options, copy.deepcopy(self.parent.options.table_options))
+        merged_local_options = self.options.merge_dict(options, copy.deepcopy(self.options.table_options))
+        merged_table_options = self.options.merge_dict(copy.deepcopy(merged_local_options), copy.deepcopy(self.parent.options.table_options))
         crosstab = {**{**merged_table_options['stub'], **stub}, **{'y':self.banner, 'add_format_column':True}}
         df = dataset.crosstab(
             crosstabs=[crosstab]
@@ -46,21 +74,44 @@ class Sheet:
             df = self.apply_table_options(df, options)
             table['dataframe'] = df
             table['dataframe'] = self._append_row_to_dataframe(table['dataframe'])
-            table = self._add_annotations(table)
+            if 'annotations' in self.options.table_options and self.options.table_options['annotations']:
+                table = self._add_annotations(table)
             table['dataframe'] = self._append_row_to_dataframe(table['dataframe'])
 
 
     def apply_table_options(self, df, options):
+        if 'banner_border' in options:
+            df = self.add_banner_border(df)
+        if 'title' in options:
+            index = pd.MultiIndex.from_tuples([(' ',options['title']['text'])], names=['', ''])
+            data_dict = {i:'' for i in df.columns}
+            title_row = pd.DataFrame(data=data_dict, index=index, columns=df.columns)
+            if 'format' in options['title']:
+#                title_row['FORMAT'] = '{"type":"base", "cell_format":{"question":{"format":' + json.dumps(options['title']['format']) + '}}}'
+                default_format = {'bold': True, 'align':'left'}
+                cell_format = {**default_format, **options['title']['format']}
+                title_row['FORMAT'] = '{"type":"base", "cell_format":{"0":{"format":' + json.dumps(cell_format) + '}}}'
+
+            else:
+                title_row['FORMAT'] = '{"type":"counts", "cell_format":{}}'
+            df = pd.concat([title_row, df])
         if 'base' in options:
             df = self.apply_base_options(df, options['base'])
         if 'base_label' in options:
             df = df.rename(index={'Base':options['base_label']}, level=1)
+        if 'unweighted_base_label' in options:
+            df = df.rename(index={'Unweighted base':options['unweighted_base_label']}, level=1)
         if 'format' in options:
             df = self.apply_table_format_options(df, options['format'])
         if 'row_format' in options:
             df = self.set_row_format(df, options['row_format'])
-        if 'banner_border' in options:
-            df = self.add_banner_border(df)
+        if 'font_name' in options:
+            for i, col in enumerate(df.columns):
+                self._set_column_format(df, i, {"font_name":options['font_name']})
+        if 'font_size' in options:
+            for i, col in enumerate(df.columns):
+                self._set_column_format(df, i, {"font_size":options['font_size']})
+
         return df
 
     def apply_table_format_options(self, df, options):
@@ -173,7 +224,7 @@ class Sheet:
 
         return df
 
-    def _append_row_to_dataframe(self, df, row_data=None, row_format={}):
+    def _append_row_to_dataframe(self, df, row_data=None, row_format={}, before=False):
         last_question = df.index.get_level_values(0)[-1]
         mi = pd.MultiIndex.from_tuples([(last_question, ' ')])
         if row_data is None:
@@ -181,7 +232,10 @@ class Sheet:
         else:
             row_df = pd.DataFrame(columns=df.columns, data=[row_data], index=mi)
         row_df.iloc[-1, -1] = '{{"type":"counts", "cell_format":{}}}'.format(row_format)
-        df = pd.concat([df, row_df])
+        if before:
+            df = pd.concat([row_df, df])
+        else:
+            df = pd.concat([df, row_df])
         return df
 
     def build_dataframes(self, build_options=None):

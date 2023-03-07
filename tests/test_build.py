@@ -68,6 +68,11 @@ def test_annotations(token, api_url, use_ssl):
     sheet.add_table(stub={'x':'q1', 'ci':['c%'], 'xtotal':True, 'stats':['mean']}, dataset=ds)
 
     sheet = build.add_sheet(banner=['gender', 'locality'])
+    sheet.options.set_annotations(True)
+    sheet.options.set_sig_test_levels(0.05)
+    sheet.add_table(stub={'x':'q1', 'ci':['c%'], 'xtotal':True, 'stats':['stddev']}, dataset=ds)
+
+    sheet = build.add_sheet(banner=['gender', 'locality'])
     sheet.add_table(stub={'x':'q1', 'ci':['c%'], 'xtotal':True, 'stats':['stddev']}, dataset=ds)
 
     build.save_excel('test_annotations.xlsx')
@@ -214,21 +219,63 @@ def test_build_options(token, api_url, use_ssl):
     build.options.freeze_panes(9,1)
     build.options.set_base_position('outside')
     build.options.set_answer_format('base', {"font_color":"F15A30", "bold":True,'text_wrap': True})
-    build.options.set_question_format('percentage', {"bold":True})
     build.options.set_format('base', {"bold":True})
+    build.options.set_font("Comic Sans", 10)
+    build.options.set_top_offset(3)
+    build.options.freeze_panes(9,1)
+
 
     sheet = build.add_sheet(banner=['gender', 'locality'])
-    sheet2 = build.add_sheet(banner=['gender', 'ethnicity'])
+    sheet2 = build.add_sheet(banner=['@', 'gender', 'ethnicity'])
     sheet2.options.set_format('stats', {"font_color":"98B4DF"})
     sheet2.options.set_stats(stats=['mean', 'stddev'])
 
     sheet.add_table(stub={'x':'q1'})
     sheet.add_table(stub={'x':'q2b'})
 
-    sheet2.add_table(stub={'x':'q1'})
+    sheet2.add_table(stub={'x':'q1' })
     sheet2.add_table(stub={'x':'q2b'})
 
     build.save_excel('test_build_options.xlsx')
     wb = openpyxl.load_workbook('test_build_options.xlsx')
     os.remove('test_build_options.xlsx')
 
+def test_add_change_base_label(token, api_url, use_ssl):
+    ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
+    ds.use_spss('tests/fixtures/Example Data (A).sav')
+
+    build = tally.Build(name='client A', default_dataset=ds, table_of_contents=True)
+
+    build.options.set_hide_gridlines(2)
+    build.options.set_base_position('outside')
+    sheet = build.add_sheet(banner=['gender', 'locality'])
+    build.options.set_weight('weight_a')
+
+    sheet.options.set_base_labels('All GB', 'Unweighted base (All GB)')
+
+    sheet.add_table(stub={'x':'q2b', 'xtotal':True, 'base':'both'})
+    sheet.add_table(stub={'x':'q1', 'xtotal':True}, options={'base':'hide'})
+
+    build.save_excel('test_add_change_base_label.xlsx')
+    wb = openpyxl.load_workbook('test_add_change_base_label.xlsx')
+    os.remove('test_add_change_base_label.xlsx')
+
+def test_add_table_title(token, api_url, use_ssl):
+    ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
+    ds.use_spss('tests/fixtures/Example Data (A).sav')
+
+    build = tally.Build(name='client A', default_dataset=ds, table_of_contents=True)
+
+    build.options.set_hide_gridlines(2)
+    build.options.set_base_position('outside')
+    sheet = build.add_sheet(banner=['gender', 'locality'])
+    build.options.set_weight('weight_a')
+
+    sheet.options.set_base_labels('All GB', 'Unweighted base (All GB)')
+
+    sheet.add_table(stub={'x':'q2b', 'xtotal':True, 'base':'both'}, options={'title':{'text':'This is my title', 'format':{'bold':True, 'font_color':'#ebebeb'}}})
+    sheet.add_table(stub={'x':'q1', 'xtotal':True}, options={'base':'hide'})
+
+    build.save_excel('add_title.xlsx')
+    wb = openpyxl.load_workbook('add_title.xlsx')
+    os.remove('add_title.xlsx')
