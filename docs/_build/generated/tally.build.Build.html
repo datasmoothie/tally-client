@@ -171,6 +171,18 @@
   </a>
  </li>
 </ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Examples
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../formatting_header_and_base.html">
+   Formatting bases in Excel
+  </a>
+ </li>
+</ul>
 
     </div>
 </nav></div>
@@ -262,7 +274,7 @@ title="Source repository"
 <dl class="py class">
 <dt class="sig sig-object py" id="tally.build.Build">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tally.build.</span></span><span class="sig-name descname"><span class="pre">Build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subtitle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_dataset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_of_contents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tally.build.Build" title="Permalink to this definition">#</a></dt>
-<dd><p>A class that gathers together crosstabs a user wants to use to build Excel, Powerpoint or Datasmoothie dashboards output.</p>
+<dd><p>Represents crosstabs and settings to build a deliverable, such as Excel tables.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>name</strong> (<em>string</em>) – Name for the dataset</p>
@@ -287,7 +299,7 @@ title="Source repository"
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="tally.build.Build.add_sheet.html#tally.build.Build.add_sheet" title="tally.build.Build.add_sheet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_sheet</span></code></a>([name, banner])</p></td>
-<td><p></p></td>
+<td><p>Add sheet to a build</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_excel</span></code>(filename)</p></td>
 <td><p></p></td>

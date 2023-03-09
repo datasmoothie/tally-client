@@ -37,6 +37,7 @@
       ~Options.set_stats
       ~Options.set_stub
       ~Options.set_top_offset
+      ~Options.set_top_offset_after_header
       ~Options.set_weight
    
    

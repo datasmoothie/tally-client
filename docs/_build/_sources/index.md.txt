@@ -64,6 +64,14 @@ api_dataset
 terminology
 ```
 
+```{toctree}
+:caption: Examples
+:hidden:
+
+formatting_header_and_base
+add_total_column
+```
+
 Tally is a tool for survey and market research data processing, analysis, and publishing. It allows users to combine multiple survey data platforms, run data processing tasks such as cleaning, weighting, merging data and creating new variables. It also produces Excel data tables, Powerpoint files and interactive dashboards.
 
 Tally is composed of two parts:
