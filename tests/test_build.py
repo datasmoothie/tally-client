@@ -172,7 +172,6 @@ def test_add_simple_table(token, api_url, use_ssl):
     sheet.options.set_show_table_base_column(True)
     sheet.options.set_column_format_for_type('base', 1, {"bold":True})
     sheet.options.set_column_format_for_type('percentage', 1, {"bold":True})
-    sheet.options.set_base('')
 
     sheet.options.set_base_position('outside')
     sheet.options.set_filter({'gender':[1], 'locality':[1,2]})
