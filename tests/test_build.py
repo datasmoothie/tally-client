@@ -98,6 +98,63 @@ def test_default_options(token, api_url, use_ssl):
 
     build.sheets[0].add_table(stub={'x':'ethnicity'})
 
+def test_table_without_formatting(token, api_url, use_ssl):
+    ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
+    ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
+
+    build = tally.Build(name='Client A', subtitle="Datasmoothie", default_dataset=ds)
+
+    sheet = build.add_sheet(banner=['gender', 'locality'])
+
+    sheet.add_table(stub={'x' : 'q14r01c01'}) 
+    sheet.add_table(stub={'x' : 'q14r02c01', 'stats':['mean']})
+    sheet.add_table(stub={'x' : 'q14r03c01'})
+
+
+    build.save_excel('test_table_without_formatting.xlsx')
+    wb = openpyxl.load_workbook('test_table_without_formatting.xlsx')
+    os.remove('test_table_without_formatting.xlsx')
+
+def test_table_with_header_formatting(token, api_url, use_ssl):
+    ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
+    ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
+
+    build = tally.Build(name='Client A', subtitle="Datasmoothie", default_dataset=ds)
+    build.options.set_top_offset_after_header(1)
+
+    sheet = build.add_sheet(banner=['gender', 'locality'])
+    sheet.options.set_base_position('outside')
+    sheet.options.set_format('base', {'bold':True, 'border': 1, 'border_color':'000000'})
+    sheet.options.set_base_labels("All respondents")
+
+    sheet.add_table(stub={'x' : 'q14r01c01'}) 
+    sheet.add_table(stub={'x' : 'q14r02c01', 'stats':['mean']})
+    sheet.add_table(stub={'x' : 'q14r03c01'})
+
+
+    build.save_excel('test_table_with_header_formatting.xlsx')
+    os.remove('test_table_with_header_formatting.xlsx')
+
+
+def test_table_with_totals(token, api_url, use_ssl):
+    ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
+    ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
+
+    build = tally.Build(name='Client A', subtitle="Datasmoothie", default_dataset=ds)
+
+    sheet = build.add_sheet(banner=['gender', 'locality'])
+    sheet.options.set_stub({'xtotal': True})
+    sheet.options.set_column_format_for_type('base', 1, {"bold":True})
+    sheet.options.set_column_format_for_type('percentage', 1, {"bold":True})
+
+    sheet.add_table(stub={'x' : 'q14r01c01'}) 
+    sheet.add_table(stub={'x' : 'q14r02c01', 'stats':['mean']})
+    sheet.add_table(stub={'x' : 'q14r03c01'})
+
+    build.save_excel('test_table_with_totals.xlsx')
+    os.remove('test_table_with_totals.xlsx')
+
+
 def test_add_simple_table(token, api_url, use_ssl):
     ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
     ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
@@ -110,11 +167,12 @@ def test_add_simple_table(token, api_url, use_ssl):
     sheet = build.add_sheet(banner=['gender > locality', 'locality > q2b'])
 
     sheet.options.set_banner_border(True)
+    sheet.options.set_show_bases('both')
 
     sheet.options.set_show_table_base_column(True)
     sheet.options.set_column_format_for_type('base', 1, {"bold":True})
     sheet.options.set_column_format_for_type('percentage', 1, {"bold":True})
-
+    sheet.options.set_base('')
 
     sheet.options.set_base_position('outside')
     sheet.options.set_filter({'gender':[1], 'locality':[1,2]})

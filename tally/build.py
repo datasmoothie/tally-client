@@ -187,6 +187,18 @@ class Build:
                         start_column=2, 
                         end_column=2
                     )
+
+                # if we have the base outside, remove the first base line from the top
+                if 'base' in self.options.table_options:
+                    base_option = self.options.table_options['base']
+                elif 'base' in sheet.options.table_options:
+                    base_option = sheet.options.table_options['base']
+                else:
+                    base_option = None
+                if base_option == 'outside':
+                    row_for_removal = top_offset + len(self.sheets[0].tables[0]['dataframe'].columns.names) + 1
+                    wb_sheet.delete_rows(row_for_removal)
+                top_offset + len(self.sheets[0].tables[0]['dataframe'].columns.names) + 1
                 for index, header in enumerate(self.sheets[0].tables[0]['dataframe'].columns.names):
                     wb_sheet.row_dimensions[top_offset+index+1].height=heights[header]
                     for col_range in range(1,100):

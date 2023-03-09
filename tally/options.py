@@ -195,6 +195,12 @@ class Options:
         """
         self.formats['offsets']['top'] = offset_row
 
+    def set_top_offset_after_header(self, offset_row):
+        """Set how many empty lines are below the header.
+        """
+        self.formats['offsets']['row'] = offset_row
+
+
     def freeze_panes(self, row=10, column=1):
         """Set where to freeze panes in the Excel file.
         """
