@@ -29,6 +29,10 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install flake8 pytest
+        PYTHONVERSION=`python --version|awk '/3.10/{print $2}'`
+        echo "CURRENT PYTHONVERSION :: $PYTHONVERSION"
+        if [ "$PYTHONVERSION" ]; then sed -i 's/numpy==1.20.3/numpy==1.21.0/g' requirements.txt && sed -i "s/pandas==1.2.4/pandas==1.5.2/g" requirements.txt && echo "REPLACE THE requirements.txt" ; fi
+        cat requirements.txt
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
       run: |
