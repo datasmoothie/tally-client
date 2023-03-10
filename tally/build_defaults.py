@@ -57,7 +57,7 @@ build_default_formats = {
         "top": 6,
         "left": 0,
         "column": 1,  # This is how many cells we shift from the left
-        "row": 2  # This is how many rows we shift from the top,
+        "row": 1  # This is how many rows we shift from the top,
     },
 
     "set_page_setup": {"hide_gridlines":{"option":2}}

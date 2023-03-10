@@ -37,6 +37,8 @@
     <script src="../_static/design-tabs.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="DataSet class" href="../api_dataset.html" />
+    <link rel="prev" title="tally.build.Sheet.add_table" href="tally.build.Sheet.add_table.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -145,7 +147,7 @@
   API Reference
  </span>
 </p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="../the_api.html">
    The API
@@ -166,6 +168,18 @@
  <li class="toctree-l1">
   <a class="reference internal" href="../terminology.html">
    Terminology
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Examples
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../formatting_header_and_base.html">
+   Formatting bases in Excel
   </a>
  </li>
 </ul>
@@ -260,7 +274,8 @@ title="Source repository"
 <dl class="py class">
 <dt class="sig sig-object py" id="tally.build.Options">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tally.build.</span></span><span class="sig-name descname"><span class="pre">Options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">formats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tally.build.Options" title="Permalink to this definition">#</a></dt>
-<dd><dl class="py method">
+<dd><p>Options for both sheet and build with convenience methods to change both data and visuals.</p>
+<dl class="py method">
 <dt class="sig sig-object py" id="tally.build.Options.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">formats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tally.build.Options.__init__" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
@@ -276,79 +291,79 @@ title="Source repository"
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">freeze_panes</span></code>([row, column])</p></td>
-<td><p></p></td>
+<td><p>Set where to freeze panes in the Excel file.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge</span></code>(options)</p></td>
 <td><p>Merge two Option objects together, this one overriding the incoming one</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge_dict</span></code>(source, destination)</p></td>
-<td><p><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;first&#39;</span> <span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;all_rows&#39;</span> <span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;pass&#39;</span> <span class="p">:</span> <span class="s1">&#39;dog&#39;</span><span class="p">,</span> <span class="s1">&#39;number&#39;</span> <span class="p">:</span> <span class="s1">&#39;1&#39;</span> <span class="p">}</span> <span class="p">}</span> <span class="p">}</span>
-</pre></div>
-</div>
-</p></td>
+<td><p>Merge two dictionaries by having the destination override the source, recursively.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_annotations</span></code>(annotations)</p></td>
-<td><p></p></td>
+<td><p>Set whether tables are annotated with information about sig-testing, weight applied, and base.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_answer_format</span></code>(answer_type, format)</p></td>
-<td><p></p></td>
+<td><p>Set the format for an answer, e.g.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_banner_border</span></code>(border)</p></td>
-<td><p></p></td>
+<td><p>Set whether there should be a border between the banner categories, like gender and age.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_base_labels</span></code>(label[, unweighted_label])</p></td>
-<td><p></p></td>
+<td><p>Set the labels for the base and unweighted base.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_base_position</span></code>(position)</p></td>
-<td><p></p></td>
+<td><p>Change the position of the base</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_ci</span></code>(ci)</p></td>
-<td><p></p></td>
+<td><p>Set what the table cells should contain</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_column_format_for_type</span></code>(answer_type, ...)</p></td>
-<td><p></p></td>
+<td><p>Set column format for answer type.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_filter</span></code>(filter)</p></td>
-<td><p></p></td>
+<td><p>Set filter to use on all data</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_font</span></code>(name[, size])</p></td>
-<td><p></p></td>
+<td><p>Sets the global font name and size to be used in Excel.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_format</span></code>(name, new_format)</p></td>
-<td><p></p></td>
+<td><p>Set format for a question type in the table</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_hide_gridlines</span></code>(hide)</p></td>
-<td><p>0 Don’t hide gridlines.</p></td>
+<td><p>Show or hide gridlines in the spreadsheet.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_language_key</span></code>(text_key)</p></td>
-<td><p></p></td>
+<td><p>Set language key for results.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_question_format</span></code>(answer_type, format)</p></td>
-<td><p></p></td>
+<td><p>Set the format rules for the question (line at the top of every table showing variable label)</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_row_colors</span></code>(colors)</p></td>
-<td><p>Params:</p></td>
+<td><p>Set alternating row colors of the Excel spreadsheet :param colors: list of colours that will be alternated across (supply two colours to get stripes) :type colors: list</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_show_bases</span></code>(bases)</p></td>
-<td><p></p></td>
+<td><p>Set what bases should be shown in the table.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_show_table_base_column</span></code>(xtotal)</p></td>
-<td><p></p></td>
+<td><p>Show column on the far left with the totals from all of the data.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_sig_test_levels</span></code>(sig_test_level)</p></td>
-<td><p></p></td>
+<td><p>Set alpha level for sig-testing.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_stats</span></code>([stats])</p></td>
-<td><p></p></td>
+<td><p>Decide on what statistics to show</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_stub</span></code>(default_stub)</p></td>
-<td><p></p></td>
+<td><p>Set what variables should be in the stub.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_top_offset</span></code>(offset_row)</p></td>
-<td><p></p></td>
+<td><p>Set where the data starts in the Excel sheet.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_weight</span></code>(weight)</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_top_offset_after_header</span></code>(offset_row)</p></td>
+<td><p>Set how many empty lines are below the header.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_weight</span></code>(weight)</p></td>
+<td><p>Set the variable used to weight.</p></td>
 </tr>
 </tbody>
 </table>
@@ -364,6 +379,20 @@ title="Source repository"
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="tally.build.Sheet.add_table.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">tally.build.Sheet.add_table</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="../api_dataset.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">DataSet class</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
 </div>
             </footer>
         </div>

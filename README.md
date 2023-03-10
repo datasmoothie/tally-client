@@ -147,3 +147,18 @@ Run test called `test_spss_crosstab`
 ```python -m pytest -k test_spss_crosstab --token=[your_token]```
 
 The `-k` parameter for pytest uses the supplied argument as a keyword and runs all tests that match the string. 
+
+Adding to the docs
+==================
+
+From the docs directory, install the required dependencies to build the documentation.
+
+```
+pip install -r docs_requirements.txt
+```
+
+Then run the autobuild, so every change is reflected on a live webserver
+
+```
+sphinx-autobuild source _build
+```
