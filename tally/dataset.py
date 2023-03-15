@@ -44,6 +44,8 @@ class DataSet:
         response = self.tally.post_request('tally', api_endpoint, payload, files)
         if response.status_code == 404:
             return self._method_not_found_response(api_endpoint)
+        if response.status_code >= 400 and response.status_code != 404:
+            raise ValueError(response.text)
         json_dict = json.loads(response.content)
         json_dict = self._clean_error_response(json_dict)
         if self._has_keys(json_dict, VARIABLE_KEYS):

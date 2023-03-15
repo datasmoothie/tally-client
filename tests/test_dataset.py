@@ -408,3 +408,18 @@ def test_meta_created_variables_function(token, api_url, use_ssl):
     with open('functions.py', 'w') as f:
         f.write(result)
 
+def test_error_response(token, api_url, use_ssl):
+    params = {
+        "name":"singleVar",
+        "label":"variable of type single",
+        "qtype":"single"
+    }
+
+    ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
+    ds.use_spss('tests/fixtures/Example Data (A).sav')
+    with pytest.raises(ValueError) as e_info:
+        ds.create_empty_variable(**params)
+    assert str(e_info.value) == \
+        '{"error":{"type":"invalid_arguments","message":"Must provide \'categories\' ' + \
+        'when requesting data of type single.","detailed_message":"Must provide' + \
+        ' \'categories\' when requesting data of type single.","payload":{}}}'
