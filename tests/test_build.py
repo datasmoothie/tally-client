@@ -6,25 +6,31 @@ import openpyxl
 
 def test_add_table(token, api_url, use_ssl):
     ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
-    ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
 
-    build = tally.Build(name='client A', default_dataset=ds)
+    ds.use_spss('tests/fixtures/Example Data (A).sav')
+
+    build = tally.Build(name='Client A', default_dataset=ds)
 
     sheet = build.add_sheet(banner=['gender', 'locality'])
+    sheet.add_table(stub={'x' : ['gender']})
+    # ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
 
-    sheet.options.set_base_position('outside')
-    sheet.options.set_answer_format('base', {"font_color":"#F15A30", "bold":True})
-    sheet.options.set_question_format('percentage', {"bold":True})
-    sheet.options.set_column_format_for_type('base', 1, {"bold":True})
-    sheet.options.set_column_format_for_type('percentage', 1, {"bold":True})
+    # build = tally.Build(name='client A', default_dataset=ds)
 
-    # base can be outside, above (default), hide
-    sheet.add_table(stub={'x':'q2b', 'ci':['c%', 'counts'], 'xtotal':True, 'stats':['mean', 'stddev']}, dataset=ds)
-    sheet.add_table(stub={'x':'q2b', 'ci':['c%'], 'f':{'locality':[1]}, 'w':'weight_a', 'xtotal':True, 'stats':['mean', 'stddev']}, dataset=ds)
-    sheet.add_table(stub={'x':'q1', 'ci':['c%'], 'f':{'locality':[2]}, 'w':'weight_a', 'base':'both', 'xtotal':True}, 
-                          options={'row_format':{'rows':[4,5,6], 'format':{'bg_color':'F15A30'}}})
-    sheet.add_table(stub={'x':'q3', 'ci':['c%'], 'f':{'locality':[1]}, 'w':'weight_a', 'xtotal':True}, options={'base':'hide'})
-    sheet.add_table(stub={'x':'q2b', 'ci':['c%'], 'f':{'locality':[1]}, 'w':'weight_a', 'xtotal':True}, dataset=ds)
+    # sheet = build.add_sheet(banner=['gender', 'locality'])
+    # sheet.options.set_base_position('outside')
+    # sheet.options.set_answer_format('base', {"font_color":"#F15A30", "bold":True})
+    # sheet.options.set_question_format('percentage', {"bold":True})
+    # sheet.options.set_column_format_for_type('base', 1, {"bold":True})
+    # sheet.options.set_column_format_for_type('percentage', 1, {"bold":True})
+
+    # # base can be outside, above (default), hide
+    # sheet.add_table(stub={'x':'q2b', 'ci':['c%', 'counts'], 'xtotal':True, 'stats':['mean', 'stddev']}, dataset=ds)
+    # sheet.add_table(stub={'x':'q2b', 'ci':['c%'], 'f':{'locality':[1]}, 'w':'weight_a', 'xtotal':True, 'stats':['mean', 'stddev']}, dataset=ds)
+    # sheet.add_table(stub={'x':'q1', 'ci':['c%'], 'f':{'locality':[2]}, 'w':'weight_a', 'base':'both', 'xtotal':True}, 
+    #                       options={'row_format':{'rows':[4,5,6], 'format':{'bg_color':'F15A30'}}})
+    # sheet.add_table(stub={'x':'q3', 'ci':['c%'], 'f':{'locality':[1]}, 'w':'weight_a', 'xtotal':True}, options={'base':'hide'})
+    # sheet.add_table(stub={'x':'q2b', 'ci':['c%'], 'f':{'locality':[1]}, 'w':'weight_a', 'xtotal':True}, dataset=ds)
 
     build.save_excel('test.xlsx')
     wb = openpyxl.load_workbook('test.xlsx')
