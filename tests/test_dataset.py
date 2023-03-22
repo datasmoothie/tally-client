@@ -193,19 +193,23 @@ def test_error_messages(token, api_url, use_ssl):
     ds.add_credentials(api_key=token, host=api_url, ssl=use_ssl)
     ds.use_spss('tests/fixtures/Example Data (A).sav')
 
-    scheme={
-            'locality':{1:36.0, 2:27.4, 3:16.0, 4:10.0, 5:10.6},
-            'gender':{1:49.0, 2:51.0}
-        }
-    result = ds.meta(variable='unknown', format='dict')
-    assert 'error' in result
+    scheme = {
+        'locality':{1:36.0, 2:27.4, 3:16.0, 4:10.0, 5:10.6},
+        'gender':{1:49.0, 2:51.0}
+    }
+
+    with pytest.raises(ValueError) as e_info:
+        ds.meta(variable='unknown', format='dict')
+    assert '"detailed_message":"unknown - is not in the dataset"' in str(e_info.value)
 
     result = ds.weight(name='my weight', variable='weight_c', unique_key='unknown_column', scheme=scheme)
+    assert "'message': 'unknown_column - the unique key specified for the weighting does not " + \
+        "exist in the dataset'" in str(result)
 
-    scheme={
-            'error':{1:36.0, 2:27.4, 3:16.0, 4:10.0, 5:10.6},
-            'gender':{1:49.0, 2:51.0}
-        }
+    scheme = {
+        'error':{1:36.0, 2:27.4, 3:16.0, 4:10.0, 5:10.6},
+        'gender':{1:49.0, 2:51.0}
+    }
     result = ds.weight(name='my weight', variable='weight_c', unique_key='unique_id', scheme=scheme)
     assert 'error' in result
 
@@ -409,3 +413,18 @@ def test_meta_created_variables_function(token, api_url, use_ssl):
     with open('functions.py', 'w') as f:
         f.write(result)
 
+def test_error_response(token, api_url, use_ssl):
+    params = {
+        "name":"singleVar",
+        "label":"variable of type single",
+        "qtype":"single"
+    }
+
+    ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
+    ds.use_spss('tests/fixtures/Example Data (A).sav')
+    with pytest.raises(ValueError) as e_info:
+        ds.create_empty_variable(**params)
+    assert str(e_info.value) == \
+        '{"error":{"type":"invalid_arguments","message":"Must provide \'categories\' ' + \
+        'when requesting data of type single.","detailed_message":"Must provide' + \
+        ' \'categories\' when requesting data of type single.","payload":{}}}'
