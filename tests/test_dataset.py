@@ -324,11 +324,12 @@ def test_crosstabs_with_format_column(token, api_url, use_ssl):
 
     ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
 
-    ct1 = ds.crosstab(x="q1", y="gender", add_format_column=True)
+    ct1 = ds.crosstab(crosstabs=[{"x":"q1", "y":"gender"}], add_format_column=True)
 
     ct2 = ds.crosstab(
-        crosstabs= [{'x': 'q1', 'y': 'gender', 'add_format_column': True},
-                    {'x': 'q2', 'y': 'gender', 'add_format_column': True}]
+        crosstabs= [{'x': 'q1', 'y': 'gender'},
+                    {'x': 'q2', 'y': 'gender'}],
+        add_format_column=True
     )
 
 
