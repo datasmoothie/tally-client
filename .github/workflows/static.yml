@@ -1,5 +1,5 @@
 # Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+name: Deploy static docs content to Pages
 
 on:
   # Runs on pushes targeting the default branch
@@ -30,6 +30,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Setup Python environment
+        uses: actions/setup-python@v2.4.4
+        with:
+          python-version: 3.9
+      - name: Install Dependencies
+        run: pip install -r docs_requirements.txt
+        working-directory: docs      
+      - name: Build documentation
+        run: sphinx-build source _build
+        working-directory: docs      
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
