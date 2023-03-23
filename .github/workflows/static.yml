@@ -34,7 +34,9 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: 3.9
-      - name: Install Dependencies
+      - name: Install Tally Client Dependencies
+        run: pip install -r requirements.txt
+      - name: Install Docs Dependencies
         run: pip install -r docs_requirements.txt
         working-directory: docs      
       - name: Build documentation
