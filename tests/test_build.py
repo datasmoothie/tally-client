@@ -6,12 +6,12 @@ import openpyxl
 
 def test_add_table(token, api_url, use_ssl):
     ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
+
     ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
 
     build = tally.Build(name='client A', default_dataset=ds)
 
     sheet = build.add_sheet(banner=['gender', 'locality'])
-
     sheet.options.set_base_position('outside')
     sheet.options.set_answer_format('base', {"font_color":"#F15A30", "bold":True})
     sheet.options.set_question_format('percentage', {"bold":True})

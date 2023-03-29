@@ -351,6 +351,9 @@ class DataSet:
             for ct in crosstabs:
                 ct['dataset'] = 'one'
             params = {"crosstabs":crosstabs}
+
+        if 'add_format_column' in kwargs:
+            params['add_format_column'] = kwargs['add_format_column']
         files, payload = self.prepare_post_params(data_params, params)
         # the datasource will be a quantipy one, so we provide meta and data
         datasources={"one":{"meta":payload.pop('meta'), "data":payload.pop('data')}}

@@ -59,9 +59,10 @@ class Sheet:
             dataset = self.default_dataset
         merged_local_options = self.options.merge_dict(options, copy.deepcopy(self.options.table_options))
         merged_table_options = self.options.merge_dict(copy.deepcopy(merged_local_options), copy.deepcopy(self.parent.options.table_options))
-        crosstab = {**{**merged_table_options['stub'], **stub}, **{'y':self.banner, 'add_format_column':True}}
+        crosstab = {**{**merged_table_options['stub'], **stub}, **{'y':self.banner}}
         df = dataset.crosstab(
-            crosstabs=[crosstab]
+            crosstabs=[crosstab],
+            add_format_column=True
         )
         self.tables.append({"dataframe":df, "options":merged_table_options})
 
