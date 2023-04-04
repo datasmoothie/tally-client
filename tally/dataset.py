@@ -28,8 +28,10 @@ class DataSet:
     qp_data = None
     tally = None
 
-    def __init__(self, api_key=None, host='tally.datasmoothie.com', ssl=True):
+    def __init__(self, api_key=None, host='tally.datasmoothie.com', ssl=True, use_futures=False):
         self.add_credentials(api_key=api_key, host=host, ssl=ssl)
+        self.use_futures = use_futures
+        self.futures = []
 
     #@add_data
     def __getattr__(self, name):
@@ -41,6 +43,9 @@ class DataSet:
     def _call_tally(self, api_endpoint, *args, **kwargs):
         data_params = kwargs.pop('data_params')
         files, payload = self.prepare_post_params(data_params, kwargs)
+        if self.use_futures:
+            self.call_use_future(api_endpoint, kwargs, files)
+            return
         response = self.tally.post_request('tally', api_endpoint, payload, files)
         if response.status_code == 404:
             return self._method_not_found_response(api_endpoint)
@@ -352,6 +357,9 @@ class DataSet:
                 ct['dataset'] = 'one'
             params = {"crosstabs":crosstabs}
         files, payload = self.prepare_post_params(data_params, params)
+        if self.use_futures:
+            self.call_use_future('joined_crosstab', kwargs, files)
+            return
         # the datasource will be a quantipy one, so we provide meta and data
         datasources={"one":{"meta":payload.pop('meta'), "data":payload.pop('data')}}
         payload['params']['datasources'] = datasources
@@ -818,4 +826,17 @@ class DataSet:
             If True pandas.DataFrame.reindex() will be applied to the merged dataframe.
         """
         return self._call_tally('vmerge', **kwargs)
-        
+
+    def call_use_future(self, api_endpoint, payload, files):
+        self.futures.append({'method': api_endpoint, 'params': payload, "files": files})
+
+    def result(self):
+        payload = {
+            "data": self.qp_data,
+            "meta": self.qp_meta,
+            "params": {
+                "methods": self.futures
+            }
+        }
+        response = self.tally.post_request('tally', 'futures', payload)
+        return response
