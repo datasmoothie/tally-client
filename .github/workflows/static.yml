@@ -27,6 +27,8 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    env:
+      tally_api_key: ${{ secrets.TALLY_API_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
