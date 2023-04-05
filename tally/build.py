@@ -8,6 +8,7 @@ from openpyxl.styles import Font, PatternFill, Alignment
 from .build_defaults import build_default_formats
 from .options import Options
 from .sheet import Sheet
+from .presentation import Presentation
 
 class Build:
     """ Represents crosstabs and settings to build a deliverable, such as Excel tables.
@@ -38,6 +39,16 @@ class Build:
             formats=copy.deepcopy(build_default_formats),
             parent=self
         )
+
+    def add_presentation(self, name=None):
+        if name is None:
+            name = "Presentation {}" #.format(str(len(self.sheets)+1))
+        presentation = Presentation(
+            default_dataset=self.default_dataset, 
+            name=name,
+            parent=self
+            )
+        return presentation
 
     def add_sheet(self, name=None, banner='@'):
         """ Add sheet to a build

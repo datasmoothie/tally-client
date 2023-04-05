@@ -336,3 +336,57 @@ def test_add_table_title(token, api_url, use_ssl):
     build.save_excel('add_title.xlsx')
     wb = openpyxl.load_workbook('add_title.xlsx')
     os.remove('add_title.xlsx')
+
+
+def test_add_slide(token, api_url, use_ssl):
+    ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
+    ds.use_spss('tests/fixtures/Example Data (A).sav')
+
+    build = tally.Build(name='client A', default_dataset=ds, table_of_contents=True)
+
+    presentation = build.add_presentation('test')
+
+    presentation.add_slide(
+        stub="gender", 
+        banner="q2b",
+        show='r%',
+        options={
+            'chart_type':'column_stacked',
+            'slide':1,
+            'title':'How frequently do you do sports?'
+        }
+    )
+    presentation.add_slide(
+        stub="q2b", 
+        banner="gender",
+        show='r%',
+        options={
+            'chart_type':'column_clustered',
+            'slide':1,
+            'title':'How frequently do you do sports?'
+        }
+    )
+    presentation.add_slide(
+        stub="q2b", 
+        banner="gender",
+        show='c%',
+        options={
+            'chart_type':'column_clustered',
+            'slide':1,
+            'title':'How frequently do you do sports?'
+        }
+    )
+
+    presentation.add_slide(
+        stub="q1", 
+        banner="@",
+        show='c%',
+        table='counts',
+        options={
+            'chart_type':'pie',
+            'slide':2,
+            'title':'What sports do you do?'
+        }
+    )
+
+    presentation.save_powerpoint('test.pptx')
