@@ -40,12 +40,13 @@ class Build:
             parent=self
         )
 
-    def add_presentation(self, name=None):
+    def add_presentation(self, name=None, powerpoint_template=None):
         if name is None:
             name = "Presentation {}" #.format(str(len(self.sheets)+1))
         presentation = Presentation(
             default_dataset=self.default_dataset, 
             name=name,
+            powerpoint_template=powerpoint_template,
             parent=self
             )
         return presentation

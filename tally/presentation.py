@@ -5,13 +5,14 @@ import copy
 
 class Presentation:
 
-  def __init__(self, default_dataset=None, name=None, parent=None):
+  def __init__(self, default_dataset=None, name=None, parent=None, powerpoint_template=None):
         self.slides = []
         self.slide_options = []
         self.default_dataset = default_dataset
         self.name = name
         self.options = Options(parent=self)
         self.parent = parent
+        self.powerpoint_template = powerpoint_template
         #self.options._set_page_setup("write_string",{"row":2, "col":0, "string":name})
 
   def add_slide(self, stub, banner, show='pct', table=None, options={}, dataset=None):
@@ -83,9 +84,14 @@ class Presentation:
         df = slide
         df = df.replace({'null':0})
         payload = json.loads(df.to_json(orient='split'))
-        payload['index_names'] = df.index.names.copy()
-        payload['column_names'] = df.columns.names.copy()
+        payload["index_names"] = df.index.names.copy()
+        payload["column_names"] = df.columns.names.copy()
         dataframes_payload.append(payload)        
 
-    self.default_dataset.build_powerpoint_from_dataframes(filename=filename, dataframes=dataframes_payload, options=self.slide_options)
+    self.default_dataset.build_powerpoint_from_dataframes(
+      filename=filename, 
+      dataframes=dataframes_payload, 
+      options=self.slide_options, 
+      powerpoint_template=self.powerpoint_template
+    )
 

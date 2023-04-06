@@ -15,6 +15,7 @@
    
       ~Build.__init__
       ~Build.add_logo
+      ~Build.add_presentation
       ~Build.add_sheet
       ~Build.save_excel
       ~Build.set_index_option

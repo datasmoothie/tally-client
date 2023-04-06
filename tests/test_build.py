@@ -344,36 +344,38 @@ def test_add_slide(token, api_url, use_ssl):
 
     build = tally.Build(name='client A', default_dataset=ds, table_of_contents=True)
 
-    presentation = build.add_presentation('test')
+    presentation = build.add_presentation('test', powerpoint_template='tests/fixtures/Datasmoothie_Template2.pptx')
 
     presentation.add_slide(
-        stub="gender", 
-        banner="q2b",
-        show='r%',
-        options={
-            'chart_type':'column_stacked',
-            'slide':1,
-            'title':'How frequently do you do sports?'
-        }
-    )
-    presentation.add_slide(
-        stub="q2b", 
-        banner="gender",
-        show='r%',
-        options={
-            'chart_type':'column_clustered',
-            'slide':1,
-            'title':'How frequently do you do sports?'
-        }
-    )
-    presentation.add_slide(
-        stub="q2b", 
-        banner="gender",
+        stub="q1", 
+        banner="@",
         show='c%',
         options={
             'chart_type':'column_clustered',
-            'slide':1,
-            'title':'How frequently do you do sports?'
+            'title':'What is your main sporting activity?',
+            'data_labels': True,
+            'data_labels_position':'outside_end'
+        }
+    )
+    presentation.add_slide(
+        stub="q1", 
+        banner="q2b",
+        show='c%',
+        options={
+            'chart_type':'column_clustered',
+            'title':'What is your main activity and how frequently do you exercise?'
+        }
+    )
+    presentation.add_slide(
+        stub="q14r01c01", 
+        banner="Wave",
+        show='mean',
+        options={
+            'chart_type':'line',
+            'template':1,
+            'title':'I hade a good experience in the store',
+            'value_axis_minimum_scale':0,
+            'value_axis_maximum_scale':5           
         }
     )
 
@@ -384,7 +386,7 @@ def test_add_slide(token, api_url, use_ssl):
         table='counts',
         options={
             'chart_type':'pie',
-            'slide':2,
+            'template':2,
             'title':'What sports do you do?'
         }
     )

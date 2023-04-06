@@ -431,11 +431,16 @@ class DataSet:
         file.close()
         return response
 
-    @valid_params(['filename', 'dataframes', 'options'])
-    @add_data
-    def build_powerpoint_from_dataframes(self, data_params=None, filename=None, **kwargs):
-        files, payload = self.prepare_post_params(data_params, kwargs)
-        payload = kwargs
+    @valid_params(['filename', 'dataframes', 'options', 'powerpoint_template'])
+    def build_powerpoint_from_dataframes(self, filename, dataframes, options, powerpoint_template=None):
+        payload = {'dataframes':json.dumps(dataframes), 'options':json.dumps(options)}
+        if powerpoint_template is not None:
+            files = {}
+            files['pptx_template'] = (
+                'template.pptx', 
+                open(powerpoint_template, 'rb').read(), 
+                'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+            )
         response = self.tally.post_request('tally', 'build_powerpoint_from_dataframes', payload, files)
         if response.status_code != 200:
             content = json.loads(response.content)
