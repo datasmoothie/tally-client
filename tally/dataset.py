@@ -3,6 +3,7 @@ import pandas as pd
 import io
 from functools import partial
 import urllib.request
+import uuid
 
 from difflib import SequenceMatcher
 from .decorators import add_data, format_response, valid_params
@@ -357,12 +358,12 @@ class DataSet:
                 ct['dataset'] = 'one'
             params = {"crosstabs":crosstabs}
         files, payload = self.prepare_post_params(data_params, params)
-        if self.use_futures:
-            self.call_use_future('joined_crosstab', kwargs, files)
-            return
         # the datasource will be a quantipy one, so we provide meta and data
         datasources={"one":{"meta":payload.pop('meta'), "data":payload.pop('data')}}
         payload['params']['datasources'] = datasources
+        if self.use_futures:
+            self.call_use_future('joined_crosstab', payload, files)
+            return
         response = self.tally.post_request('tally', 'joined_crosstab', payload, files)
         json_dict = json.loads(response.content)
         if 'result' in json_dict.keys():
@@ -828,7 +829,9 @@ class DataSet:
         return self._call_tally('vmerge', **kwargs)
 
     def call_use_future(self, api_endpoint, payload, files):
-        self.futures.append({'method': api_endpoint, 'params': payload, "files": files})
+        if api_endpoint == 'joined_crosstab':
+            payload = payload.pop('params')
+        self.futures.append({'method': api_endpoint, 'params': payload, "files": files, "id": str(uuid.uuid4())})
 
     def result(self):
         payload = {
@@ -839,4 +842,8 @@ class DataSet:
             }
         }
         response = self.tally.post_request('tally', 'futures', payload)
-        return response
+        json_dict = json.loads(response.content)
+        if 'message' in json_dict.keys():
+                raise ValueError(json_dict['message'])
+        else:
+            return json_dict
