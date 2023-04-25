@@ -45,8 +45,8 @@ class DataSet:
         data_params = kwargs.pop('data_params')
         files, payload = self.prepare_post_params(data_params, kwargs)
         if self.use_futures:
-            self.call_use_future(api_endpoint, kwargs, files)
-            return
+            # Returns the uid of the operation.
+            return self.call_use_future(api_endpoint, kwargs, files)
         response = self.tally.post_request('tally', api_endpoint, payload, files)
         if response.status_code == 404:
             return self._method_not_found_response(api_endpoint)
@@ -362,8 +362,7 @@ class DataSet:
         datasources={"one":{"meta":payload.pop('meta'), "data":payload.pop('data')}}
         payload['params']['datasources'] = datasources
         if self.use_futures:
-            self.call_use_future('joined_crosstab', payload, files)
-            return
+            return self.call_use_future('joined_crosstab', payload, files)
         response = self.tally.post_request('tally', 'joined_crosstab', payload, files)
         json_dict = json.loads(response.content)
         if 'result' in json_dict.keys():
@@ -378,13 +377,16 @@ class DataSet:
     @add_data
     def weight(self, data_params=None, **kwargs):
         files, payload = self.prepare_post_params(data_params, kwargs)
-        response = self.tally.post_request('tally', 'weight', payload, files)
-        json_dict = json.loads(response.content)
-        if 'error' in json_dict:
-            json_dict = self._clean_error_response(json_dict)
+        if self.use_futures:
+            return self.call_use_future('weight', kwargs, files)
+        else:
+            response = self.tally.post_request('tally', 'weight', payload, files)
+            json_dict = json.loads(response.content)
+            if 'error' in json_dict:
+                json_dict = self._clean_error_response(json_dict)
+                return json_dict
+            self.merge_column_to_data(kwargs['variable'], json_dict['weight_data'], json_dict['weight_var_meta'], kwargs['unique_key'])
             return json_dict
-        self.merge_column_to_data(kwargs['variable'], json_dict['weight_data'], json_dict['weight_var_meta'], kwargs['unique_key'])
-        return json_dict
 
     def merge_column_to_data(self, name, data, new_meta, merge_on):
         df = pd.read_csv(io.StringIO(self.qp_data))
@@ -831,7 +833,9 @@ class DataSet:
     def call_use_future(self, api_endpoint, payload, files):
         if api_endpoint == 'joined_crosstab':
             payload = payload.pop('params')
-        self.futures.append({'method': api_endpoint, 'params': payload, "files": files, "id": str(uuid.uuid4())})
+        uid = str(uuid.uuid4())
+        self.futures.append({'method': api_endpoint, 'params': payload, "files": files, "id": uid})
+        return uid  # Give the client a uid for bookkeeping
 
     def result(self):
         payload = {
