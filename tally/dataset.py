@@ -837,11 +837,12 @@ class DataSet:
         self.futures.append({'method': api_endpoint, 'params': payload, "files": files, "id": uid})
         return uid  # Give the client a uid for bookkeeping
 
-    def result(self):
+    def result(self, include_dataset=False):
         payload = {
             "data": self.qp_data,
             "meta": self.qp_meta,
             "params": {
+                "include_dataset": include_dataset,
                 "methods": self.futures
             }
         }
@@ -850,4 +851,7 @@ class DataSet:
         if 'message' in json_dict.keys():
                 raise ValueError(json_dict['message'])
         else:
+            if include_dataset:
+                self.qp_data = json_dict['dataset']['data']
+                self.qp_meta = json.dumps(json_dict['dataset']['meta'])
             return json_dict

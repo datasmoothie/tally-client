@@ -81,3 +81,80 @@ def test_derive_futures(token, api_url, use_ssl):
     else:
         raise AssertionError("Dataframes are equal but should not be")
 
+def test_futures_include_dataset(token, api_url, use_ssl):
+    ds = tally.DataSet(use_futures=True)
+    ds.add_credentials(api_key=token, host=api_url, ssl=use_ssl)
+    ds.use_csv('tests/fixtures/Example Data (A) no-meta.csv')
+
+    weight_scheme = {
+        'locality':{1:10, 2:10, 3:10, 4:50, 5:20},
+        'gender':{1:10, 2:90}
+    }
+
+    cond_map = [
+        (1, "Urban", 'union', {'locality': [1,2]}),
+        (2, "Non-urban", 'union', {'locality':[3,4]})
+    ]
+
+    # These methods will be calculated in the future
+    ds.weight(name='my weight', variable='weight_c', unique_key='resp_id', scheme= weight_scheme)
+    ds.weight(name='my weight_2', variable='weight_d', unique_key='resp_id', scheme= weight_scheme)
+    ds.derive(name='new_variable', label='My new variable', qtype='single', cond_map=cond_map)
+    ds.derive(name='new_variable_2', label='My new variable_2', qtype='single', cond_map=cond_map)
+    # Get the results from the futures.
+    ds.result(include_dataset=True)
+    # Check that the changes were made in meta.
+    meta = json.loads(ds.qp_meta)
+    assert 'weight_c' in meta['columns']
+    assert 'new_variable_2' in meta['columns']
+
+def test_futures_include_dataset_with_crosstab(token, api_url, use_ssl):
+    ds = tally.DataSet(use_futures=True)
+    ds.add_credentials(api_key=token, host=api_url, ssl=use_ssl)
+    ds.use_csv('tests/fixtures/Example Data (A) no-meta.csv')
+
+    weight_scheme = {
+        'locality': {1:10, 2:10, 3:10, 4:50, 5:20},
+        'gender': {1:10, 2:90}
+    }
+
+    cond_map = [
+        (1, "Urban", 'union', {'locality': [1,2]}),
+        (2, "Non-urban", 'union', {'locality':[3,4]})
+    ]
+
+    ds.weight(name='my weight', variable='weight_c', unique_key='resp_id', scheme= weight_scheme)
+    ds.derive(name='new_variable', label='My new variable', qtype='single', cond_map=cond_map)
+    ds.crosstab(x='gender', ci=['c%'], w='weight_c')
+    # Get the results from the futures.
+    result = ds.result(include_dataset=True)
+
+    assert 'dataset' in result.keys()
+    assert 'weight_c' in result['dataset']['meta']['columns']
+    assert 'new_variable' in result['dataset']['meta']['columns']
+
+def test_weight_futures(token, api_url, use_ssl):
+    ds = tally.DataSet(use_futures=True)
+    ds.add_credentials(api_key=token, host=api_url, ssl=use_ssl)
+    ds.use_csv('tests/fixtures/Example Data (A) no-meta.csv')
+
+    scheme={
+        'locality':{1:36.0, 2:27.4, 3:16.0, 4:10.0, 5:10.6},
+        'gender':{1:49.0, 2:51.0}
+    }
+
+    ds.weight(name='my weight', variable='weight_c', unique_key='resp_id', scheme=scheme)
+    crosstab_0_uid_w = ds.crosstab(x='gender', ci=['c%'], w='weight_c')
+    # Get the results from the futures.
+    result = ds.result()
+
+    # Deserialize the results, to check them
+    c_names = ['Total', 'Total']
+    i_names = ['Question','Values']
+    ct0w = result_helper.decode_result_to_dataframe(
+            result[crosstab_0_uid_w],
+            column_names=c_names,
+            index_names=i_names)
+
+    assert ct0w.shape == (3,1)
+    assert list(ct0w.values) ==  [[8255.0], [49.1],[50.9]]
