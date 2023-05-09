@@ -39,6 +39,30 @@ class Build:
             parent=self
         )
 
+    def show(self, sheet=None, table=None) -> pd.DataFrame:
+        """Return the dataframe or dataframes specified by the params.
+        Keyword arguments:
+        sheet -- the sheet number (default None)
+        table -- the table number (default None)
+        """
+        if sheet is None:
+            raise TypeError("sheet argument missing")
+        if not isinstance(sheet, int):
+            raise ValueError(f"The parameter sheet={sheet} must be an integer")
+        if table is not None and not isinstance(table, int):
+            raise ValueError(f"The parameter table={table} must be an integer")
+
+        if table is None:
+            df_list = []
+            for t in self.sheets[sheet].tables:
+                df_list.append(t['dataframe'])
+            df = pd.concat(df_list)
+        else:
+            df = self.sheets[sheet].tables[table]['dataframe']
+        if 'FORMAT' in df.columns:
+            df = df.drop("FORMAT", axis=1, level=0)
+        return df
+
     def add_sheet(self, name=None, banner='@'):
         """ Add sheet to a build
 
