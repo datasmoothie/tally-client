@@ -3,6 +3,18 @@ import json
 import pandas as pd
 import copy
 
+class Table(dict):
+    """Represents a table in an Excel sheet."""
+
+    def __init__(self, dictionary) -> None:
+        super().__init__(dictionary)
+
+    def show(self) -> pd.DataFrame:
+        df = self['dataframe']
+        if 'FORMAT' in df.columns:
+            df = df.drop("FORMAT", axis=1, level=0)
+        return df
+
 class Sheet:
     """ Represents a sheet in an Excel document.
 
@@ -28,6 +40,24 @@ class Sheet:
         self.options = Options(parent=self)
         self.parent = parent
         self.options._set_page_setup("write_string",{"row":2, "col":0, "string":name})
+
+    def show(self, table=None) -> pd.DataFrame:
+        """Return the dataframe or dataframes for a given sheet.
+        Keyword arguments:
+        table -- the table number (default None)
+        """
+        if table is not None and not isinstance(table, int):
+            raise ValueError(f"The parameter table={table} must be an integer")
+        if table is None:
+            df_list = []
+            for t in self.tables:
+                df_list.append(t['dataframe'])
+            df = pd.concat(df_list)
+        else:
+            df = self.tables[table]['dataframe']
+        if 'FORMAT' in df.columns:
+            df = df.drop("FORMAT", axis=1, level=0)
+        return df
 
     def get_name(self):
         if self.name is not None:
@@ -63,7 +93,7 @@ class Sheet:
         df = dataset.crosstab(
             crosstabs=[crosstab]
         )
-        self.tables.append({"dataframe":df, "options":merged_table_options})
+        self.tables.append(Table({"dataframe":df, "options":merged_table_options}))
 
     def paint_dataframes(self):
         for table in self.tables:
