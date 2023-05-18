@@ -19,6 +19,7 @@
       ~Build.add_sheet
       ~Build.save_excel
       ~Build.set_index_option
+      ~Build.show
       ~Build.table_count
    
    

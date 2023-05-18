@@ -344,7 +344,7 @@ def test_add_slide(token, api_url, use_ssl):
 
     build = tally.Build(name='client A', default_dataset=ds, table_of_contents=True)
 
-    presentation = build.add_presentation('test', powerpoint_template='tests/fixtures/Datasmoothie_Template2.pptx')
+    presentation = build.add_presentation('test', powerpoint_template='tests/fixtures/Datasmoothie_Template.pptx')
 
     presentation.add_slide(
         stub="q1", 
@@ -388,6 +388,17 @@ def test_add_slide(token, api_url, use_ssl):
             'chart_type':'pie',
             'template':2,
             'title':'What sports do you do?'
+        }
+    )
+
+    presentation.add_slide(
+        stub="q1", 
+        banner="gender",
+        show='r%',
+        options={
+            'chart_type':'column_clustered',
+            'template':1,
+            'title':'What is your main sporting activity?'
         }
     )
 
