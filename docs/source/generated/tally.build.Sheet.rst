@@ -24,6 +24,7 @@
       ~Sheet.paint_dataframes
       ~Sheet.set_format_for_type
       ~Sheet.set_row_format
+      ~Sheet.show
       ~Sheet.table_count
    
    

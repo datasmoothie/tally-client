@@ -336,3 +336,70 @@ def test_add_table_title(token, api_url, use_ssl):
     build.save_excel('add_title.xlsx')
     wb = openpyxl.load_workbook('add_title.xlsx')
     os.remove('add_title.xlsx')
+
+
+def test_add_slide(token, api_url, use_ssl):
+    ds = tally.DataSet(api_key=token, host=api_url, ssl=use_ssl)
+    ds.use_spss('tests/fixtures/Example Data (A).sav')
+
+    build = tally.Build(name='client A', default_dataset=ds, table_of_contents=True)
+
+    presentation = build.add_presentation('test', powerpoint_template='tests/fixtures/Datasmoothie_Template.pptx')
+
+    presentation.add_slide(
+        stub="q1", 
+        banner="@",
+        show='c%',
+        options={
+            'chart_type':'column_clustered',
+            'title':'What is your main sporting activity?',
+            'data_labels': True,
+            'data_labels_position':'outside_end'
+        }
+    )
+    presentation.add_slide(
+        stub="q1", 
+        banner="q2b",
+        show='c%',
+        options={
+            'chart_type':'column_clustered',
+            'title':'What is your main activity and how frequently do you exercise?'
+        }
+    )
+    presentation.add_slide(
+        stub="q14r01c01", 
+        banner="Wave",
+        show='mean',
+        options={
+            'chart_type':'line',
+            'template':1,
+            'title':'I hade a good experience in the store',
+            'value_axis_minimum_scale':0,
+            'value_axis_maximum_scale':5           
+        }
+    )
+
+    presentation.add_slide(
+        stub="q1", 
+        banner="@",
+        show='c%',
+        table='counts',
+        options={
+            'chart_type':'pie',
+            'template':2,
+            'title':'What sports do you do?'
+        }
+    )
+
+    presentation.add_slide(
+        stub="q1", 
+        banner="gender",
+        show='r%',
+        options={
+            'chart_type':'column_clustered',
+            'template':1,
+            'title':'What is your main sporting activity?'
+        }
+    )
+
+    presentation.save_powerpoint('test.pptx')

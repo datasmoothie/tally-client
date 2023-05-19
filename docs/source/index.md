@@ -47,6 +47,7 @@ pipeline_intro
 5_weight_data
 6_create_crosstabs
 7_build_excel_output
+8_build_powerpoint_output
 ```
 
 ```{toctree}
