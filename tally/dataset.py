@@ -3,6 +3,7 @@ import pandas as pd
 import io
 from functools import partial
 import urllib.request
+import uuid
 
 from difflib import SequenceMatcher
 from .decorators import add_data, format_response, valid_params
@@ -28,8 +29,10 @@ class DataSet:
     qp_data = None
     tally = None
 
-    def __init__(self, api_key=None, host='tally.datasmoothie.com', ssl=True):
+    def __init__(self, api_key=None, host='tally.datasmoothie.com', ssl=True, use_futures=False):
         self.add_credentials(api_key=api_key, host=host, ssl=ssl)
+        self.use_futures = use_futures
+        self.futures = []
 
     #@add_data
     def __getattr__(self, name):
@@ -41,6 +44,9 @@ class DataSet:
     def _call_tally(self, api_endpoint, *args, **kwargs):
         data_params = kwargs.pop('data_params')
         files, payload = self.prepare_post_params(data_params, kwargs)
+        if self.use_futures:
+            # Returns the uid of the operation.
+            return self.call_use_future(api_endpoint, kwargs, files)
         response = self.tally.post_request('tally', api_endpoint, payload, files)
         if response.status_code == 404:
             return self._method_not_found_response(api_endpoint)
@@ -355,6 +361,8 @@ class DataSet:
         # the datasource will be a quantipy one, so we provide meta and data
         datasources={"one":{"meta":payload.pop('meta'), "data":payload.pop('data')}}
         payload['params']['datasources'] = datasources
+        if self.use_futures:
+            return self.call_use_future('joined_crosstab', payload, files)
         response = self.tally.post_request('tally', 'joined_crosstab', payload, files)
         json_dict = json.loads(response.content)
         if 'result' in json_dict.keys():
@@ -369,13 +377,16 @@ class DataSet:
     @add_data
     def weight(self, data_params=None, **kwargs):
         files, payload = self.prepare_post_params(data_params, kwargs)
-        response = self.tally.post_request('tally', 'weight', payload, files)
-        json_dict = json.loads(response.content)
-        if 'error' in json_dict:
-            json_dict = self._clean_error_response(json_dict)
+        if self.use_futures:
+            return self.call_use_future('weight', kwargs, files)
+        else:
+            response = self.tally.post_request('tally', 'weight', payload, files)
+            json_dict = json.loads(response.content)
+            if 'error' in json_dict:
+                json_dict = self._clean_error_response(json_dict)
+                return json_dict
+            self.merge_column_to_data(kwargs['variable'], json_dict['weight_data'], json_dict['weight_var_meta'], kwargs['unique_key'])
             return json_dict
-        self.merge_column_to_data(kwargs['variable'], json_dict['weight_data'], json_dict['weight_var_meta'], kwargs['unique_key'])
-        return json_dict
 
     def merge_column_to_data(self, name, data, new_meta, merge_on):
         df = pd.read_csv(io.StringIO(self.qp_data))
@@ -838,4 +849,29 @@ class DataSet:
             If True pandas.DataFrame.reindex() will be applied to the merged dataframe.
         """
         return self._call_tally('vmerge', **kwargs)
-        
+
+    def call_use_future(self, api_endpoint, payload, files):
+        if api_endpoint == 'joined_crosstab':
+            payload = payload.pop('params')
+        uid = str(uuid.uuid4())
+        self.futures.append({'method': api_endpoint, 'params': payload, "files": files, "id": uid})
+        return uid  # Give the client a uid for bookkeeping
+
+    def result(self, include_dataset=False):
+        payload = {
+            "data": self.qp_data,
+            "meta": self.qp_meta,
+            "params": {
+                "include_dataset": include_dataset,
+                "methods": self.futures
+            }
+        }
+        response = self.tally.post_request('tally', 'futures', payload)
+        json_dict = json.loads(response.content)
+        if 'message' in json_dict.keys():
+                raise ValueError(json_dict['message'])
+        else:
+            if include_dataset:
+                self.qp_data = json_dict['dataset']['data']
+                self.qp_meta = json.dumps(json_dict['dataset']['meta'])
+            return json_dict
