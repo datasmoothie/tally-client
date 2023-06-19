@@ -1,4 +1,4 @@
-# Tally Python client
+# Tally Python client!
 The Tally Python client is a wrapper for [Datasmoothie's Tally API](https://tally.datasmoothie.com) for market research and survey data. Tally is a RESTful
 API that leverages Quantipy and other techologies to give users access to all the data processing, aggregation and
 exporting functions they need.
