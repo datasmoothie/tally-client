@@ -126,6 +126,7 @@ def test_reorder(token, api_url, use_ssl):
         name = 'locality',
         new_order = order
     )
+    assert list(ds.meta(variable='locality')['codes'].values) == order
 
 def test_variables(token, api_url, use_ssl):
     ds = tally.DataSet()
