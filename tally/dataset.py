@@ -58,7 +58,12 @@ class DataSet:
             self.add_column_to_data(json_dict['meta']['name'], json_dict['data'], json_dict['meta'])
             return
         if self._has_keys(json_dict, META_VARIABLE_KEYS):
-            self.add_column_to_data(json_dict['meta']['name'], None, json_dict['meta'])
+            # if we got sent back meta for an entire meta object
+            if self._has_keys(json_dict['meta'], ['columns', 'info', 'lib', 'masks', 'sets', 'type']):
+                self.qp_meta = json.dumps(json_dict['meta'])
+            # otherwise, we got meta for just one variable
+            else:
+                self.add_column_to_data(json_dict['meta']['name'], None, json_dict['meta'])
             return
         if self._has_keys(json_dict, NEW_DATASET_KEYS):
             self.qp_data = json_dict['dataset_data']

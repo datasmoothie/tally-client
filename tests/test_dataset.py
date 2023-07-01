@@ -117,6 +117,16 @@ def test_values(token, api_url, use_ssl):
     result = ds.values(name="q1", format="dict")
     assert list(result['values'].keys()) == ['1', '2', '3', '4', '5', '6', '7', '8', '9', '96', '98', '99']
 
+def test_reorder(token, api_url, use_ssl):
+    ds = tally.DataSet()
+    ds.add_credentials(api_key=token, host=api_url, ssl=use_ssl)
+    ds.use_quantipy('tests/fixtures/Example Data (A).json', 'tests/fixtures/Example Data (A).csv')
+    order = [2,3,4,5,1]
+    ds.reorder_values(
+        name = 'locality',
+        new_order = order
+    )
+    assert list(ds.meta(variable='locality')['codes'].values) == order
 
 def test_variables(token, api_url, use_ssl):
     ds = tally.DataSet()
