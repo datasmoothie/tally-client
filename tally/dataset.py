@@ -145,16 +145,19 @@ class DataSet:
 
         Parameters
         ----------
-            file_path: string
-                Path to the sav file we want to use as our data.
+            file_path: string : BytesIO
+                Path to the sav file we want to use as our data OR a bytes array
         """
         # this is okay because the path format will be the same as the OS running this
 
-        with open(file_path, mode='rb') as file:
-            fileContent = file.read()
-        
         payload={}
-        files=[ ('spss',('Example Data (A).sav',io.BytesIO(fileContent),'application/x-spss-sav')) ]
+        if isinstance(file_path, str):
+            with open(file_path, mode='rb') as file:
+                fileContent = file.read()
+            files=[ ('spss',('Example Data (A).sav',io.BytesIO(fileContent),'application/x-spss-sav')) ]
+        else:
+            files=[ ('spss',('Example Data (A).sav',file_path,'application/x-spss-sav')) ]
+
         response = self.tally.post_request('tally', 'convert_data_to_csv_json', payload, files)
         result = json.loads(response.content)
         self.qp_meta = json.dumps(result['json'])
