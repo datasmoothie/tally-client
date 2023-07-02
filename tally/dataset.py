@@ -293,22 +293,42 @@ class DataSet:
         self.dataset_type = 'quantipy'
 
     def use_parquet(self, pq_data_filename, pq_meta_filename=None):
+        """
+        Load parquet file into memory as the file to send with all requests.
 
-        with open(pq_data_filename, mode='rb') as file:
-            fileContent_data = file.read()
-        
+        Parameters
+        ----------
+            pq_data_filename: string : BytesIO
+                Path to the parquet file we want to use as our data OR a bytes array
+            pq_meta_filename: string : BytesIO
+                Path to the meta file we want to use as our data OR a bytes array
+        """
+
         payload={}
-
-        files=[ 
-            ('pq', (pq_data_filename,io.BytesIO(fileContent_data), 'application/x-parquet')) 
-        ]
+        # If it's a string, then we load the "location" and pass it in as bytes
+        if isinstance(pq_data_filename, str):
+           with open(pq_data_filename, mode='rb') as file:
+                fileContent_data = file.read()
+            files=[
+                ('pq', (pq_data_filename, io.BytesIO(fileContent_data), 'application/x-parquet'))
+            ]
+        else:
+            files=[
+                ('pq', ("pq_data.parquet", pg_data_filename, 'application/x-parquet'))
+            ]
 
         if pq_meta_filename is not None:
-            with open(pq_meta_filename, mode='rb') as file:
-                fileContent_meta = file.read()
-            files.append(
-                ('pq_meta',(pq_meta_filename,io.BytesIO(fileContent_meta),'text/plain')),
-            )
+            # If it's a string, then we load the "location" and pass it in as bytes
+            if isinstance(pg_meta_filename, str):
+                with open(pq_meta_filename, mode='rb') as file:
+                    fileContent_meta = file.read()
+                files.append(
+                    ('pq_meta',(pq_meta_filename, io.BytesIO(fileContent_meta), 'text/plain')),
+                )
+            else:
+                files.append(
+                    ('pq_meta',(pq_meta_filename, pg_meta_filename, 'text/plain')),
+                )
         response = self.tally.post_request('tally', 'convert_data_to_csv_json', payload, files)
         result = json.loads(response.content)
         self.qp_meta = json.dumps(result['json'])
