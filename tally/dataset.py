@@ -337,17 +337,39 @@ class DataSet:
 
 
     def use_unicom(self, mdd_filename, ddf_filename):
-        with open(mdd_filename, mode='rb') as file:
-            fileContent_mdd = file.read()
+        """
+        Load parquet file into memory as the file to send with all requests.
 
-        with open(ddf_filename, mode='rb') as file:
-            fileContent_ddf = file.read()
+        Note: If the mdd_filename and ddf_filename are passed as ByteIO then
+              they will be sent directly to Tally and get named "file.mdd" 
+              and "file.ddf" respectively.
+
+        Parameters
+        ----------
+            mdd_filename: string : BytesIO
+                Path to the parquet file we want to use as our data OR a bytes array
+            ddf_filename: string : BytesIO
+                Path to the meta file we want to use as our data OR a bytes array
+        """
+        if isinstance(mdd_filename, str):
+            with open(mdd_filename, mode='rb') as file:
+                fileContent_mdd = io.BytesIO(file.read())
+        else:
+            fileContent_mdd = mdd_filename
+            mdd_filename = "file.mdd"  # This string can be anything
+
+        if isinstance(ddf_filename, str):
+            with open(ddf_filename, mode='rb') as file:
+                fileContent_ddf = io.BytesIO(file.read())
+        else:
+            fileContent_ddf = ddf_filename
+            ddf_filename = "file.ddf"  # This string can be anything
         
         payload={}
 
         files=[ 
-            ('mdd',(mdd_filename,io.BytesIO(fileContent_mdd),'text/xml')),
-            ('ddf', (ddf_filename,io.BytesIO(fileContent_ddf), 'application/x-sqlite3')) 
+            ('mdd', (mdd_filename, fileContent_mdd,'text/xml')),
+            ('ddf', (ddf_filename, fileContent_ddf, 'application/x-sqlite3')) 
         ]
         response = self.tally.post_request('tally', 'convert_data_to_csv_json', payload, files)
         result = json.loads(response.content)
