@@ -314,12 +314,12 @@ class DataSet:
             ]
         else:
             files=[
-                ('pq', ("pq_data.parquet", pg_data_filename, 'application/x-parquet'))
+                ('pq', ("pq_data.parquet", pq_data_filename, 'application/x-parquet'))
             ]
 
         if pq_meta_filename is not None:
             # If it's a string, then we load the "location" and pass it in as bytes
-            if isinstance(pg_meta_filename, str):
+            if isinstance(pq_meta_filename, str):
                 with open(pq_meta_filename, mode='rb') as file:
                     fileContent_meta = file.read()
                 files.append(
@@ -327,7 +327,7 @@ class DataSet:
                 )
             else:
                 files.append(
-                    ('pq_meta',(pq_meta_filename, pg_meta_filename, 'text/plain')),
+                    ('pq_meta',("pq_meta_filename", pq_meta_filename, 'text/plain')),
                 )
         response = self.tally.post_request('tally', 'convert_data_to_csv_json', payload, files)
         result = json.loads(response.content)
