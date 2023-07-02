@@ -307,7 +307,7 @@ class DataSet:
         payload={}
         # If it's a string, then we load the "location" and pass it in as bytes
         if isinstance(pq_data_filename, str):
-           with open(pq_data_filename, mode='rb') as file:
+            with open(pq_data_filename, mode='rb') as file:
                 fileContent_data = file.read()
             files=[
                 ('pq', (pq_data_filename, io.BytesIO(fileContent_data), 'application/x-parquet'))
